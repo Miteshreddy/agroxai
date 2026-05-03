@@ -184,13 +184,7 @@ crop-recommendation-system/
 ### Prerequisites
 - **Node.js** v18+ with npm
 - **Python** 3.9+
-- **MongoDB** running locally on port `27017`
-
-### Step 1 — Start MongoDB
-```bash
-# From inside crop-recommendation-system/
-mongod --dbpath ./mongo_data --logpath ./mongod.log --fork
-```
+- **MongoDB Atlas** account for database
 
 ### Step 2 — Set up and start the ML service
 ```bash
@@ -537,6 +531,13 @@ To deploy the Python/Flask ML service on platforms like Render:
 4. **Environment Variables**:
    - Set `OPENAI_API_KEY` to your OpenAI key.
    - (Optional) Set `PORT` to `10000` if required by your hosting provider.
+
+## 13. MongoDB Atlas Setup
+
+To connect your project to MongoDB Atlas for cloud database hosting:
+1. **Create a Cluster** on MongoDB Atlas.
+2. **Copy the Connection String** (format: `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>`).
+3. **Add `MONGO_URI`** to your Render environment variables (or local `backend/.env`) with your connection string.
 
 ---
 
