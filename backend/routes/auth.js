@@ -45,7 +45,10 @@ router.post('/register', async (req, res) => {
         });
     } catch (err) {
         console.error('Register error:', err);
-        res.status(400).json({ message: "Registration failed", error: err.message });
+        const errorMsg = err.message.includes('buffering timed out') 
+            ? "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0"
+            : err.message;
+        res.status(400).json({ message: errorMsg, error: err.message });
     }
 });
 
@@ -81,7 +84,10 @@ router.post('/login', async (req, res) => {
         });
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json({ error: 'Server error' });
+        const errorMsg = err.message.includes('buffering timed out') 
+            ? "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0"
+            : err.message;
+        res.status(400).json({ message: errorMsg, error: err.message });
     }
 });
 

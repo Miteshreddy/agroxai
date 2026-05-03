@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, { username, password });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/auth/login`, { username, password });
             const { token, user } = response.data;
 
             localStorage.setItem('cv_token', token);
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, { username, password });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/auth/register`, { username, password });
             const { token, user } = response.data;
 
             localStorage.setItem('cv_token', token);

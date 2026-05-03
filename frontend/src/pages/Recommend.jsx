@@ -20,7 +20,7 @@ import FeaturePanel from '../components/FeaturePanel';
 import T from '../components/T';
 import { useLanguage } from '../context/LanguageContext';
 
-const API  = `${import.meta.env.VITE_API_URL}/api`;
+const API  = `${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api`;
 
 const SOIL_TYPES = ['Clay', 'Sandy', 'Loamy', 'Black', 'Red', 'Alluvial'];
 
