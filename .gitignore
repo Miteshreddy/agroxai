@@ -1,0 +1,16 @@
+node_modules/
+venv/
+.env
+*.log
+__pycache__/
+.DS_Store
+dist/
+build/
+.vscode/
+.idea/
+mongo_data/
+package-lock.json
+*.docx
+*.md
+!README.md
+!SRS_AGRO_XAI.md

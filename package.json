@@ -1,0 +1,14 @@
+{
+  "name": "crop-recommendation-system",
+  "version": "1.0.0",
+  "description": "Full-stack Crop Recommendation System with XAI",
+  "scripts": {
+    "start": "concurrently \"npm run start-ml\" \"npm run start-backend\" \"npm run start-frontend\"",
+    "start-ml": "cd ml_model && .\\venv\\Scripts\\activate && python app.py",
+    "start-backend": "cd backend && node server.js",
+    "start-frontend": "cd frontend && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
