@@ -18,7 +18,7 @@ const RevenueCard = ({ crop, rainfall, season }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5005/api/revenue-prediction', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/revenue-prediction`, {
                 crop,
                 rainfall_level: rainfall,
                 season,

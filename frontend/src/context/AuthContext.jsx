@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5005/api'}/auth/login`, { username, password });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, { username, password });
             const { token, user } = response.data;
 
             localStorage.setItem('cv_token', token);
@@ -39,9 +39,10 @@ export const AuthProvider = ({ children }) => {
 
             return { success: true };
         } catch (error) {
+            console.error('Login API Error:', error);
             return {
                 success: false,
-                error: error.response?.data?.error || 'Login failed. Please try again.'
+                error: error.response?.data?.message || error.response?.data?.error || 'Login failed. Please try again.'
             };
         }
     };
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password) => {
         try {
-            const response = await axios.post('http://localhost:5005/api/auth/register', { username, password });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, { username, password });
             const { token, user } = response.data;
 
             localStorage.setItem('cv_token', token);
@@ -61,9 +62,10 @@ export const AuthProvider = ({ children }) => {
 
             return { success: true };
         } catch (error) {
+            console.error('Registration API Error:', error);
             return {
                 success: false,
-                error: error.response?.data?.error || 'Registration failed.'
+                error: error.response?.data?.message || error.response?.data?.error || 'Registration failed.'
             };
         }
     };

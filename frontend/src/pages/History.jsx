@@ -28,7 +28,7 @@ const History = () => {
 
     const fetchHistory = async () => {
         try {
-            const response = await axios.get('http://localhost:5005/api/history');
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/history`);
             setHistory(response.data);
             setLoading(false);
         } catch (error) {
@@ -39,7 +39,7 @@ const History = () => {
 
     const deleteItem = async (id) => {
         try {
-            await axios.delete(`http://localhost:5005/api/history/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/history/${id}`);
             setHistory(history.filter(item => item._id !== id));
             toast.success('Record removed');
         } catch (error) {
