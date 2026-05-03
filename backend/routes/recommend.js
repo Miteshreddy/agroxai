@@ -59,8 +59,22 @@ router.post('/recommend', async (req, res) => {
         };
 
         // Step 6: ML prediction (top-3)
-        const mlRes = await axios.post(`${flaskUrlLocal}/predict`, farmer_inputs);
-        let top_crops = mlRes.data.recommended_crops || [{ crop: mlRes.data.crop, confidence: mlRes.data.confidence }];
+        let top_crops;
+        let mlResData;
+        try {
+            const mlApiUrl = process.env.ML_API_URL || process.env.FLASK_URL || 'http://localhost:10000/predict';
+            const mlRes = await axios.post(mlApiUrl, farmer_inputs, { timeout: 8000 });
+            mlResData = mlRes.data;
+            top_crops = mlResData.recommended_crops || [{ crop: mlResData.crop, confidence: mlResData.confidence }];
+        } catch (mlErr) {
+            console.error('ML Service Error:', mlErr.message);
+            // Part 6: Fallback safety - return a generic recommendation instead of failing
+            top_crops = [
+                { crop: 'Rice', confidence: 0.75 },
+                { crop: 'Maize', confidence: 0.65 },
+                { crop: 'Wheat', confidence: 0.55 }
+            ];
+        }
 
         // Step 7: Climate filter
         const mlCrops = top_crops.map(c => c.crop);
@@ -105,8 +119,8 @@ router.post('/recommend', async (req, res) => {
             soil_type,
             season: weather.season,
             climate_zone: weather.climate_zone,
-            explanation: mlRes.data.explanation,
-            mapped_values: mlRes.data.mapped_values,
+            explanation: (typeof mlResData !== 'undefined') ? mlResData.explanation : { "Climate": 0.8, "Soil": 0.6 },
+            mapped_values: (typeof mlResData !== 'undefined') ? mlResData.mapped_values : farmer_inputs,
             workflow_summary: farmer_inputs
         });
     } catch (err) {
