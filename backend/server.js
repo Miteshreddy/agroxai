@@ -9,6 +9,12 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Environment Validation
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+}
+
 // Database connection
 require('./db'); // ensures mongoose connects
 

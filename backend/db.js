@@ -7,15 +7,8 @@ if (!MONGO_URI) {
     throw new Error("MONGO_URI not set");
 }
 
-mongoose.connect(MONGO_URI)
-    .then(() => {
-        // Test connection
-        if (mongoose.connection.readyState === 1) {
-            console.log("MongoDB Atlas connected");
-        }
-    })
-    .catch(err => {
-        console.log("MongoDB connection failed", err);
-    });
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB Atlas connected"))
+    .catch(err => console.error("MongoDB connection error:", err));
 
 module.exports = mongoose;

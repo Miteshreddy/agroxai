@@ -11,44 +11,29 @@ router.post('/register', async (req, res) => {
 
         // Validation
         if (!username || !password) {
-            return res.status(400).json({ error: 'Username and password are required' });
-        }
-        if (username.length < 3 || username.length > 20) {
-            return res.status(400).json({ error: 'Username must be 3 to 20 characters' });
-        }
-        if (password.length < 6) {
-            return res.status(400).json({ error: 'Password must be at least 6 characters' });
+            return res.status(400).json({ message: "Username and password are required" });
         }
 
-        // Check availability
-        const existing = await User.findOne({ username });
-        if (existing) {
-            return res.status(400).json({ error: 'Username already taken' });
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists" });
         }
 
-        // Hash and Save
-        const hashed = await bcrypt.hash(password, 10);
-        const user = new User({ username, password: hashed });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = new User({
+            username,
+            password: hashedPassword
+        });
+
         await user.save();
 
-        // Create Token
-        const token = jwt.sign(
-            { userId: user._id, username: user.username },
-            process.env.JWT_SECRET,
-            { expiresIn: '7d' }
-        );
-
-        res.status(201).json({
-            message: 'Account created successfully',
-            token,
-            user: { id: user._id, username: user.username }
-        });
+        res.status(201).json({ message: "User registered successfully" });
     } catch (err) {
         console.error('Register error:', err);
         const errorMsg = err.message.includes('buffering timed out') 
             ? "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0"
-            : err.message;
-        res.status(400).json({ message: errorMsg, error: err.message });
+            : "Registration failed";
+        res.status(500).json({ message: errorMsg, error: err.message });
     }
 });
 
@@ -58,36 +43,36 @@ router.post('/login', async (req, res) => {
         const { username, password } = req.body;
 
         if (!username || !password) {
-            return res.status(400).json({ error: 'Username and password are required' });
+            return res.status(400).json({ message: "Username and password are required" });
         }
 
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(401).json({ error: 'Invalid username or password' });
+            return res.status(400).json({ message: "User not found" });
         }
 
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) {
-            return res.status(401).json({ error: 'Invalid username or password' });
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
         }
 
         const token = jwt.sign(
-            { userId: user._id, username: user.username },
+            { id: user._id },
             process.env.JWT_SECRET,
-            { expiresIn: '7d' }
+            { expiresIn: "1d" }
         );
 
-        res.status(200).json({
-            message: 'Login successful',
+        res.json({ 
             token,
-            user: { id: user._id, username: user.username }
+            user: { id: user._id, username: user.username },
+            message: "Login successful"
         });
     } catch (err) {
         console.error('Login error:', err);
         const errorMsg = err.message.includes('buffering timed out') 
             ? "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0"
-            : err.message;
-        res.status(400).json({ message: errorMsg, error: err.message });
+            : "Login failed";
+        res.status(500).json({ message: errorMsg });
     }
 });
 
