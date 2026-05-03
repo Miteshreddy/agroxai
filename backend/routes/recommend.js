@@ -15,7 +15,8 @@ router.post('/recommend', async (req, res) => {
             return res.status(400).json({ error: 'Location is required' });
         }
 
-        const baseUrl = 'http://localhost:5005/api';
+        const PORT = process.env.PORT || 5005;
+        const baseUrl = `http://localhost:${PORT}/api`;
         const flaskUrlLocal = process.env.FLASK_URL || 'http://localhost:5001';
 
         // Step 1: Get coordinates (handle both lat/lon and latitude/longitude naming)
