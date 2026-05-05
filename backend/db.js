@@ -2,7 +2,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 // Use env var or fallback to localhost
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/cropdb';
+// Direct hardcoded test URI (with password encoding)
+const mongoUri = 'mongodb+srv://agroxai:Kmit123%24@agroxai.veuwuha.mongodb.net/cropdb?retryWrites=true&w=majority';
 
 mongoose.connect(mongoUri)
     .then(() => console.log('✅ MongoDB connected to:', mongoUri.split('@')[1] || 'localhost'))
