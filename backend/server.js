@@ -21,6 +21,15 @@ app.use((req, res, next) => {
 // Database connection
 require('./db'); // ensures mongoose connects
 
+// JWT Secret Check
+if (!process.env.JWT_SECRET) {
+    console.warn('[WARNING] JWT_SECRET is missing from .env! Using fallback_secret for development.');
+}
+
+mongoose.connection.once('open', () => {
+    console.log("DB connected successfully");
+});
+
 // Health Check & Root
 app.get('/', (req, res) => {
     res.json({ message: 'AgroXAI API is online', environment: process.env.NODE_ENV || 'development' });

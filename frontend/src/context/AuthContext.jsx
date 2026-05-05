@@ -58,27 +58,32 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password) => {
         const baseURL = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
-        try {
-            const response = await axios.post(`${baseURL}/auth/register`, { username, password });
-            const { token, user } = response.data;
+        const payload = { username, password };
+        console.log("Register payload:", payload);
 
+        try {
+            const response = await axios.post(`${baseURL}/auth/register`, payload);
+            console.log("Response status:", response.status);
+            console.log("Response data:", response.data);
+
+            const { token, user } = response.data;
             localStorage.setItem('cv_token', token);
             localStorage.setItem('cv_user', JSON.stringify(user));
-
             setToken(token);
             setUser(user);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
             return { success: true };
         } catch (error) {
             console.error('--- Register API Error ---');
-            console.error('URL:', `${baseURL}/auth/register`);
-            console.error('Message:', error.message);
-            if (error.response) console.error('Response Data:', error.response.data);
+            console.error("Response status:", error.response?.status);
+            console.error("Response data:", error.response?.data);
+            
+            const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Registration failed.';
+            toast.error(errorMessage);
 
             return {
                 success: false,
-                error: error.response?.data?.error || 'Registration failed.'
+                error: errorMessage
             };
         }
     };
