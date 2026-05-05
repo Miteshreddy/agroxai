@@ -35,8 +35,14 @@ app.get('/', (req, res) => {
     res.json({ message: 'AgroXAI API is online', environment: process.env.NODE_ENV || 'development' });
 });
 
-app.get('/health', (req, res) => {
-    res.json({ status: 'healthy', timestamp: new Date().toISOString(), db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
+app.get('/health', async (req, res) => {
+    const isDbAlive = await mongoose.ping();
+    res.json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(), 
+        db: isDbAlive ? 'connected' : 'disconnected',
+        readyState: mongoose.connection.readyState
+    });
 });
 
 // Routes

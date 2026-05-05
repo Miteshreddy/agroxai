@@ -28,7 +28,9 @@ router.post('/register', async (req, res) => {
 
         const hashed = await bcrypt.hash(password, 10);
         const user = new User({ username, password: hashed });
+        console.log('[Auth] Attempting to save user to DB...');
         await user.save();
+        console.log('[Auth] User saved successfully:', username);
 
         const token = jwt.sign(
             { userId: user._id, username: user.username },
