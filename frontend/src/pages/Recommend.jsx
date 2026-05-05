@@ -62,7 +62,7 @@ const DEMO_PRESETS = [
     },
 ];
 
-const API = import.meta.env.VITE_API_URL || '/api';
+const API = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
 
 const SOIL_TYPES = ['Clay', 'Sandy', 'Loamy', 'Black', 'Red', 'Alluvial'];
 

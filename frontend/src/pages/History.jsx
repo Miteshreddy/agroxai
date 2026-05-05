@@ -9,7 +9,7 @@ import T from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api',
+    baseURL: import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api',
 });
 
 const getSoilAdvice = (values) => {
