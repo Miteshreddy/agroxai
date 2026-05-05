@@ -37,7 +37,7 @@ const FloatingParticles = () => {
                         }
                     },
                     color: {
-                        value: "#2D4B37"
+                        value: "#1F7A63"
                     },
                     shape: {
                         type: "circle"

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, Loader2, CheckCircle, ChevronDown } from 'lucide-react';
+import { Sprout, Loader2, CheckCircle, ChevronDown, Play, Sun, CloudRain, Wheat } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
 import LocationSelector from '../components/LocationSelector';
 import CropExplanationPanel from '../components/CropExplanationPanel';
 import RiskAnalysisCard from '../components/RiskAnalysisCard';
@@ -15,12 +16,53 @@ import GrowingGuideCard from '../components/GrowingGuideCard';
 import LabourPlannerCard from '../components/LabourPlannerCard';
 import OrganicFarmingCard from '../components/OrganicFarmingCard';
 import CropRecommendationCard from '../components/CropRecommendationCard';
+import CropComparisonPanel from '../components/CropComparisonPanel';
+import ProfitEstimationCard from '../components/ProfitEstimationCard';
+import QuickActions from '../components/QuickActions';
+import GrowingTimeline from '../components/GrowingTimeline';
 import Sidebar from '../components/Sidebar';
 import FeaturePanel from '../components/FeaturePanel';
+import AIProcessingOverlay from '../components/AIProcessingOverlay';
 import T from '../components/T';
+import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
+import { addRecommendationToHistory } from '../utils/farmInsights';
 
-const API  = `${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api`;
+// Demo presets for expo
+const DEMO_PRESETS = [
+    {
+        id: 'dry',
+        label: 'Dry Region',
+        icon: Sun,
+        iconColor: 'text-orange-500',
+        color: 'bg-white border-slate-100 text-brand-text-primary hover:border-orange-200 hover:bg-orange-50/50 shadow-sm',
+        lat: 26.9124, lon: 70.9120,
+        soil: 'Sandy',
+        weather: { temperature: 38, humidity: 22, rainfall: 15, season: 'Summer', climate_zone: 'Arid', location: { city: 'Jaisalmer' } }
+    },
+    {
+        id: 'wet',
+        label: 'High Rainfall',
+        icon: CloudRain,
+        iconColor: 'text-blue-500',
+        color: 'bg-white border-slate-100 text-brand-text-primary hover:border-blue-200 hover:bg-blue-50/50 shadow-sm',
+        lat: 25.2948, lon: 91.7362,
+        soil: 'Loamy',
+        weather: { temperature: 22, humidity: 92, rainfall: 280, season: 'Monsoon', climate_zone: 'Tropical', location: { city: 'Cherrapunji' } }
+    },
+    {
+        id: 'fertile',
+        label: 'Fertile Plains',
+        icon: Wheat,
+        iconColor: 'text-emerald-500',
+        color: 'bg-white border-slate-100 text-brand-text-primary hover:border-emerald-200 hover:bg-emerald-50/50 shadow-sm',
+        lat: 30.9010, lon: 75.8573,
+        soil: 'Alluvial',
+        weather: { temperature: 28, humidity: 55, rainfall: 100, season: 'Monsoon', climate_zone: 'Semi-Arid', location: { city: 'Ludhiana' } }
+    },
+];
+
+const API = '/api';
 
 const SOIL_TYPES = ['Clay', 'Sandy', 'Loamy', 'Black', 'Red', 'Alluvial'];
 
@@ -30,6 +72,26 @@ const toHumidityLevel  = pct => pct < 35  ? 'Low' : pct < 75  ? 'Medium' : 'High
 
 const Recommend = () => {
     const { t } = useLanguage();
+    
+    const handleSaveRecommendation = () => {
+        if (!result) return;
+        const recData = {
+            crop,
+            confidence,
+            soilType,
+            weather,
+            explanation: result.explanation,
+            mappedValues: result.mapped_values,
+            location: locationData?.weatherData?.location?.city || 'Unknown'
+        };
+        addRecommendationToHistory(recData);
+        toast.success('Recommendation saved to history!');
+    };
+
+    const [searchParams] = useSearchParams();
+    const resultsRef = useRef(null);
+    const locationRef = useRef(null);
+    const soilRef = useRef(null);
 
     // ── Location & weather ────────────────────────────────────────────────
     const [locationData, setLocationData] = useState(null);   // { lat, lon, weatherData }
@@ -43,6 +105,10 @@ const Recommend = () => {
     const [error,    setError]    = useState('');
     const [activeTab, setActiveTab] = useState('ai');
 
+    // ── AI Processing Overlay ────────────────────────────────────────────
+    const [showProcessing, setShowProcessing] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+
     // ── Additional cards ─────────────────────────────────────────────────
     const [riskData,        setRiskData]        = useState(null);
     const [soilTestData,    setSoilTestData]    = useState(null);
@@ -53,10 +119,18 @@ const Recommend = () => {
     const [labourData,      setLabourData]      = useState(null);
     const [organicData,     setOrganicData]     = useState(null);
 
+    const crop       = result?.crop || result?.recommended_crops?.[0]?.crop;
+    const confidence = result?.confidence ?? result?.recommended_crops?.[0]?.confidence ?? 0;
+    const soilType   = result?.soil_type || manualSoil;
+    const weather    = result?.weather || locationData?.weatherData || {};
+    const rainfallLevel = toRainfallLevel(weather.rainfall ?? 140);
+    const season     = result?.season || weather.season || 'Monsoon';
+
     const handleLocationSelect = (data) => {
         setLocationData(data);
         setResult(null);
         setError('');
+        setShowResults(false);
     };
 
     const fetchAdditional = async (crop, confidence, soilType, weather) => {
@@ -69,14 +143,14 @@ const Recommend = () => {
                         season, temperature: weather.temperature };
 
         await Promise.allSettled([
-            axios.post(`${API}/confidence-risk`,    base).then(r => setRiskData(r.data)).catch(() => {}),
-            axios.post(`${API}/soil-test-advice`,   { soil_type: soilType, crop }).then(r => setSoilTestData(r.data)).catch(() => {}),
-            axios.post(`${API}/soil-improvement`,   { crop, soil_type: soilType }).then(r => setImprovementData(r.data)).catch(() => {}),
-            axios.post(`${API}/feasibility-report`, { crop, soil_type: soilType, season, rainfall_level: rainfallLevel, humidity_level: humidityLevel }).then(r => setFeasibilityData(r.data)).catch(() => {}),
-            axios.post(`${API}/government-schemes`, { crop }).then(r => setSchemesData(r.data)).catch(() => {}),
-            axios.post(`${API}/growing-guide`,      { crop, season }).then(r => setGrowingData(r.data)).catch(() => {}),
-            axios.post(`${API}/labour-requirements`,{ crop, land_area_acres: 1, season }).then(r => setLabourData(r.data)).catch(() => {}),
-            axios.post(`${API}/organic-farming`,    { crop, soil_type: soilType }).then(r => setOrganicData(r.data)).catch(() => {}),
+            axios.post(`${API}/confidence-risk`,    base).then(r => setRiskData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/soil-test-advice`,   { soil_type: soilType, crop }).then(r => setSoilTestData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/soil-improvement`,   { crop, soil_type: soilType }).then(r => setImprovementData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/feasibility-report`, { crop, soil_type: soilType, season, rainfall_level: rainfallLevel, humidity_level: humidityLevel }).then(r => setFeasibilityData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/government-schemes`, { crop }).then(r => setSchemesData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/growing-guide`,      { crop, season }).then(r => setGrowingData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/labour-requirements`,{ crop, land_area_acres: 1, season }).then(r => setLabourData(r.data.data)).catch(() => {}),
+            axios.post(`${API}/organic-farming`,    { crop, soil_type: soilType }).then(r => setOrganicData(r.data.data)).catch(() => {}),
         ]);
     };
 
@@ -87,11 +161,16 @@ const Recommend = () => {
             return;
         }
         setLoading(true);
+        setShowProcessing(true);
+        setShowResults(false);
         setError('');
         setResult(null);
         setRiskData(null); setSoilTestData(null); setImprovementData(null);
         setFeasibilityData(null); setSchemesData(null);
         setGrowingData(null); setLabourData(null); setOrganicData(null);
+
+        const overlayStart = Date.now();
+        const MIN_OVERLAY_MS = 2500; // minimum time to show the overlay
 
         try {
             const res = await axios.post(`${API}/recommend`, {
@@ -100,90 +179,166 @@ const Recommend = () => {
                 manual_soil_type: manualSoil,
             }, { timeout: 30000 });
 
-            const data = res.data;
+            const data = res.data.data;
             setResult(data);
             const crop       = data.crop || data.recommended_crops?.[0]?.crop;
             const confidence = data.confidence ?? data.recommended_crops?.[0]?.confidence ?? 0.8;
             const soilType   = data.soil_type || manualSoil;
             const weather    = data.weather || locationData.weatherData || {};
             toast.success(`🌾 Recommended: ${crop}!`);
+
+            // Wait for the overlay to show at least MIN_OVERLAY_MS
+            const elapsed = Date.now() - overlayStart;
+            const remaining = Math.max(0, MIN_OVERLAY_MS - elapsed);
+            await new Promise(resolve => setTimeout(resolve, remaining));
+
+            // Dismiss overlay and reveal results
+            setLoading(false);
+            setShowProcessing(false);
+            setShowResults(true);
+
+            // Scroll to results after a brief render delay
+            setTimeout(() => {
+                resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+
             await fetchAdditional(crop, confidence, soilType, weather);
         } catch (err) {
             const msg = err.response?.data?.error || err.message || 'Recommendation failed.';
             setError(msg);
-            toast.error('Recommendation failed. Check all servers are running.');
-        } finally {
             setLoading(false);
+            setShowProcessing(false);
+            setShowResults(false);
+            toast.error('Recommendation failed. Check all servers are running.');
         }
     };
 
-    const crop       = result?.crop || result?.recommended_crops?.[0]?.crop;
-    const confidence = result?.confidence ?? result?.recommended_crops?.[0]?.confidence ?? 0;
-    const soilType   = result?.soil_type || manualSoil;
-    const weather    = result?.weather || locationData?.weatherData || {};
-    const rainfallLevel = toRainfallLevel(weather.rainfall ?? 140);
-    const season     = result?.season || weather.season || 'Monsoon';
+    // Callback when AI overlay finishes its animation (backup path)
+    const handleProcessingComplete = useCallback(() => {
+        setShowProcessing(false);
+        if (result) {
+            setShowResults(true);
+            setTimeout(() => {
+                resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+    }, [result]);
+
+    // Demo mode: auto-fill and auto-submit
+    useEffect(() => {
+        const isDemo = searchParams.get('demo') === 'true';
+        if (isDemo && !locationData) {
+            // Auto-fill with Hyderabad coordinates
+            const demoWeather = {
+                temperature: 32,
+                humidity: 65,
+                rainfall: 145,
+                season: 'Monsoon',
+                climate_zone: 'Tropical Wet-Dry',
+                location: { city: 'Hyderabad' }
+            };
+            const demoLocation = {
+                lat: 17.385,
+                lon: 78.4867,
+                weatherData: demoWeather,
+                mode: 'demo'
+            };
+            setLocationData(demoLocation);
+            setManualSoil('Loamy');
+            // Auto-trigger after a brief delay
+            setTimeout(() => {
+                // We need to trigger handleSubmit, but locationData might not be set yet
+                // So we'll use a flag
+            }, 500);
+        }
+    }, [searchParams]);
+
+    // Auto-submit for demo mode once locationData is set
+    const demoTriggered = useRef(false);
+    useEffect(() => {
+        const isDemo = searchParams.get('demo') === 'true';
+        if (isDemo && locationData && !demoTriggered.current && !result) {
+            demoTriggered.current = true;
+            setTimeout(() => handleSubmit(), 800);
+        }
+    }, [locationData, searchParams]);
 
     return (
         <motion.div
-            className="bg-brand-cream min-h-screen pt-24 pb-20"
+            className="bg-brand-bg min-h-screen pt-32 pb-20"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.35, ease: 'easeInOut' }}
         >
-            <div className="max-w-4xl mx-auto px-4 md:px-8">
+            {/* AI Processing Overlay */}
+            <AIProcessingOverlay
+                isActive={showProcessing}
+                onComplete={handleProcessingComplete}
+            />
+
+            <div className="max-w-4xl mx-auto px-6 md:px-8">
 
                 {/* Page heading */}
-                <div className="text-center mb-10">
-                    <T as="h1" className="text-4xl md:text-5xl font-black text-brand-dark tracking-tight mb-2">
+                <div className="text-center mb-12 relative">
+                    <div className="flex items-center justify-center gap-3 mb-6">
+                        <span className="badge-ai">
+                            <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse" />
+                            <T>AI POWERED</T>
+                        </span>
+                        <span className="badge-verified">
+                            <CheckCircle size={12} />
+                            <T>REAL-TIME DATA</T>
+                        </span>
+                    </div>
+                    <T as="h1" className="text-5xl md:text-6xl font-black text-brand-text-primary tracking-tight mb-4 uppercase">
                         PRECISION ANALYSIS
                     </T>
-                    <T as="p" className="text-brand-olive font-medium text-sm">
-                        Find the optimal crop for your field through AI-powered environmental mapping.
+                    <T as="p" className="text-brand-text-secondary font-medium text-base max-w-2xl mx-auto">
+                        Find the optimal crop for your field through AI-powered environmental mapping and soil data analysis.
                     </T>
                 </div>
 
                 {/* Input grid — Location + Soil */}
-                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div ref={locationRef} className="grid md:grid-cols-2 gap-6 mb-8">
                     {/* Step 1: Location (GPS or manual) */}
                     <LocationSelector onLocationSelect={handleLocationSelect} loading={loading} />
 
                     {/* Step 2: Soil */}
-                    <div className="bg-white rounded-3xl p-6 border border-brand-green/10 shadow-lg">
-                        <h3 className="text-lg font-black text-brand-dark uppercase mb-4 flex items-center gap-2">
-                            <Sprout size={20} className="text-brand-green" />
+                    <div ref={soilRef} className="premium-card">
+                        <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <Sprout size={18} className="text-brand-primary" />
                             <T>Step 2 — Soil Type</T>
                         </h3>
 
                         {/* Soil Selection Dropdown */}
-                        <div className="relative mb-5">
+                        <div className="relative mb-6">
                             <select
                                 value={manualSoil}
                                 onChange={e => setManualSoil(e.target.value)}
-                                className="w-full appearance-none px-4 py-3.5 rounded-xl border border-gray-200 bg-white font-bold text-brand-dark outline-none focus:border-brand-green transition-all"
+                                className="w-full appearance-none px-5 py-4 rounded-2xl border border-slate-200 bg-white font-bold text-xs uppercase tracking-widest text-brand-text-primary outline-none focus:border-brand-primary transition-all shadow-sm"
                             >
-                                {SOIL_TYPES.map(s => <option key={s} value={s}>{s} Soil</option>)}
+                                {SOIL_TYPES.map(s => <option key={s} value={s}>{t(s.toLowerCase() + 'Soil')}</option>)}
                             </select>
-                            <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                            <ChevronDown size={14} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                         </div>
 
                         {/* Weather snapshot (if location selected) */}
                         {locationData?.weatherData && (
-                            <div className="mt-5 p-4 bg-gray-50 border border-gray-100 rounded-2xl">
-                                <T as="p" className="text-[10px] uppercase font-black text-brand-dark/40 tracking-widest mb-3">Weather Preview</T>
-                                <div className="grid grid-cols-3 gap-3 text-center">
-                                    <div>
-                                        <p className="text-2xl font-black text-brand-dark">{Math.round(locationData.weatherData.temperature)}°</p>
-                                        <T as="p" className="text-[10px] font-bold text-brand-olive uppercase">Temp</T>
+                            <div className="mt-6 p-5 bg-slate-50 border border-slate-100 rounded-2xl">
+                                <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Environment Snapshot</T>
+                                <div className="grid grid-cols-3 gap-4 text-center">
+                                    <div className="space-y-1">
+                                        <p className="text-xl font-black text-brand-text-primary leading-none">{Math.round(locationData.weatherData.temperature)}°</p>
+                                        <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Temp</T>
                                     </div>
-                                    <div>
-                                        <p className="text-2xl font-black text-brand-dark">{locationData.weatherData.humidity}%</p>
-                                        <T as="p" className="text-[10px] font-bold text-brand-olive uppercase">Humidity</T>
+                                    <div className="space-y-1">
+                                        <p className="text-xl font-black text-brand-text-primary leading-none">{locationData.weatherData.humidity}%</p>
+                                        <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Humidity</T>
                                     </div>
-                                    <div>
-                                        <p className="text-2xl font-black text-brand-dark">{locationData.weatherData.rainfall}</p>
-                                        <T as="p" className="text-[10px] font-bold text-brand-olive uppercase">mm Rain</T>
+                                    <div className="space-y-1">
+                                        <p className="text-xl font-black text-brand-text-primary leading-none">{locationData.weatherData.rainfall}</p>
+                                        <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">mm Rain</T>
                                     </div>
                                 </div>
                             </div>
@@ -193,17 +348,52 @@ const Recommend = () => {
 
                 {/* Submit button */}
                 <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.01, boxShadow: '0 0 30px rgba(31, 122, 99, 0.15)' }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSubmit}
                     disabled={loading || !locationData}
-                    className="w-full py-5 bg-brand-dark text-white font-black text-base uppercase tracking-widest rounded-2xl flex items-center justify-center gap-3 shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4"
+                    data-submit-btn
+                    className="w-full py-5 bg-brand-text-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4 group"
                 >
                     {loading
-                        ? <><Loader2 className="animate-spin" size={20} /><T>Analyzing your field…</T></>
-                        : <><Sprout size={20} /><T>Get Best Crop Match</T></>
+                        ? <><Loader2 className="animate-spin" size={18} /><T>Processing…</T></>
+                        : <><Sprout size={18} className="transition-transform group-hover:scale-110" /><T>Get Best Crop Match</T></>
                     }
                 </motion.button>
+
+                {/* Demo Presets */}
+                {!result && !loading && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="mb-4"
+                    >
+                        <p className="text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Quick Demo Presets</p>
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {DEMO_PRESETS.map((preset) => {
+                                const Icon = preset.icon;
+                                return (
+                                    <button
+                                        key={preset.id}
+                                        onClick={() => {
+                                            setLocationData({ lat: preset.lat, lon: preset.lon, weatherData: preset.weather, mode: 'demo' });
+                                            setManualSoil(preset.soil);
+                                            toast(`🎬 ${preset.label} — ${preset.weather.location.city}`, { icon: '✨' });
+                                            setTimeout(() => {
+                                                document.querySelector('[data-submit-btn]')?.click();
+                                            }, 300);
+                                        }}
+                                        className={`flex items-center gap-2 px-5 py-3 text-[10px] font-black uppercase tracking-widest rounded-2xl border transition-all duration-300 ${preset.color}`}
+                                    >
+                                        <Icon size={14} className={preset.iconColor} />
+                                        {preset.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </motion.div>
+                )}
 
                 {error && (
                     <div className="p-4 bg-red-50 border border-red-100 text-red-700 text-sm font-bold rounded-2xl mb-8">
@@ -214,15 +404,15 @@ const Recommend = () => {
             </div>
 
             {/* Results Container - Wide Layout */}
-            <div className="w-full max-w-[100rem] mx-auto px-4 md:px-8 xl:px-12">
+            <div ref={resultsRef} className="w-full max-w-[100rem] mx-auto px-4 md:px-8 xl:px-12">
                 {/* Results */}
                 <AnimatePresence>
-                    {result && crop && (
+                    {result && crop && showResults && (
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.5 }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
                         >
                             <CropRecommendationCard 
                                 crop={crop} 
@@ -230,6 +420,25 @@ const Recommend = () => {
                                 season={season} 
                                 result={result} 
                             />
+
+                            {/* Quick Action Buttons */}
+                            <QuickActions
+                                onRetry={handleSubmit}
+                                onScrollToLocation={() => locationRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                                onScrollToSoil={() => soilRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                                crop={crop}
+                                confidence={confidence}
+                                season={season}
+                                soilType={soilType}
+                                weather={weather}
+                                explanation={result?.explanation}
+                                mappedValues={result?.mapped_values}
+                            />
+
+                            {/* Crop Comparison Panel */}
+                            {result?.recommended_crops && result.recommended_crops.length > 1 && (
+                                <CropComparisonPanel crops={result.recommended_crops} />
+                            )}
 
                             {/* Dashboard Sidebar & Feature Panel */}
                             <div className="flex flex-col md:flex-row gap-6 md:gap-8 mt-8">
@@ -243,18 +452,21 @@ const Recommend = () => {
                                                 explanation={result.explanation}
                                                 inputs={{ soil_type: soilType, season }}
                                                 mapped_values={result.mapped_values}
+                                                onSave={handleSaveRecommendation}
                                             />
                                         </div>
                                     )}
-                                    {activeTab === 'risk' && <RiskAnalysisCard riskData={riskData} cropName={crop} />}
-                                    {activeTab === 'soil_test' && <SoilTestingCard soilTestData={soilTestData} soilType={soilType} />}
-                                    {activeTab === 'soil_improve' && <SoilImprovementCard improvementData={improvementData} />}
+                                    {activeTab === 'risk' && (riskData ? <RiskAnalysisCard riskData={riskData} cropName={crop} /> : <CardSkeleton />)}
+                                    {activeTab === 'soil_test' && (soilTestData ? <SoilTestingCard soilTestData={soilTestData} soilType={soilType} /> : <CardSkeleton />)}
+                                    {activeTab === 'soil_improve' && (improvementData ? <SoilImprovementCard improvementData={improvementData} /> : <CardSkeleton />)}
                                     {activeTab === 'revenue' && <RevenueCard crop={crop} rainfall={rainfallLevel} season={season} />}
-                                    {activeTab === 'feasibility' && <FeasibilityCard reportData={feasibilityData} cropName={crop} />}
-                                    {activeTab === 'schemes' && <GovernmentSchemesCard schemesData={schemesData} cropName={crop} />}
-                                    {activeTab === 'guide' && <GrowingGuideCard guideData={growingData} cropName={crop} />}
-                                    {activeTab === 'labour' && <LabourPlannerCard labourData={labourData} />}
-                                    {activeTab === 'organic' && <OrganicFarmingCard organicData={organicData} cropName={crop} />}
+                                    {activeTab === 'profit' && <ProfitEstimationCard crop={crop} confidence={confidence} />}
+                                    {activeTab === 'timeline' && <GrowingTimeline crop={crop} />}
+                                    {activeTab === 'feasibility' && (feasibilityData ? <FeasibilityCard reportData={feasibilityData} cropName={crop} /> : <CardSkeleton />)}
+                                    {activeTab === 'schemes' && (schemesData ? <GovernmentSchemesCard schemesData={schemesData} cropName={crop} /> : <CardSkeleton />)}
+                                    {activeTab === 'guide' && (growingData ? <GrowingGuideCard guideData={growingData} cropName={crop} /> : <CardSkeleton />)}
+                                    {activeTab === 'labour' && (labourData ? <LabourPlannerCard labourData={labourData} /> : <CardSkeleton />)}
+                                    {activeTab === 'organic' && (organicData ? <OrganicFarmingCard organicData={organicData} cropName={crop} /> : <CardSkeleton />)}
                                 </FeaturePanel>
                             </div>
                         </motion.div>

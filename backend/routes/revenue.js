@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { success, error: errorRes } = require('../utils/response');
 
 const baseYields = {
     'Rice': 2.5, 'Wheat': 2.0, 'Maize': 3.0, 'Millet': 1.2, 'Sugarcane': 35.0,
@@ -46,7 +47,7 @@ router.post('/revenue-prediction', (req, res) => {
         const net_profit = gross_revenue - input_cost;
         const profit_per_acre = net_profit / area;
 
-        res.json({
+        return success(res, {
             crop_used: normalizedCrop,
             estimated_yield: parseFloat(estimated_yield.toFixed(2)),
             gross_revenue: Math.round(gross_revenue),
@@ -70,8 +71,10 @@ router.post('/revenue-prediction', (req, res) => {
 
     } catch (err) {
         console.error('Error calculating revenue:', err.message);
-        res.status(500).json({ error: 'Revenue engine failed to calculate' });
+        return errorRes(res, 'Revenue calculation failure', 500, err.message);
     }
 });
+
+module.exports = router;
 
 module.exports = router;

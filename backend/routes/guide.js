@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const cropData = require('../utils/cropData');
 
 const guideData = {
     'Rice': {
-        total_duration: "120-150 Days",
+        total_duration: cropData['Rice'].total_duration,
         difficulty: "Medium",
         water_requirement: "Very High",
         best_season: "Kharif (Monsoon)",
@@ -114,9 +115,8 @@ const guideData = {
             }
         ]
     },
-    // Adding Wheat as a second complete example, others simplified for space but structure same
     'Wheat': {
-        total_duration: "110-130 Days",
+        total_duration: cropData['Wheat'].total_duration,
         difficulty: "Low",
         water_requirement: "Medium",
         best_season: "Rabi (Winter)",
@@ -129,38 +129,26 @@ const guideData = {
                 tools: ["Tractor"],
                 warning: "Rough soil causes poor germination."
             }
-            // ... (structure continues for all stages)
         ]
     }
 };
 
-// Simplified generic data for other crops to ensure all 10 are covered
-const genericSteps = [
-    "Prepare the field with organic matter.",
-    "Select high-quality certified seeds.",
-    "Maintain optimal spacing during sowing.",
-    "Monitor moisture levels regularly.",
-    "Apply NPK as per local soil health card.",
-    "Keep field weed-free during early growth.",
-    "Harvest at physiological maturity.",
-    "Dry thoroughly before air-tight storage."
-];
-
 const crops = ['Maize', 'Millet', 'Sugarcane', 'Cotton', 'Jute', 'Coffee', 'Coconut', 'Banana'];
 crops.forEach(c => {
     if (!guideData[c]) {
+        const info = cropData[c] || { total_duration: "100-140 Days", difficulty: "Medium", water_requirement: "Moderate", best_season: "Varies" };
         guideData[c] = {
-            total_duration: "100-140 Days",
-            difficulty: "Medium",
-            water_requirement: "Moderate",
-            best_season: "Varies",
+            total_duration: info.total_duration,
+            difficulty: info.difficulty,
+            water_requirement: info.water_requirement,
+            best_season: info.best_season,
             stages: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
                 num: i,
                 name: ["Preparation", "Seed Selection", "Sowing", "Irrigation", "Nutrients", "Pest Management", "Harvesting", "Storage"][i - 1],
                 emoji: ["🚜", "🧪", "🌱", "💧", "🧪", "🛡️", "🌾", "🏠"][i - 1],
                 duration: "Varies",
                 desc: `Critical stage for ${c} production.`,
-                steps: genericSteps.slice(i - 1, i + 2).concat(["Follow regional biological cycles."]),
+                steps: ["Standard cultivation step.", "Monitor progress.", "Apply treatments."],
                 pro_tip: "Consult local KVK for area-specific seed varieties.",
                 tools: ["Standard Farm Tools"],
                 warning: "Avoid over-irrigation during seedling stage."

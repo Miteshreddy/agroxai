@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Sprout } from 'lucide-react';
 import T from '../components/T';
 
 const Register = () => {
@@ -38,19 +38,23 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen bg-brand-cream flex flex-col items-center justify-center p-6">
-            <div className="text-center mb-10">
-                <span className="text-6xl mb-4 block">🌱</span>
-                <h1 className="text-5xl font-black text-brand-dark uppercase tracking-tighter mb-2">CropVisionAI</h1>
-                <T as="p" className="text-brand-olive font-medium">Create your account</T>
+        <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center p-6 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,122,99,0.05),transparent)] pointer-events-none" />
+            
+            <div className="text-center mb-12 relative z-10">
+                <div className="w-16 h-16 bg-brand-primary rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 shadow-premium">
+                    <Sprout className="text-white" size={32} />
+                </div>
+                <h1 className="text-4xl font-black text-brand-text-primary uppercase tracking-tighter mb-2">Agro<span className="text-brand-primary italic">XAI</span></h1>
+                <T as="p" className="text-brand-text-secondary font-medium tracking-wide">Join the future of sustainable farming</T>
             </div>
 
-            <div className="glass-card w-full max-w-[400px] shadow-2xl">
-                <T as="h2" className="text-2xl font-black text-brand-dark mb-8 uppercase tracking-tight">Sign Up</T>
+            <div className="glass-card w-full max-w-[420px] !p-10 relative z-10">
+                <T as="h2" className="text-2xl font-black text-brand-text-primary mb-8 uppercase tracking-tight">Sign Up</T>
 
                 <form onSubmit={handleRegister} className="space-y-6">
                     <div className="space-y-2">
-                        <T as="label" className="text-xs font-black text-brand-dark/40 uppercase tracking-widest">Username</T>
+                        <T as="label" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</T>
                         <input
                             type="text"
                             className="input-field"
@@ -58,11 +62,11 @@ const Register = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
-                        <T as="p" className="text-[10px] text-brand-olive/60 font-bold uppercase tracking-tight">3 to 20 characters</T>
+                        <T as="p" className="text-[9px] text-slate-300 font-black uppercase tracking-tight ml-1">3 to 20 characters</T>
                     </div>
 
                     <div className="space-y-2">
-                        <T as="label" className="text-xs font-black text-brand-dark/40 uppercase tracking-widest">Password</T>
+                        <T as="label" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</T>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -73,16 +77,16 @@ const Register = () => {
                             />
                             <button
                                 type="button"
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-olive hover:text-brand-green transition-colors"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-primary transition-colors"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <T as="label" className="text-xs font-black text-brand-dark/40 uppercase tracking-widest">Confirm Password</T>
+                        <T as="label" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Confirm Password</T>
                         <input
                             type="password"
                             className="input-field"
@@ -93,28 +97,28 @@ const Register = () => {
                     </div>
 
                     {error && (
-                        <div className="bg-red-50 text-red-500 p-4 rounded-xl text-xs font-bold border border-red-100 animate-shake">
-                            {error}
+                        <div className="bg-red-50 text-red-500 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-100 animate-shake text-center">
+                            ⚠️ {error}
                         </div>
                     )}
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full btn-primary py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-brand-text-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-brand-dark transition-all shadow-premium active:scale-[0.98] disabled:opacity-70"
                     >
                         {loading ? (
-                            <><Loader2 size={20} className="animate-spin" /><T>Please wait...</T></>
+                            <><Loader2 size={16} className="animate-spin" /><T>Creating Account...</T></>
                         ) : (
-                            <T>Create Account</T>
+                            <><T>Create Account</T></>
                         )}
                     </button>
                 </form>
 
-                <div className="mt-8 text-center">
-                    <p className="text-sm text-brand-olive font-medium">
+                <div className="mt-10 text-center border-t border-slate-100 pt-8">
+                    <p className="text-xs text-brand-text-secondary font-bold">
                         <T>Already have an account?</T>{' '}
-                        <Link to="/login" className="text-brand-green font-black hover:underline underline-offset-4 transition-all">
+                        <Link to="/login" className="text-brand-primary font-black hover:underline underline-offset-4 transition-all">
                             <T>Login</T>
                         </Link>
                     </p>

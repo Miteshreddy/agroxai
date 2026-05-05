@@ -6,6 +6,11 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import T from '../components/T';
+import { CardSkeleton } from '../components/Skeleton';
+
+const apiClient = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || '/api',
+});
 
 const getSoilAdvice = (values) => {
     if (!values) return "Optimal";
@@ -28,7 +33,7 @@ const History = () => {
 
     const fetchHistory = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/history`);
+            const response = await apiClient.get('/history');
             setHistory(response.data);
             setLoading(false);
         } catch (error) {
@@ -39,7 +44,7 @@ const History = () => {
 
     const deleteItem = async (id) => {
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/history/${id}`);
+            await axios.delete(`/api/history/${id}`);
             setHistory(history.filter(item => item._id !== id));
             toast.success('Record removed');
         } catch (error) {
@@ -53,103 +58,111 @@ const History = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="bg-brand-cream min-h-screen pt-32 pb-20 px-6"
+            className="bg-brand-bg min-h-screen pt-32 pb-20 px-6"
         >
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <T as="h1" className="text-5xl font-black text-brand-dark mb-4 uppercase tracking-tighter">Record History</T>
-                        <T as="p" className="text-brand-olive font-medium">Tracking every analytical decision made for your farm infrastructure.</T>
+                        <T as="h1" className="text-5xl font-black text-brand-text-primary mb-4 uppercase tracking-tight">Record History</T>
+                        <T as="p" className="text-brand-text-secondary font-medium">Tracking every analytical decision made for your farm infrastructure.</T>
                     </motion.div>
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="bg-white px-6 py-4 rounded-3xl border border-brand-green/5 shadow-xl flex items-center gap-4"
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-white px-8 py-5 rounded-[2rem] border border-slate-100 shadow-premium flex items-center gap-6"
                     >
                         <div className="text-right">
-                            <T as="p" className="text-[10px] uppercase font-black text-brand-olive tracking-widest">Total Analyses</T>
-                            <p className="text-2xl font-black text-brand-green leading-none">
+                            <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary tracking-widest opacity-60">Total Analyses</T>
+                            <p className="text-3xl font-black text-brand-primary leading-none">
                                 <CountUp end={history.length} duration={1.5} />
                             </p>
                         </div>
-                        <div className="w-10 h-10 bg-brand-green/10 rounded-full flex items-center justify-center text-brand-green">
-                            <ShieldCheck size={20} />
+                        <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary shadow-sm">
+                            <ShieldCheck size={24} />
                         </div>
                     </motion.div>
                 </div>
 
-                {history.length > 0 ? (
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[...Array(6)].map((_, i) => (
+                            <CardSkeleton key={i} />
+                        ))}
+                    </div>
+                ) : history.length > 0 ? (
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.15 }}
-                        transition={{ duration: 0.45 }}
-                        className="glass-card !p-0 overflow-hidden bg-white border-brand-green/10 shadow-2xl"
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="glass-card !p-0 overflow-hidden bg-white border border-slate-100"
                     >
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
-                                <thead className="bg-brand-green/5 border-b border-brand-green/10">
+                                <thead className="bg-slate-50/50 border-b border-slate-100">
                                     <tr>
-                                        <T as="th" className="px-8 py-6 text-xs font-black uppercase text-brand-olive tracking-[0.2em]">Prediction (Crop & Soil)</T>
-                                        <T as="th" className="px-8 py-6 text-xs font-black uppercase text-brand-olive tracking-[0.2em]">Confidence</T>
-                                        <T as="th" className="px-8 py-6 text-xs font-black uppercase text-brand-olive tracking-[0.2em]">Condition</T>
-                                        <T as="th" className="px-8 py-6 text-xs font-black uppercase text-brand-olive tracking-[0.2em]">Soil Type</T>
-                                        <T as="th" className="px-8 py-6 text-xs font-black uppercase text-brand-olive tracking-[0.2em]">Date</T>
-                                        <T as="th" className="px-8 py-6 text-xs font-black uppercase text-brand-olive tracking-[0.2em]">Action</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Prediction (Crop & Soil)</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Confidence</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Condition</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Growth Period</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Soil Type</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Date</T>
+                                        <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Action</T>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {history.map((record, idx) => (
                                         <motion.tr
-                                            key={record._id}
+                                            key={record._id || idx}
                                             initial={{ opacity: 0, y: 20 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.45, delay: idx * 0.07 }}
-                                            className="border-b border-brand-green/5 hover:bg-brand-green/[0.02] transition-colors group"
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.5, delay: idx * 0.05 }}
+                                            className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group"
                                         >
-                                            <td className="px-8 py-6">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green group-hover:scale-110 transition-transform">
-                                                        <Sprout size={20} />
+                                            <td className="px-8 py-7">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform shadow-sm">
+                                                        <Sprout size={24} />
                                                     </div>
                                                     <div>
-                                                        <span className="font-black text-brand-dark uppercase italic tracking-tighter text-lg block">{record.result.crop}</span>
-                                                        <p className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">{getSoilAdvice(record.result.mapped_values)}</p>
+                                                        <span className="font-black text-brand-text-primary uppercase italic tracking-tighter text-xl block leading-tight">{record.result?.crop || 'Unknown'}</span>
+                                                        <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.1em] opacity-80">{getSoilAdvice(record.result?.mapped_values)}</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-8 py-6">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-24 h-2 bg-brand-green/10 rounded-full overflow-hidden">
+                                            <td className="px-8 py-7">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
                                                         <motion.div
                                                             initial={{ width: 0 }}
-                                                            whileInView={{ width: `${record.result.confidence * 100}%` }}
-                                                            transition={{ duration: 1, ease: "easeOut", delay: 0.2 + (idx * 0.07) }}
-                                                            className="h-full bg-brand-green"
+                                                            animate={{ width: `${(record.result?.confidence || 0) * 100}%` }}
+                                                            transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 + (idx * 0.05) }}
+                                                            className="h-full bg-brand-primary"
                                                         />
                                                     </div>
-                                                    <span className="text-xs font-bold text-brand-olive">{(record.result.confidence * 100).toFixed(0)}%</span>
+                                                    <span className="text-xs font-black text-brand-text-primary">{((record.result?.confidence || 0) * 100).toFixed(0)}%</span>
                                                 </div>
                                             </td>
-                                            <td className="px-8 py-6">
-                                                <p className="text-brand-dark font-bold text-sm">{record.inputs.season}</p>
-                                                <T as="p" className="text-[10px] uppercase font-black text-brand-olive opacity-60 tracking-widest">{record.inputs.temperature}°C Engine Read</T>
+                                            <td className="px-8 py-7">
+                                                <p className="text-brand-text-primary font-bold text-sm mb-0.5">{record.inputs.season}</p>
+                                                <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary opacity-40 tracking-widest">{record.inputs.temperature}°C Engine Read</T>
                                             </td>
-                                            <td className="px-8 py-6 text-brand-dark font-bold text-sm">{record.inputs.soil_type}</td>
-                                            <td className="px-8 py-6 text-brand-olive font-bold text-sm">{new Date(record.createdAt).toLocaleDateString()}</td>
-                                            <td className="px-8 py-6">
+                                            <td className="px-8 py-7">
+                                                <span className="px-3 py-1 bg-brand-primary/10 text-brand-primary rounded-lg text-xs font-black uppercase italic">
+                                                    {record.result?.total_duration || 'N/A'}
+                                                </span>
+                                            </td>
+                                            <td className="px-8 py-7 text-brand-text-primary font-bold text-sm tracking-wide">{record.inputs.soil_type}</td>
+                                            <td className="px-8 py-7 text-brand-text-secondary font-bold text-sm">{new Date(record.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-8 py-7 text-right">
                                                 <motion.button
-                                                    whileHover={{ scale: 1.15 }}
-                                                    whileTap={{ scale: 0.9 }}
+                                                    whileHover={{ scale: 1.1, backgroundColor: '#EF4444', color: '#FFFFFF' }}
+                                                    whileTap={{ scale: 0.95 }}
                                                     onClick={() => deleteItem(record._id)}
-                                                    className="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                                                    className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center transition-all shadow-sm border border-slate-100"
                                                 >
                                                     <Trash2 size={18} />
                                                 </motion.button>
@@ -166,11 +179,11 @@ const History = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         className="text-center py-40 glass-card bg-white"
                     >
-                        <div className="w-24 h-24 bg-brand-green/10 rounded-[2rem] mx-auto flex items-center justify-center text-brand-green mb-8">
+                        <div className="w-24 h-24 bg-brand-primary/10 rounded-[2.5rem] mx-auto flex items-center justify-center text-brand-primary mb-10 shadow-premium">
                             <HistoryIcon size={48} />
                         </div>
-                        <T as="h2" className="text-3xl font-black text-brand-dark mb-4">No analysis data found</T>
-                        <T as="p" className="text-brand-olive font-medium mb-10 max-w-sm mx-auto">Start a new recommendation to seed your analytical history.</T>
+                        <T as="h2" className="text-4xl font-black text-brand-text-primary mb-4 uppercase tracking-tight">No analysis data found</T>
+                        <T as="p" className="text-brand-text-secondary font-medium mb-12 max-w-sm mx-auto">Start a new recommendation to seed your analytical history with precision data.</T>
                         <motion.div
                             whileHover={{ scale: 1.04 }}
                             whileTap={{ scale: 0.96 }}

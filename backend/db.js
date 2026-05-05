@@ -1,14 +1,14 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const MONGO_URI = process.env.MONGO_URI;
+// Use env var or fallback to localhost
+const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/cropdb';
 
-if (!MONGO_URI) {
-    throw new Error("MONGO_URI not set");
-}
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB Atlas connected"))
-    .catch(err => console.error("MongoDB connection error:", err));
+mongoose.connect(mongoUri)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        // Continue without DB – the app will still run but DB ops will fail gracefully
+    });
 
 module.exports = mongoose;

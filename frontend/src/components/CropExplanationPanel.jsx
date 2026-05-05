@@ -18,7 +18,7 @@ const getSoilAdviceDetail = (values) => {
     return recs.join(" ");
 };
 
-const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_values }) => {
+const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_values, onSave }) => {
     const chartData = useMemo(() => {
         return Object.entries(explanation)
             .map(([key, value]) => ({
@@ -69,7 +69,7 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="glass-card bg-brand-dark p-8 rounded-[2rem] border-brand-green/20 text-white relative overflow-hidden"
+                className="bg-brand-dark p-8 rounded-[2rem] border border-brand-green/20 text-white relative overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-500"
             >
                 <div className="absolute top-0 right-0 p-8 opacity-10">
                     <Sparkles size={120} />
@@ -162,7 +162,10 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                 >
                     <TD value={`Your field is scientifically prepared for this match. The ${inputs.soil_type} soil provides the perfect base for high-yield seeding.`} />
                 </motion.p>
-                <button className="btn-primary group">
+                <button 
+                    onClick={() => onSave && onSave()}
+                    className="btn-primary group"
+                >
                     <T>Save Recommendation</T> <Target size={18} className="ml-2 transition-transform group-hover:scale-125" />
                 </button>
             </motion.div>

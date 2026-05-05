@@ -18,14 +18,14 @@ const RevenueCard = ({ crop, rainfall, season }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/revenue-prediction`, {
+            const response = await axios.post('/api/revenue-prediction', {
                 crop,
                 rainfall_level: rainfall,
                 season,
                 land_area_acres: landArea,
                 soil_quality: soilQuality
             });
-            setPrediction(response.data);
+            setPrediction(response.data.data);
             toast.success(t('Revenue analysis complete!') || 'Revenue analysis complete!');
         } catch (error) {
             toast.error(t('Prediction failed. Ensure backend is running.') || 'Prediction failed. Ensure backend is running.');

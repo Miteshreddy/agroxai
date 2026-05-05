@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { success, error: errorRes } = require('../utils/response');
 
+// ... data remains same ...
 const cropLabourData = {
     'Rice': {
         labour_days_per_acre: 45,
@@ -158,7 +160,6 @@ router.post('/labour-requirements', (req, res) => {
         const { crop, land_area_acres, season } = req.body;
         const area = parseFloat(land_area_acres) || 1;
 
-        // Normalize crop name
         const normalizedCrop = Object.keys(cropLabourData).find(
             k => k.toLowerCase() === crop?.toLowerCase()
         ) || 'Rice';
@@ -167,7 +168,7 @@ router.post('/labour-requirements', (req, res) => {
         const totalLabourDays = Math.round(data.labour_days_per_acre * area);
         const totalLabourCost = Math.round(totalLabourDays * data.daily_wage_rate);
 
-        const response = {
+        return success(res, {
             crop_name: normalizedCrop,
             land_area: area,
             total_labour_days: totalLabourDays,
@@ -176,17 +177,17 @@ router.post('/labour-requirements', (req, res) => {
             peak_labour_periods: data.peak_months,
             labour_phases: data.phases.map(p => ({
                 ...p,
-                cost_for_area: Math.round((totalLabourCost / 4)) // Simplification: split cost equally for phases for estimation
+                cost_for_area: Math.round((totalLabourCost / 4)) 
             })),
             machinery_options: data.machinery_options,
             booking_tip: "Book labour at least 15 days before peak months. Group with neighboring farms to negotiate better daily rates or machinery rentals."
-        };
-
-        res.json(response);
+        });
     } catch (err) {
         console.error('Error calculating labour requirements:', err.message);
-        res.status(500).json({ error: 'Labour planning engine failed' });
+        return errorRes(res, 'Labour planning engine failed', 500, err.message);
     }
 });
+
+module.exports = router;
 
 module.exports = router;

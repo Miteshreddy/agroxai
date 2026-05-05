@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const Recommendation = require('../models/Recommendation');
-require('dotenv').config();
-
-const flaskUrl = process.env.FLASK_URL || 'http://localhost:5001';
+const { success, error: errorRes } = require('../utils/response');
+const cropData = require('../utils/cropData');
 
 // POST /api/recommend
 router.post('/recommend', async (req, res) => {
@@ -12,31 +11,38 @@ router.post('/recommend', async (req, res) => {
         const { location, soil_mode = 'manual', manual_soil_type = 'Loamy' } = req.body;
 
         if (!location) {
-            return res.status(400).json({ error: 'Location is required' });
+            return errorRes(res, 'Location is required', 400);
         }
 
-        const PORT = process.env.PORT || 5005;
-        const baseUrl = `http://localhost:${PORT}/api`;
+        // Use process.env for URLs or derive from request host
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const selfUrl = `${protocol}://${host}/api`;
         const flaskUrlLocal = process.env.FLASK_URL || 'http://localhost:5001';
 
-        // Step 1: Get coordinates (handle both lat/lon and latitude/longitude naming)
+        // Step 1: Get coordinates
         let lat = location.lat || location.latitude;
         let lon = location.lon || location.longitude;
+        
         if (!lat || !lon) {
             const { state, district, village } = location;
             if (!state && !district) {
-                return res.status(400).json({ error: 'State or district required for manual location' });
+                return errorRes(res, 'State or district required for manual location', 400);
             }
-            const geoRes = await axios.get(`${baseUrl}/geocode`, { params: { state, district, village } });
+            const geoRes = await axios.get(`${selfUrl}/geocode`, { params: { state, district, village } });
             lat = geoRes.data.latitude;
             lon = geoRes.data.longitude;
         }
 
+        if (!lat || !lon) {
+            return errorRes(res, 'Could not resolve location coordinates', 400);
+        }
+
         // Step 2: Get weather
-        const weatherRes = await axios.get(`${baseUrl}/weather`, { params: { lat, lon } });
+        const weatherRes = await axios.get(`${selfUrl}/weather`, { params: { lat, lon } });
         const weather = weatherRes.data;
 
-        // Step 3: Derive descriptive levels from numeric weather
+        // Step 3: Derive descriptive levels
         const rainfall_level = weather.rainfall < 70 ? 'Low' : weather.rainfall < 170 ? 'Medium' : 'High';
         const humidity_level = weather.humidity < 35 ? 'Low' : weather.humidity < 75 ? 'Medium' : 'High';
 
@@ -44,12 +50,12 @@ router.post('/recommend', async (req, res) => {
         let soil_type = manual_soil_type;
         let soil_info = { soil_type };
         if (soil_mode === 'auto') {
-            const soilRes = await axios.get(`${baseUrl}/soil`, { params: { lat, lon } });
+            const soilRes = await axios.get(`${selfUrl}/soil`, { params: { lat, lon } });
             soil_type = soilRes.data.soil_type;
             soil_info = soilRes.data;
         }
 
-        // Step 5: Prepare farmer inputs for soil_mapper
+        // Step 5: Prepare farmer inputs
         const farmer_inputs = {
             temperature: weather.temperature,
             season: weather.season,
@@ -58,27 +64,13 @@ router.post('/recommend', async (req, res) => {
             humidity_level
         };
 
-        // Step 6: ML prediction (top-3)
-        let top_crops;
-        let mlResData;
-        try {
-            const mlApiUrl = process.env.ML_API_URL || process.env.FLASK_URL || 'http://localhost:10000/predict';
-            const mlRes = await axios.post(mlApiUrl, farmer_inputs, { timeout: 8000 });
-            mlResData = mlRes.data;
-            top_crops = mlResData.recommended_crops || [{ crop: mlResData.crop, confidence: mlResData.confidence }];
-        } catch (mlErr) {
-            console.error('ML Service Error:', mlErr.message);
-            // Part 6: Fallback safety - return a generic recommendation instead of failing
-            top_crops = [
-                { crop: 'Rice', confidence: 0.75 },
-                { crop: 'Maize', confidence: 0.65 },
-                { crop: 'Wheat', confidence: 0.55 }
-            ];
-        }
+        // Step 6: ML prediction
+        const mlRes = await axios.post(`${flaskUrlLocal}/predict`, farmer_inputs);
+        let top_crops = mlRes.data.recommended_crops || [{ crop: mlRes.data.crop, confidence: mlRes.data.confidence }];
 
         // Step 7: Climate filter
         const mlCrops = top_crops.map(c => c.crop);
-        const filterRes = await axios.post(`${baseUrl}/filter-crops`, {
+        const filterRes = await axios.post(`${selfUrl}/filter-crops`, {
             crops: mlCrops,
             temperature: weather.temperature,
             rainfall: weather.rainfall
@@ -86,12 +78,14 @@ router.post('/recommend', async (req, res) => {
         const filtered_indices = filterRes.data.filtered_crops.map(crop => mlCrops.indexOf(crop));
         const filtered_crops = filtered_indices.map(idx => top_crops[idx]).filter(Boolean).slice(0, 3);
 
-        // Top 1
         const top1 = filtered_crops[0] || top_crops[0];
+
+        // Enrich with crop metadata
+        const cropInfo = cropData[top1.crop] || { total_duration: 'Varies', difficulty: 'Medium' };
 
         // Save to Mongo
         const recommendation = new Recommendation({
-            userId: 'guest',
+            userId: req.user?.id || 'guest',
             inputs: req.body,
             workflow: {
                 location: { lat, lon },
@@ -99,35 +93,31 @@ router.post('/recommend', async (req, res) => {
                 soil_info,
                 farmer_inputs,
                 ml_top3: top_crops,
-                climate_zone: weather.climate_zone,
                 filtered_crops
             },
             result: {
                 crop: top1.crop,
                 confidence: top1.confidence,
-                recommended_crops: filtered_crops
+                recommended_crops: filtered_crops,
+                total_duration: cropInfo.total_duration
             }
         });
         await recommendation.save().catch(e => console.warn('Mongo save skipped:', e.message));
 
-        // Response
-        res.json({
+        return success(res, {
             crop: top1.crop,
             confidence: top1.confidence,
             recommended_crops: filtered_crops,
             weather,
             soil_type,
-            season: weather.season,
-            climate_zone: weather.climate_zone,
-            explanation: (typeof mlResData !== 'undefined') ? mlResData.explanation : { "Climate": 0.8, "Soil": 0.6 },
-            mapped_values: (typeof mlResData !== 'undefined') ? mlResData.mapped_values : farmer_inputs,
-            workflow_summary: farmer_inputs
+            explanation: mlRes.data.explanation,
+            workflow_summary: farmer_inputs,
+            total_duration: cropInfo.total_duration
         });
     } catch (err) {
         console.error('Error in /recommend:', err.message);
         const statusCode = err.response?.status || 500;
-        const errorMessage = err.response?.data?.error !== undefined ? err.response.data.error : err.message;
-        res.status(statusCode).json({ error: errorMessage, stack: err.stack, full: err.toString() });
+        return errorRes(res, 'Recommendation service temporarily unavailable', statusCode, err.message);
     }
 });
 

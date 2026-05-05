@@ -1,47 +1,97 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
+import CountUp from 'react-countup';
 import T from './T';
 
 const CropRecommendationCard = ({ crop, confidence, season, result }) => {
+    const [barWidth, setBarWidth] = useState(0);
+    const confPercent = (confidence * 100).toFixed(1);
+
+    // Animate the confidence bar on mount
+    useEffect(() => {
+        const timer = setTimeout(() => setBarWidth(confidence * 100), 200);
+        return () => clearTimeout(timer);
+    }, [confidence]);
+
     return (
-        <div className="bg-brand-dark rounded-[2.5rem] p-10 mb-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
-                <CheckCircle size={12} className="text-brand-green" />
-                <T as="span" className="text-[10px] font-black text-white uppercase tracking-widest">AGROKAI VERIFIED</T>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="bg-brand-text-primary rounded-[3rem] p-12 mb-10 relative overflow-hidden shadow-premium-hover border-t border-white/10"
+        >
+            <div className="absolute top-8 right-8 flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                <CheckCircle size={14} className="text-brand-primary" />
+                <T as="span" className="text-[10px] font-black text-white uppercase tracking-[0.2em]">AGROKAI VERIFIED</T>
             </div>
 
-            <T as="p" className="text-brand-green font-black text-[10px] uppercase tracking-[0.3em] mb-3">Recommended Crop</T>
+            <T as="p" className="text-brand-primary font-black text-[10px] uppercase tracking-[0.4em] mb-4">Recommended Crop</T>
             <h2 className="text-7xl md:text-9xl font-black text-white tracking-tighter italic leading-none mb-8 capitalize">
                 <T>{crop}</T>
             </h2>
 
-            <div className="flex flex-wrap gap-3">
-                <span className="flex items-center gap-2 bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full">
-                    <span className="w-1.5 h-1.5 bg-brand-green rounded-full" />
-                    <T>Confidence</T>: {(confidence * 100).toFixed(1)}%
+            {/* Animated Confidence Bar */}
+            <div className="mb-10">
+                <div className="flex items-end justify-between mb-3">
+                    <T as="span" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">AI Confidence Score</T>
+                    <span className="text-3xl font-black text-white tabular-nums">
+                        <CountUp end={parseFloat(confPercent)} decimals={1} duration={1.5} suffix="%" />
+                    </span>
+                </div>
+                <div className="w-full h-2.5 bg-white/10 rounded-full overflow-hidden">
+                    <div
+                        className="h-full rounded-full confidence-bar-fill"
+                        style={{
+                            width: `${barWidth}%`,
+                            background: barWidth > 80
+                                ? 'linear-gradient(90deg, #1F7A63, #10B981)'
+                                : barWidth > 50
+                                    ? 'linear-gradient(90deg, #F59E0B, #EAB308)'
+                                    : 'linear-gradient(90deg, #EF4444, #F97316)'
+                        }}
+                    />
+                </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+                <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                    <span className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" />
+                    <T>Confidence</T>: {confPercent}%
                 </span>
-                <span className="flex items-center gap-2 bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full">
-                    <CheckCircle size={12} className="text-brand-green" /> <T>Soil Advice Included</T>
+                <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                    <CheckCircle size={14} className="text-brand-primary" /> <T>Soil Advice Included</T>
                 </span>
-                <span className="flex items-center gap-2 bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full">
+                <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
                     🗓️ <T>{season}</T>
                 </span>
+                {result?.total_duration && (
+                    <span className="flex items-center gap-2.5 bg-brand-primary/20 border border-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                        ⏱️ <T>Growth Period</T>: {result.total_duration}
+                    </span>
+                )}
                 {result?.climate_zone && (
-                    <span className="flex items-center gap-2 bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full">
+                    <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
                         🌍 <T>{result.climate_zone}</T>
                     </span>
                 )}
             </div>
 
-            {/* Alternative crops */}
+            {/* Alternative crops with stagger animation */}
             {result?.recommended_crops && result.recommended_crops.length > 1 && (
-                <div className="mt-8 pt-6 border-t border-white/10">
-                    <T as="p" className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4">Alternative Crops</T>
-                    <div className="flex gap-3 flex-wrap">
+                <div className="mt-10 pt-8 border-t border-white/10">
+                    <T as="p" className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-6">Alternative Matches</T>
+                    <div className="flex gap-4 flex-wrap">
                         {result.recommended_crops.slice(1).map((c, i) => (
-                            <span key={i} className="px-4 py-1.5 bg-white/5 border border-white/10 text-white/70 text-xs font-bold rounded-full capitalize">
-                                #{i + 2} <T>{c.crop}</T> — {(c.confidence * 100).toFixed(0)}%
-                            </span>
+                            <motion.span
+                                key={i}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 + i * 0.15, duration: 0.4 }}
+                                className="px-5 py-2.5 bg-white/5 border border-white/10 text-white/70 text-xs font-bold rounded-xl capitalize hover:bg-white/10 transition-colors cursor-default"
+                            >
+                                <span className="text-brand-primary/60 mr-2">#{i + 2}</span> <T>{c.crop}</T> — {(c.confidence * 100).toFixed(0)}%
+                            </motion.span>
                         ))}
                     </div>
                 </div>
@@ -49,22 +99,27 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
 
             {/* Soil treatment snippet */}
             {result?.mapped_values && (
-                <div className="mt-8 bg-white/5 border border-white/10 rounded-3xl p-6 flex items-start gap-4">
-                    <div className="w-10 h-10 bg-brand-gold/20 rounded-xl flex items-center justify-center shrink-0">
-                        <span className="text-lg">🗺️</span>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="mt-10 bg-white/5 border border-white/10 rounded-[2rem] p-8 flex items-start gap-6 group hover:bg-white/[0.08] transition-all"
+                >
+                    <div className="w-12 h-12 bg-brand-primary/20 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="text-xl">🗺️</span>
                     </div>
                     <div>
-                        <T as="p" className="text-[10px] font-black text-brand-green uppercase tracking-widest mb-1">Soil Treatment Recommendation</T>
-                        <T as="p" className="text-sm text-white/70 font-medium">
+                        <T as="p" className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-2">Soil Treatment Recommendation</T>
+                        <T as="p" className="text-base text-white/70 font-medium leading-relaxed">
                             {result.mapped_values.N >= 50 && result.mapped_values.P >= 40 && result.mapped_values.K >= 40
-                                ? 'Soil nutrient balance is optimal for high yield.'
+                                ? 'Soil nutrient balance is optimal for high yield. No immediate supplement required.'
                                 : `Supplement soil — N: ${result.mapped_values.N}, P: ${result.mapped_values.P}, K: ${result.mapped_values.K}, pH: ${result.mapped_values.ph?.toFixed(1)}`
                             }
                         </T>
                     </div>
-                </div>
+                </motion.div>
             )}
-        </div>
+        </motion.div>
     );
 };
 

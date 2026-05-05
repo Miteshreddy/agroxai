@@ -184,7 +184,13 @@ crop-recommendation-system/
 ### Prerequisites
 - **Node.js** v18+ with npm
 - **Python** 3.9+
-- **MongoDB Atlas** account for database
+- **MongoDB** running locally on port `27017`
+
+### Step 1 — Start MongoDB
+```bash
+# From inside crop-recommendation-system/
+mongod --dbpath ./mongo_data --logpath ./mongod.log --fork
+```
 
 ### Step 2 — Set up and start the ML service
 ```bash
@@ -518,26 +524,6 @@ For deeper dives into each layer, see the `docs/` folder:
 | Node.js Backend (Express) | `5005` |
 | Flask ML Server | `5001` |
 | MongoDB | `27017` |
-
----
-
-## 12. Deployment (Render)
-
-To deploy the Python/Flask ML service on platforms like Render:
-
-1. **Upload** the `ml_model` directory (or the whole project and set `ml_model` as the Root Directory).
-2. **Build Command**: `pip install -r requirements.txt`
-3. **Start Command**: `gunicorn app:app`
-4. **Environment Variables**:
-   - Set `OPENAI_API_KEY` to your OpenAI key.
-   - (Optional) Set `PORT` to `10000` if required by your hosting provider.
-
-## 13. MongoDB Atlas Setup
-
-To connect your project to MongoDB Atlas for cloud database hosting:
-1. **Create a Cluster** on MongoDB Atlas.
-2. **Copy the Connection String** (format: `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>`).
-3. **Add `MONGO_URI`** to your Render environment variables (or local `backend/.env`) with your connection string.
 
 ---
 

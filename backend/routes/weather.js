@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const { success, error: errorRes } = require('../utils/response');
 
-// ============================================
-// CLIMATE CROP MAP
-// ============================================
+// ... constants and functions remain same ...
 const CLIMATE_CROP_MAP = {
     "tropical": ["rice", "banana", "coconut", "papaya", "coffee", "jute", "rubber", "tea", "mango", "pomegranate"],
     "semi_arid": ["cotton", "pigeonpeas", "maize", "sorghum", "millets", "groundnut", "sunflower", "soybean", "castor"],
@@ -12,7 +11,6 @@ const CLIMATE_CROP_MAP = {
     "arid": ["date palm", "cactus", "agave", "jojoba", "moongbean"]
 };
 
-// WMO Weather Code → Description
 const WMO_CODES = {
     0: 'clear sky', 1: 'mainly clear', 2: 'partly cloudy', 3: 'overcast',
     45: 'foggy', 48: 'depositing rime fog',
@@ -31,25 +29,21 @@ function determineClimateZone(temperature, rainfall) {
 }
 
 function getCurrentSeason() {
-    const month = new Date().getMonth() + 1; // 1-indexed
+    const month = new Date().getMonth() + 1; 
     if (month >= 3 && month <= 5) return 'Summer';
     if (month >= 6 && month <= 9) return 'Monsoon';
     if (month >= 10 && month <= 11) return 'Post-Monsoon';
     return 'Winter';
 }
 
-// ============================================
-// ROUTE 1: Get weather from coordinates
-// Uses Open-Meteo (free, no API key required)
-// ============================================
+// ROUTE 1: Get weather
 router.get('/weather', async (req, res) => {
     const { lat, lon } = req.query;
     if (!lat || !lon) {
-        return res.status(400).json({ error: 'Latitude and longitude are required' });
+        return errorRes(res, 'Latitude and longitude are required', 400);
     }
 
     try {
-        // 1. Fetch weather from Open-Meteo
         const weatherRes = await axios.get(
             `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
             `&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code` +
@@ -61,12 +55,9 @@ router.get('/weather', async (req, res) => {
         const apparent_temperature = d.current.apparent_temperature;
         const humidity = d.current.relative_humidity_2m;
 
-        // Use today's daily precipitation sum as rainfall (more meaningful than hourly)
         const rainfall = Math.round((d.daily?.precipitation_sum?.[0] ?? d.current.precipitation ?? 0) * 10) / 10;
         const weather_description = WMO_CODES[d.current.weather_code] || 'clear sky';
-        console.log(`[Weather] lat=${lat} lon=${lon} → temp=${temperature}°C feels=${apparent_temperature}°C humidity=${humidity}% rainfall=${rainfall}mm`);
 
-        // 2. Reverse geocode for city name using Nominatim (OpenStreetMap, free)
         let city = 'Your Location';
         let country = 'IN';
         try {
@@ -75,20 +66,8 @@ router.get('/weather', async (req, res) => {
                 { headers: { 'User-Agent': 'AGRO.XAI/1.0 (crop recommendation app)' }, timeout: 6000 }
             );
             const addr = revGeo.data?.address || {};
-            // Broad fallback chain — covers metros, towns, rural areas across India
-            city = addr.city
-                || addr.town
-                || addr.municipality
-                || addr.city_district
-                || addr.suburb
-                || addr.village
-                || addr.hamlet
-                || addr.county
-                || addr.state_district
-                || addr.state
-                || 'Your Location';
+            city = addr.city || addr.town || addr.municipality || addr.city_district || addr.suburb || addr.village || addr.hamlet || addr.county || addr.state_district || addr.state || 'Your Location';
             country = (addr.country_code || 'in').toUpperCase();
-            console.log(`[Geocode] city resolved as: "${city}" from addr keys: ${Object.keys(addr).join(', ')}`);
         } catch (geoErr) {
             console.warn('[Geocode] Reverse geocoding failed:', geoErr.message);
         }
@@ -96,7 +75,7 @@ router.get('/weather', async (req, res) => {
         const climateZone = determineClimateZone(temperature, rainfall);
         const season = getCurrentSeason();
 
-        res.json({
+        return success(res, {
             temperature: Math.round(temperature * 10) / 10,
             apparent_temperature: apparent_temperature != null ? Math.round(apparent_temperature * 10) / 10 : null,
             humidity,
@@ -108,10 +87,9 @@ router.get('/weather', async (req, res) => {
             weather_description
         });
     } catch (err) {
-        console.error('[Weather] Open-Meteo API error:', err.message, '| lat:', lat, 'lon:', lon);
+        console.error('[Weather] API error:', err.message);
         const season = getCurrentSeason();
-        // Return sensible fallback so the app doesn't break
-        res.json({
+        return success(res, {
             temperature: null,
             apparent_temperature: null,
             humidity: null,

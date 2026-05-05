@@ -48,20 +48,20 @@ const FeaturePanel = ({ activeTab, children }) => {
 
     return (
         <div className="flex-1 min-w-0">
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-6">
                 <button 
                     onClick={handleReadAloud}
-                    className="flex items-center gap-2 px-4 py-2 bg-white text-brand-dark border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm text-xs font-bold uppercase tracking-wider group"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-white text-brand-text-primary border border-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-premium text-[10px] font-black uppercase tracking-widest group"
                     title="Read content aloud"
                 >
                     {isSpeaking ? (
                         <>
-                            <VolumeX size={16} className="text-red-500" />
+                            <VolumeX size={14} className="text-red-500 animate-pulse" />
                             <T as="span" className="text-red-500">Stop Reading</T>
                         </>
                     ) : (
                         <>
-                            <Volume2 size={16} className="text-brand-green group-hover:scale-110 transition-transform" />
+                            <Volume2 size={14} className="text-brand-primary group-hover:scale-110 transition-transform" />
                             <T as="span">Read Aloud</T>
                         </>
                     )}

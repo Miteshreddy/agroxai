@@ -4,19 +4,22 @@ const cors = require('cors');
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: "*"
-}));
+app.use(cors());
 app.use(express.json());
 
-// Environment Validation
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in environment variables");
-}
+// Basic Request Logger
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
 
 // Database connection
 require('./db'); // ensures mongoose connects
+
+// Health Check
+app.get('/health', (req, res) => {
+    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
 
 // Routes
 const recommendRouter = require('./routes/recommend');
@@ -31,6 +34,7 @@ const guideRouter = require('./routes/guide');
 const organicRouter = require('./routes/organic');
 const authRouter = require('./routes/auth');
 const weatherRouter = require('./routes/weather');
+const chatRouter = require('./routes/chat');
 
 app.use('/api', recommendRouter);
 app.use('/api', riskRouter);
@@ -44,8 +48,18 @@ app.use('/api', guideRouter);
 app.use('/api', organicRouter);
 app.use('/api/auth', authRouter);
 app.use('/api', weatherRouter);
+app.use('/api', chatRouter);
 
-// History route is also inside some of these or separate?
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('--- Global Server Error ---');
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+        success: false,
+        message: 'Internal Server Error',
+        error: process.env.NODE_ENV === 'production' ? 'Service temporarily unavailable' : err.message
+    });
+});
 
 const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => {

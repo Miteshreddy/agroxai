@@ -5,23 +5,12 @@ import shap
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from soil_mapper import map_farmer_inputs
-from dotenv import load_dotenv
-from openai import OpenAI
-
-# Get the directory where this script is located
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 app = Flask(__name__)
 CORS(app)
 
-# Initialize OpenAI client
-api_key = os.environ.get("OPENAI_API_KEY")
-print(f"API Key loaded: {'YES' if api_key else 'NO'}")
-client = OpenAI(api_key=api_key) if api_key else None
-
-# Paths to model and encoders (using absolute paths)
+# Get the directory where this script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Paths to model and encoders (using absolute paths)
 MODEL_PATH = os.path.join(BASE_DIR, 'crop_model.pkl')
@@ -148,58 +137,5 @@ def predict():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 400
 
-def get_ai_response(user_message):
-    if not client:
-        print("Error: OPENAI_API_KEY is missing. Chatbot cannot respond.")
-        return "Sorry, the AI Chatbot requires an OpenAI API Key to work. Please add it to the .env file in the ml_model folder."
-
-    system_prompt = """You are an expert agricultural advisor.
-Help farmers with crop diseases, fertilizers, soil, irrigation, and pest control.
-Use simple English.
-Always provide:
-1. Problem explanation
-2. Practical solution
-3. Suggested fertilizer or treatment
-4. Prevention tips"""
-    
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message}
-            ],
-            temperature=0.7
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        error_str = str(e)
-        if "quota" in error_str.lower() or "429" in error_str:
-            return "OpenAI Error: Your API key has exceeded its quota or you need to add billing details to your OpenAI account."
-        elif "api key" in error_str.lower() or "401" in error_str:
-            return "OpenAI Error: The API key provided is incorrect or invalid."
-        return f"Sorry, I encountered an error: {error_str}"
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    try:
-        data = request.get_json(force=True)
-        user_message = data.get("message")
-        
-        if not user_message:
-            return jsonify({"error": "Message is required"}), 400
-            
-        ai_reply = get_ai_response(user_message)
-        
-        if ai_reply:
-            return jsonify({"reply": ai_reply})
-        else:
-            return jsonify({"error": "Sorry, try again later"}), 500
-            
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({"error": "Sorry, try again later"}), 500
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    app.run(host='0.0.0.0', port=5001)

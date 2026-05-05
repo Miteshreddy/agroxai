@@ -28,21 +28,22 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/auth/login`, { username, password });
-            const { token, user } = response.data;
+            const response = await axios.post('/api/auth/login', { username, password });
+            const { token, user: userData } = response.data;
 
             localStorage.setItem('cv_token', token);
-            localStorage.setItem('cv_user', JSON.stringify(user));
+            localStorage.setItem('cv_user', JSON.stringify(userData));
 
             setToken(token);
-            setUser(user);
+            setUser(userData);
 
+            toast.success('Welcome back!');
             return { success: true };
         } catch (error) {
-            console.error('Login API Error:', error);
+            toast.error(error.response?.data?.error || 'Login failed');
             return {
                 success: false,
-                error: error.response?.data?.message || error.response?.data?.error || 'Login failed. Please try again.'
+                error: error.response?.data?.error || 'Login failed. Please try again.'
             };
         }
     };
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com'}/api/auth/register`, { username, password });
+            const response = await axios.post('/api/auth/register', { username, password });
             const { token, user } = response.data;
 
             localStorage.setItem('cv_token', token);
@@ -62,10 +63,9 @@ export const AuthProvider = ({ children }) => {
 
             return { success: true };
         } catch (error) {
-            console.error('Registration API Error:', error);
             return {
                 success: false,
-                error: error.response?.data?.message || error.response?.data?.error || 'Registration failed.'
+                error: error.response?.data?.error || 'Registration failed.'
             };
         }
     };

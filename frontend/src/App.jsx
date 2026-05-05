@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Recommend from './pages/Recommend';
+import MyFarm from './pages/MyFarm';
 import History from './pages/History';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -18,11 +19,14 @@ import { AuthProvider } from './context/AuthContext';
 import { RecommendationProvider } from './context/RecommendationContext';
 import { LanguageProvider } from './context/LanguageContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import AgroChatbot from './components/AgroChatbot';
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 const AppContent = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-brand-cream">
+    <ErrorBoundary>
+      <div className="flex flex-col min-h-screen bg-brand-bg">
       <ScrollProgress />
       <BackToTop />
       <Toaster position="top-center" />
@@ -51,6 +55,12 @@ const AppContent = () => {
             </ProtectedRoute>
           } />
 
+          <Route path="/my-farm" element={
+            <ProtectedRoute>
+              <MyFarm />
+            </ProtectedRoute>
+          } />
+
           <Route path="/history" element={
             <ProtectedRoute>
               <History />
@@ -60,8 +70,10 @@ const AppContent = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <AgroChatbot />
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 };
 

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { success, error: errorRes } = require('../utils/response');
 
+// ... data remains same ...
 const soilAdviceData = {
     'Sandy': {
         tips: [
@@ -58,7 +60,7 @@ router.post('/soil-test-advice', (req, res) => {
         const normalizedSoil = soilAdviceData[soil_type] ? soil_type : 'Loamy';
         const advice = soilAdviceData[normalizedSoil];
 
-        const response = {
+        return success(res, {
             should_test: true,
             urgency: advice.urgency,
             urgency_level: normalizedSoil === 'Sandy' || normalizedSoil === 'Black' ? 'High' : (normalizedSoil === 'Loamy' || normalizedSoil === 'Alluvial' ? 'Low' : 'Moderate'),
@@ -82,13 +84,13 @@ router.post('/soil-test-advice', (req, res) => {
                 "Sun-dry the composite 500g sample before packing in a clean cloth bag."
             ],
             improvement_tips: advice.tips
-        };
-
-        res.json(response);
+        });
     } catch (err) {
         console.error('Error generating soil advice:', err.message);
-        res.status(500).json({ error: 'Failed to generate soil testing strategy' });
+        return errorRes(res, 'Failed to generate soil testing strategy', 500, err.message);
     }
 });
+
+module.exports = router;
 
 module.exports = router;

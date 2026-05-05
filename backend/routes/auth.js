@@ -3,37 +3,45 @@ const router = express.Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const { success, error: errorRes } = require('../utils/response');
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Validation
         if (!username || !password) {
-            return res.status(400).json({ message: "Username and password are required" });
+            return errorRes(res, 'Username and password are required', 400);
+        }
+        if (username.length < 3 || username.length > 20) {
+            return errorRes(res, 'Username must be 3 to 20 characters', 400);
+        }
+        if (password.length < 6) {
+            return errorRes(res, 'Password must be at least 6 characters', 400);
         }
 
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
+        const existing = await User.findOne({ username });
+        if (existing) {
+            return errorRes(res, 'Username already taken', 400);
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({
-            username,
-            password: hashedPassword
-        });
-
+        const hashed = await bcrypt.hash(password, 10);
+        const user = new User({ username, password: hashed });
         await user.save();
 
-        res.status(201).json({ message: "User registered successfully" });
+        const token = jwt.sign(
+            { userId: user._id, username: user.username },
+            process.env.JWT_SECRET || 'fallback_secret',
+            { expiresIn: '7d' }
+        );
+
+        return success(res, {
+            token,
+            user: { id: user._id, username: user.username }
+        }, 'Account created successfully', 201);
     } catch (err) {
         console.error('Register error:', err);
-        const errorMsg = err.message.includes('buffering timed out') 
-            ? "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0"
-            : "Registration failed";
-        res.status(500).json({ message: errorMsg, error: err.message });
+        return errorRes(res, 'Server error during registration', 500, err.message);
     }
 });
 
@@ -43,36 +51,32 @@ router.post('/login', async (req, res) => {
         const { username, password } = req.body;
 
         if (!username || !password) {
-            return res.status(400).json({ message: "Username and password are required" });
+            return errorRes(res, 'Username and password are required', 400);
         }
 
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(400).json({ message: "User not found" });
+            return errorRes(res, 'Invalid username or password', 401);
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Invalid credentials" });
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            return errorRes(res, 'Invalid username or password', 401);
         }
 
         const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
+            { userId: user._id, username: user.username },
+            process.env.JWT_SECRET || 'fallback_secret',
+            { expiresIn: '7d' }
         );
 
-        res.json({ 
+        return success(res, {
             token,
-            user: { id: user._id, username: user.username },
-            message: "Login successful"
-        });
+            user: { id: user._id, username: user.username }
+        }, 'Login successful');
     } catch (err) {
         console.error('Login error:', err);
-        const errorMsg = err.message.includes('buffering timed out') 
-            ? "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0"
-            : "Login failed";
-        res.status(500).json({ message: errorMsg });
+        return errorRes(res, 'Server error during login', 500, err.message);
     }
 });
 

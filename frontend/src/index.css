@@ -8,75 +8,86 @@
   }
 
   body {
-    @apply bg-brand-cream text-brand-dark antialiased overflow-x-hidden;
-    background: #F5F5F0;
-  }
-}
-
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
+    @apply bg-brand-bg text-brand-text-primary antialiased overflow-x-hidden;
+    font-family: 'Inter', sans-serif;
   }
 
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-brand-text-primary font-black tracking-tight;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-8 py-3 bg-brand-dark text-white rounded-full font-bold transition-all hover:bg-brand-green hover:shadow-2xl active:scale-95 relative overflow-hidden;
+    @apply px-8 py-3.5 bg-brand-primary text-white rounded-3xl font-bold transition-all duration-300 hover:bg-brand-dark hover:scale-[1.02] hover:shadow-premium-hover active:scale-[0.98] relative overflow-hidden flex items-center justify-center gap-2;
   }
 
   .glass-card {
-    @apply bg-white/60 backdrop-blur-xl border border-white/40 rounded-[2rem] p-8 transition-all;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    @apply bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl p-8 transition-all duration-500 shadow-premium;
   }
 
   .glass-card:hover {
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    @apply -translate-y-1.5 bg-white/70 shadow-premium-hover;
   }
 
   .input-field {
-    @apply w-full px-5 py-3 bg-white/50 border border-brand-olive/10 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-green/20 focus:border-brand-green/50 transition-all text-brand-dark font-medium placeholder:text-brand-olive/40;
+    @apply w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all duration-300 text-brand-text-primary font-medium placeholder:text-slate-400;
   }
 
-  /* Animated underline for nav links */
-  .nav-link {
-    @apply relative py-1 text-sm font-bold text-brand-olive hover:text-brand-green transition-colors;
+  .premium-card {
+    @apply bg-white border border-slate-100 rounded-3xl p-6 transition-all duration-500 shadow-premium;
   }
 
-  .nav-link::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-brand-green transition-all duration-300;
+  .premium-card:hover {
+    @apply -translate-y-1 bg-white shadow-premium-hover border-brand-primary/10;
   }
 
-  .nav-link:hover::after {
-    @apply w-full;
+  .glass-panel {
+    @apply bg-white/30 backdrop-blur-lg border border-white/30 shadow-premium;
   }
 
-  /* Pulse animation for CTA */
-  .pulse-glow {
-    animation: pulseGlow 2s infinite;
+  /* Status Badges */
+  .badge-premium {
+    @apply px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5;
+  }
+
+  .badge-ai {
+    @apply badge-premium bg-brand-primary/10 text-brand-primary border border-brand-primary/20;
+  }
+
+  .badge-verified {
+    @apply badge-premium bg-blue-500/10 text-blue-600 border border-blue-200;
+  }
+
+  .badge-confidence {
+    @apply badge-premium bg-orange-500/10 text-orange-600 border border-orange-200;
   }
 }
 
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+
 @keyframes pulseGlow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
-  }
-
-  70% {
-    box-shadow: 0 0 0 15px rgba(22, 163, 74, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(31, 122, 99, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(31, 122, 99, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(31, 122, 99, 0); }
 }
 
 /* Floating animation */
@@ -198,13 +209,13 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #16a34a;
+  background: #1F7A63;
   border-radius: 10px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #15803d;
+  background: #145A4A;
 }
 
 @keyframes float {
@@ -245,13 +256,104 @@
   }
 }
 
-/* EFFECT 8 - Input Field Focus Glow */
+/* Global Micro-interactions */
+button:not(.btn-primary) {
+  @apply transition-all duration-200 hover:scale-[1.02] active:scale-[0.98];
+}
+
+.lucide {
+  @apply transition-all duration-200 hover:scale-110 hover:opacity-80;
+}
+
+/* Input Field Focus Glow */
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(45, 75, 55, 0.18);
-  transition: box-shadow 0.25s ease;
+  box-shadow: 0 0 0 4px rgba(31, 122, 99, 0.08);
+  border-color: rgba(31, 122, 99, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* Delayed float animation for second hero badge */
+.float-animation-delayed {
+  animation: floating 3s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+/* Slow-moving gradient background */
+.gradient-bg-animated {
+  background: linear-gradient(
+    135deg,
+    rgba(31, 122, 99, 0.03) 0%,
+    rgba(20, 90, 74, 0.02) 25%,
+    transparent 50%,
+    rgba(31, 122, 99, 0.04) 75%,
+    rgba(20, 90, 74, 0.02) 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* AI Processing Overlay Animations */
+.ai-processing-pulse {
+  animation: aiPulse 2s ease-in-out infinite;
+}
+
+@keyframes aiPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(31, 122, 99, 0.4),
+                0 0 0 0 rgba(31, 122, 99, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(31, 122, 99, 0.15),
+                0 0 60px 30px rgba(31, 122, 99, 0.05);
+  }
+}
+
+.ai-orbit {
+  animation: orbitSpin 3s linear infinite;
+}
+
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.ai-orbit-reverse {
+  animation: orbitSpinReverse 4s linear infinite;
+}
+
+@keyframes orbitSpinReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+/* Confidence bar fill animation */
+.confidence-bar-fill {
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Step fade-in for AI processing */
+@keyframes stepFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-fade-in {
+  animation: stepFadeIn 0.4s ease-out forwards;
 }
 
 /* FINAL VERIFICATION - Prefers Reduced Motion */
