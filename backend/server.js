@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const app = express();
 
 // Middleware
@@ -16,9 +17,13 @@ app.use((req, res, next) => {
 // Database connection
 require('./db'); // ensures mongoose connects
 
-// Health Check
+// Health Check & Root
+app.get('/', (req, res) => {
+    res.json({ message: 'AgroXAI API is online', environment: process.env.NODE_ENV || 'development' });
+});
+
 app.get('/health', (req, res) => {
-    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+    res.json({ status: 'healthy', timestamp: new Date().toISOString(), db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
 });
 
 // Routes

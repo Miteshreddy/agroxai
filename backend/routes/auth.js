@@ -7,6 +7,7 @@ const { success, error: errorRes } = require('../utils/response');
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
+    console.log('[Auth] Register Request:', req.body.username);
     try {
         const { username, password } = req.body;
 
@@ -47,6 +48,7 @@ router.post('/register', async (req, res) => {
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
+    console.log('[Auth] Login Request:', req.body.username);
     try {
         const { username, password } = req.body;
 
