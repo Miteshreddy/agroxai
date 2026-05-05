@@ -13,11 +13,14 @@ export const AuthProvider = ({ children }) => {
         const savedToken = localStorage.getItem('cv_token');
         const savedUser = localStorage.getItem('cv_user');
 
-        if (savedToken && savedUser) {
+        if (savedToken && savedUser && savedUser !== 'undefined') {
             try {
-                setUser(JSON.parse(savedUser));
-                setToken(savedToken);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+                const parsedUser = JSON.parse(savedUser);
+                if (parsedUser) {
+                    setUser(parsedUser);
+                    setToken(savedToken);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+                }
             } catch (err) {
                 console.error('Auth initialization error:', err);
                 localStorage.removeItem('cv_token');
@@ -33,6 +36,10 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post(`${baseURL}/auth/login`, { username, password });
             const { token, user: userData } = response.data;
+            
+            if (!userData || !token) {
+                throw new Error('Invalid response from server');
+            }
 
             localStorage.setItem('cv_token', token);
             localStorage.setItem('cv_user', JSON.stringify(userData));
@@ -65,14 +72,17 @@ export const AuthProvider = ({ children }) => {
 
         try {
             const response = await axios.post(`${baseURL}/auth/register`, payload);
-            console.log("Response status:", response.status);
-            console.log("Response data:", response.data);
+            const { token, user: userData } = response.data;
 
-            const { token, user } = response.data;
+            if (!userData || !token) {
+                throw new Error('Invalid response from server');
+            }
+
             localStorage.setItem('cv_token', token);
-            localStorage.setItem('cv_user', JSON.stringify(user));
+            localStorage.setItem('cv_user', JSON.stringify(userData));
             setToken(token);
-            setUser(user);
+            setUser(userData);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
             return { success: true };
         } catch (error) {
