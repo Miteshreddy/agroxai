@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
             try {
                 setUser(JSON.parse(savedUser));
                 setToken(savedToken);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
             } catch (err) {
                 console.error('Auth initialization error:', err);
                 localStorage.removeItem('cv_token');
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }) => {
 
             setToken(token);
             setUser(userData);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
             toast.success('Welcome back!');
             return { success: true };
