@@ -13,7 +13,7 @@
     "@react-spring/web": "^10.0.3",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
-    "axios": "^1.13.5",
+    "axios": "^1.7.9",
     "canvas-confetti": "^1.9.4",
     "formik": "^2.4.9",
     "framer-motion": "^12.34.3",
