@@ -42,6 +42,11 @@ export const AuthProvider = ({ children }) => {
             toast.success('Welcome back!');
             return { success: true };
         } catch (error) {
+            console.error('--- Login API Error ---');
+            console.error('URL:', `${baseURL}/auth/login`);
+            console.error('Message:', error.message);
+            if (error.response) console.error('Response Data:', error.response.data);
+            
             toast.error(error.response?.data?.error || 'Login failed');
             return {
                 success: false,
@@ -66,6 +71,11 @@ export const AuthProvider = ({ children }) => {
 
             return { success: true };
         } catch (error) {
+            console.error('--- Register API Error ---');
+            console.error('URL:', `${baseURL}/auth/register`);
+            console.error('Message:', error.message);
+            if (error.response) console.error('Response Data:', error.response.data);
+
             return {
                 success: false,
                 error: error.response?.data?.error || 'Registration failed.'
