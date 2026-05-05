@@ -27,7 +27,11 @@ const Login = () => {
 
         const result = await login(username, password);
         if (result.success) {
-            navigate(languageSelected ? '/' : '/language');
+            console.log('Login successful, forcing redirect...');
+            const target = languageSelected ? '/' : '/language';
+            // Use both for absolute certainty
+            navigate(target);
+            window.location.href = target;
         } else {
             setError(result.error);
         }

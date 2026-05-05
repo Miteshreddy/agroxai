@@ -30,7 +30,9 @@ const Register = () => {
 
         const result = await register(username, password);
         if (result.success) {
-            navigate('/language');
+            console.log('Registration successful, forcing redirect...');
+            // Force redirect to language selection
+            window.location.href = '/language';
         } else {
             setError(result.error);
         }
