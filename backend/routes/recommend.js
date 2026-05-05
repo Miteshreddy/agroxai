@@ -18,7 +18,7 @@ router.post('/recommend', async (req, res) => {
         const protocol = req.protocol;
         const host = req.get('host');
         const selfUrl = `${protocol}://${host}/api`;
-        const flaskUrlLocal = process.env.FLASK_URL || 'http://localhost:5001';
+        const mlUrl = process.env.ML_API_URL || `${process.env.FLASK_URL || 'http://localhost:5001'}/predict`;
 
         // Step 1: Get coordinates
         let lat = location.lat || location.latitude;
@@ -65,7 +65,7 @@ router.post('/recommend', async (req, res) => {
         };
 
         // Step 6: ML prediction
-        const mlRes = await axios.post(`${flaskUrlLocal}/predict`, farmer_inputs);
+        const mlRes = await axios.post(mlUrl, farmer_inputs);
         let top_crops = mlRes.data.recommended_crops || [{ crop: mlRes.data.crop, confidence: mlRes.data.confidence }];
 
         // Step 7: Climate filter
