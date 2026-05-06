@@ -448,29 +448,39 @@ const Recommend = () => {
                             <div className="flex flex-col md:flex-row gap-6 md:gap-8 mt-8">
                                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                                 <FeaturePanel activeTab={activeTab}>
-                                    {activeTab === 'ai' && result.explanation && (
-                                        <div id="soil-explanation-panel">
-                                            <CropExplanationPanel
-                                                crop={crop}
-                                                confidence={confidence}
-                                                explanation={result.explanation}
-                                                inputs={{ soil_type: soilType, season }}
-                                                mapped_values={result.mapped_values}
-                                                onSave={handleSaveRecommendation}
-                                            />
-                                        </div>
-                                    )}
-                                    {activeTab === 'risk' && (riskData ? <RiskAnalysisCard riskData={riskData} cropName={crop} /> : <CardSkeleton />)}
-                                    {activeTab === 'soil_test' && (soilTestData ? <SoilTestingCard soilTestData={soilTestData} soilType={soilType} /> : <CardSkeleton />)}
-                                    {activeTab === 'soil_improve' && (improvementData ? <SoilImprovementCard improvementData={improvementData} /> : <CardSkeleton />)}
-                                    {activeTab === 'revenue' && <RevenueCard crop={crop} rainfall={rainfallLevel} season={season} />}
-                                    {activeTab === 'profit' && <ProfitEstimationCard crop={crop} confidence={confidence} />}
-                                    {activeTab === 'timeline' && <GrowingTimeline crop={crop} />}
-                                    {activeTab === 'feasibility' && (feasibilityData ? <FeasibilityCard reportData={feasibilityData} cropName={crop} /> : <CardSkeleton />)}
-                                    {activeTab === 'schemes' && (schemesData ? <GovernmentSchemesCard schemesData={schemesData} cropName={crop} /> : <CardSkeleton />)}
-                                    {activeTab === 'guide' && (growingData ? <GrowingGuideCard guideData={growingData} cropName={crop} /> : <CardSkeleton />)}
-                                    {activeTab === 'labour' && (labourData ? <LabourPlannerCard labourData={labourData} /> : <CardSkeleton />)}
-                                    {activeTab === 'organic' && (organicData ? <OrganicFarmingCard organicData={organicData} cropName={crop} /> : <CardSkeleton />)}
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={activeTab}
+                                            initial={{ opacity: 0, y: 12 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -12 }}
+                                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+                                        >
+                                            {activeTab === 'ai' && result.explanation && (
+                                                <div id="soil-explanation-panel">
+                                                    <CropExplanationPanel
+                                                        crop={crop}
+                                                        confidence={confidence}
+                                                        explanation={result.explanation}
+                                                        inputs={{ soil_type: soilType, season }}
+                                                        mapped_values={result.mapped_values}
+                                                        onSave={handleSaveRecommendation}
+                                                    />
+                                                </div>
+                                            )}
+                                            {activeTab === 'risk' && (riskData ? <RiskAnalysisCard riskData={riskData} cropName={crop} /> : <CardSkeleton />)}
+                                            {activeTab === 'soil_test' && (soilTestData ? <SoilTestingCard soilTestData={soilTestData} soilType={soilType} /> : <CardSkeleton />)}
+                                            {activeTab === 'soil_improve' && (improvementData ? <SoilImprovementCard improvementData={improvementData} /> : <CardSkeleton />)}
+                                            {activeTab === 'revenue' && <RevenueCard crop={crop} rainfall={rainfallLevel} season={season} />}
+                                            {activeTab === 'profit' && <ProfitEstimationCard crop={crop} confidence={confidence} />}
+                                            {activeTab === 'timeline' && <GrowingTimeline crop={crop} />}
+                                            {activeTab === 'feasibility' && (feasibilityData ? <FeasibilityCard reportData={feasibilityData} cropName={crop} /> : <CardSkeleton />)}
+                                            {activeTab === 'schemes' && (schemesData ? <GovernmentSchemesCard schemesData={schemesData} cropName={crop} /> : <CardSkeleton />)}
+                                            {activeTab === 'guide' && (growingData ? <GrowingGuideCard guideData={growingData} cropName={crop} /> : <CardSkeleton />)}
+                                            {activeTab === 'labour' && (labourData ? <LabourPlannerCard labourData={labourData} /> : <CardSkeleton />)}
+                                            {activeTab === 'organic' && (organicData ? <OrganicFarmingCard organicData={organicData} cropName={crop} /> : <CardSkeleton />)}
+                                        </motion.div>
+                                    </AnimatePresence>
                                 </FeaturePanel>
                             </div>
                         </motion.div>
