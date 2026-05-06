@@ -28,17 +28,17 @@ def map_farmer_inputs(farmer_input):
     season = farmer_input.get("season", "Summer")
     
     # Get values from weather data or default to Medium ranges
-    input_temp = float(farmer_input.get("temperature", 25))
-    input_humidity = float(farmer_input.get("humidity", 50))
-    input_rainfall = float(farmer_input.get("rainfall", 100))
+    input_temp = float(farmer_input.get("temperature") if farmer_input.get("temperature") is not None else 25)
+    input_humidity = float(farmer_input.get("humidity") if farmer_input.get("humidity") is not None else 50)
+    input_rainfall = float(farmer_input.get("rainfall") if farmer_input.get("rainfall") is not None else 100)
 
     base_values = SOIL_NPK_MAP.get(soil_type, SOIL_NPK_MAP["Loamy"])
     multipliers = SEASON_MULTIPLIERS.get(season, SEASON_MULTIPLIERS["Summer"])
 
-    # Generate NPK
-    n_val = random.randint(*base_values["N"])
-    p_val = random.randint(*base_values["P"])
-    k_val = random.randint(*base_values["K"])
+    # Generate deterministic NPK (using the midpoint of the range)
+    n_val = (base_values["N"][0] + base_values["N"][1]) // 2
+    p_val = (base_values["P"][0] + base_values["P"][1]) // 2
+    k_val = (base_values["K"][0] + base_values["K"][1]) // 2
 
     # Apply season logic and clamp to standard dataset limits
     mapped_n = float(clamp(round(n_val * multipliers["N"]), 0, 140))

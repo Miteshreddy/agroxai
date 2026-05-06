@@ -5,6 +5,28 @@ const Recommendation = require('../models/Recommendation');
 const { success, error: errorRes } = require('../utils/response');
 const cropData = require('../utils/cropData');
 
+const getCropMetadata = (cropName) => {
+    if (!cropName) return { total_duration: 'Varies', difficulty: 'Medium' };
+    
+    const clean = cropName.toLowerCase()
+        .replace(/\s+/g, '')
+        .replace(/\(.*?\)/g, '')
+        .replace(/[^a-z]/g, '');
+        
+    for (const key of Object.keys(cropData)) {
+        const cleanKey = key.toLowerCase()
+            .replace(/\s+/g, '')
+            .replace(/\(.*?\)/g, '')
+            .replace(/[^a-z]/g, '');
+            
+        if (clean.includes(cleanKey) || cleanKey.includes(clean)) {
+            return cropData[key];
+        }
+    }
+    
+    return { total_duration: 'Varies', difficulty: 'Medium' };
+};
+
 // POST /api/recommend
 router.post('/recommend', async (req, res) => {
     try {
@@ -40,7 +62,7 @@ router.post('/recommend', async (req, res) => {
 
         // Step 2: Get weather
         const weatherRes = await axios.get(`${selfUrl}/weather`, { params: { lat, lon } });
-        const weather = weatherRes.data;
+        const weather = weatherRes.data.data;
 
         // Step 3: Derive descriptive levels
         const rainfall_level = weather.rainfall < 70 ? 'Low' : weather.rainfall < 170 ? 'Medium' : 'High';
@@ -58,6 +80,8 @@ router.post('/recommend', async (req, res) => {
         // Step 5: Prepare farmer inputs
         const farmer_inputs = {
             temperature: weather.temperature,
+            humidity: weather.humidity,
+            rainfall: weather.rainfall,
             season: weather.season,
             soil_type,
             rainfall_level,
@@ -78,10 +102,19 @@ router.post('/recommend', async (req, res) => {
         const filtered_indices = filterRes.data.filtered_crops.map(crop => mlCrops.indexOf(crop));
         const filtered_crops = filtered_indices.map(idx => top_crops[idx]).filter(Boolean).slice(0, 3);
 
-        const top1 = filtered_crops[0] || top_crops[0];
+        // Ensure we always have exactly 3 crops for the comparison panel to render consistently
+        let final_recommended = [...filtered_crops];
+        for (const tc of top_crops) {
+            if (final_recommended.length >= 3) break;
+            if (!final_recommended.some(c => c.crop === tc.crop)) {
+                final_recommended.push(tc);
+            }
+        }
+
+        const top1 = final_recommended[0] || top_crops[0];
 
         // Enrich with crop metadata
-        const cropInfo = cropData[top1.crop] || { total_duration: 'Varies', difficulty: 'Medium' };
+        const cropInfo = getCropMetadata(top1.crop);
 
         // Save to Mongo
         const recommendation = new Recommendation({
@@ -93,13 +126,15 @@ router.post('/recommend', async (req, res) => {
                 soil_info,
                 farmer_inputs,
                 ml_top3: top_crops,
-                filtered_crops
+                filtered_crops: final_recommended
             },
             result: {
                 crop: top1.crop,
                 confidence: top1.confidence,
-                recommended_crops: filtered_crops,
-                total_duration: cropInfo.total_duration
+                recommended_crops: final_recommended,
+                total_duration: cropInfo.total_duration,
+                explanation: mlRes.data.explanation,
+                mapped_values: mlRes.data.mapped_values
             }
         });
         await recommendation.save().catch(e => console.warn('Mongo save skipped:', e.message));
@@ -107,10 +142,11 @@ router.post('/recommend', async (req, res) => {
         return success(res, {
             crop: top1.crop,
             confidence: top1.confidence,
-            recommended_crops: filtered_crops,
+            recommended_crops: final_recommended,
             weather,
             soil_type,
             explanation: mlRes.data.explanation,
+            mapped_values: mlRes.data.mapped_values,
             workflow_summary: farmer_inputs,
             total_duration: cropInfo.total_duration
         });

@@ -110,12 +110,29 @@ def predict():
             top_3_indices = sorted(range(len(probs)), key=lambda i: probs[i], reverse=True)[:3]
             top_3_crops = []
             for idx in top_3_indices:
-                crop = label_encoder.inverse_transform([idx])[0]
-                prob = round(float(probs[idx]), 4)
-                top_3_crops.append({"crop": str(crop), "confidence": prob})
+                try:
+                    if hasattr(label_encoder, 'classes_') and idx < len(label_encoder.classes_):
+                        crop = label_encoder.inverse_transform([idx])[0]
+                    else:
+                        crop = f"Unknown Crop {idx}"
+                    prob = round(float(probs[idx]), 4)
+                    top_3_crops.append({"crop": str(crop), "confidence": prob})
+                except Exception as inner_e:
+                    print(f"[ML Model] Failed to decode index {idx}: {inner_e}")
+                    top_3_crops.append({"crop": f"Unknown Crop {idx}", "confidence": round(float(probs[idx]), 4)})
+            
+            if not top_3_crops:
+                raise ValueError("No crops could be decoded")
         except Exception as e:
+            import traceback
+            print("[ML Model] Probability decoding failed, using fallback:", str(e))
+            traceback.print_exc()
             confidence = 1.0
-            top_3_crops = [{"crop": str(label_encoder.inverse_transform([pred_class])[0]), "confidence": 1.0}]
+            try:
+                crop_decoded = label_encoder.inverse_transform([pred_class])[0]
+            except Exception:
+                crop_decoded = "Unknown Crop"
+            top_3_crops = [{"crop": str(crop_decoded), "confidence": 1.0}]
             
         # Decode label
         crop_name = label_encoder.inverse_transform([pred_class])[0]
