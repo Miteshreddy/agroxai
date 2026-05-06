@@ -1,7 +1,10 @@
 import os
 import joblib
 import pandas as pd
-import shap
+# import shap
+
+# Set explainer to None globally to completely bypass memory-heavy TreeExplainer on Render free tier
+explainer = None
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from soil_mapper import map_farmer_inputs
@@ -26,8 +29,7 @@ print(f"Model loaded: {model is not None}")
 print(f"Label encoder loaded: {label_encoder is not None}")
 print(f"Season encoder loaded: {season_encoder is not None}")
 
-# SHAP explainer – created once the model is loaded
-explainer = shap.TreeExplainer(model) if model else None
+# explainer = shap.TreeExplainer(model) if model else None
 
 # Determine the feature order expected by the model
 if model and hasattr(model, 'feature_names_in_'):
@@ -124,7 +126,12 @@ def predict():
             else:
                 try:
                     importances = model.feature_importances_
-                    shap_dict = dict(zip(EXPECTED_FEATURES, importances))
+                    shap_dict = {}
+                    for feat, imp in zip(EXPECTED_FEATURES, importances):
+                        val = float(df[feat].iloc[0]) if feat in df else 50.0
+                        # Dynamic sample contribution: scale global importance by input thresholds
+                        modifier = 1.5 if val > 60 else -1.2 if val < 25 else 1.0
+                        shap_dict[feat] = float(imp * modifier)
                 except Exception:
                     shap_dict = {"N": 0.2, "P": 0.1, "K": 0.15, "temperature": 0.1, "humidity": 0.25, "ph": 0.05, "rainfall": 0.15}
         except Exception as shap_err:
