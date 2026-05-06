@@ -181,7 +181,7 @@ const Recommend = () => {
                 location: { lat: locationData.lat, lon: locationData.lon },
                 soil_mode:        'manual',
                 manual_soil_type: manualSoil,
-            }, { timeout: 30000 });
+            }, { timeout: 120000 });
 
             const data = res.data.data;
             setResult(data);
