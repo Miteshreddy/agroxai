@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { success } = require('../utils/response');
 const cropData = require('../utils/cropData');
 
 const guideData = {
@@ -166,7 +167,7 @@ router.post('/growing-guide', (req, res) => {
 
         const guide = guideData[normalizedCrop];
 
-        res.json({
+        return success(res, {
             crop: normalizedCrop,
             total_duration: guide.total_duration,
             difficulty: guide.difficulty,

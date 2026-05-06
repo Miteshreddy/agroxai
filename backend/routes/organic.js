@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { success } = require('../utils/response');
 
 const organicData = {
     'Rice': {
@@ -164,7 +165,7 @@ router.post('/organic-farming', (req, res) => {
             { step: 4, name: "Certification", desc: "Receive 'India Organic' or 'Jaivik Bharat' seal.", cost: "Renewable annually", time: "Final Week" }
         ];
 
-        res.json({
+        return success(res, {
             ...data,
             certification: certificationSteps,
             institution_contacts: ["NPOP - National Programme for Organic Production", "NHM - National Horticulture Mission", "Jaivik Kheti Portal"],

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { success } = require('../utils/response');
 
 const crops = ['Rice', 'Wheat', 'Maize', 'Millet', 'Sugarcane', 'Cotton', 'Jute', 'Coffee', 'Coconut', 'Banana'];
 
@@ -102,7 +103,7 @@ router.post('/feasibility-report', (req, res) => {
                 emoji: ['🍚', '🌾', '🌽', '🌾', '🎋', '☁️', '🧶', '☕', '🥥', '🍌'][crops.indexOf(c.name)] || '🌱'
             }));
 
-        res.json({
+        return success(res, {
             overall_feasibility: label,
             feasibility_score: mainAnalysis.total,
             feasibility_color: color,

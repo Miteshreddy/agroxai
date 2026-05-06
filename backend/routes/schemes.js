@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { success } = require('../utils/response');
 
 const universalSchemes = [
     {
@@ -174,7 +175,7 @@ router.post('/government-schemes', (req, res) => {
 
         const cropSpecific = normalizedCrop ? cropSpecificSchemes[normalizedCrop] : [];
 
-        res.json({
+        return success(res, {
             universal_schemes: universalSchemes,
             crop_specific_schemes: cropSpecific,
             state_schemes_note: "Specific state-level subsidies (e.g., Rythu Bandhu in Telangana, Kalia in Odisha) may also apply based on your local residency.",

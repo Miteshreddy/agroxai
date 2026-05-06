@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { success } = require('../utils/response');
 
 const improvementData = {
     'Clay': {
@@ -95,7 +96,7 @@ router.post('/soil-improvement', (req, res) => {
         const normalizedSoil = improvementData[soil_type] ? soil_type : 'Loamy';
         const data = improvementData[normalizedSoil];
 
-        res.json({
+        return success(res, {
             soil_type: normalizedSoil,
             current_grade: data.current_grade,
             potential_grade: data.potential_grade,
