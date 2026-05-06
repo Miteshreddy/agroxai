@@ -1,8 +1,13 @@
 import { useState, useCallback } from 'react';
 import axios from 'axios';
 
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api',
+  baseURL: getApiUrl(),
   timeout: 15000,
 });
 

@@ -2,6 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -32,10 +37,10 @@ export const AuthProvider = ({ children }) => {
 
 
     const login = async (username, password) => {
-        const baseURL = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+        const baseURL = getApiUrl();
         try {
             const response = await axios.post(`${baseURL}/auth/login`, { username, password });
-            const { token, user: userData } = response.data;
+            const { token, user: userData } = response.data.data;
             
             if (!userData || !token) {
                 throw new Error('Invalid response from server');
@@ -52,7 +57,7 @@ export const AuthProvider = ({ children }) => {
             return { success: true };
         } catch (error) {
             console.error('--- Login API Error ---');
-            console.error('URL:', `${baseURL}/auth/login`);
+            console.error('URL:', `${getApiUrl()}/auth/login`);
             console.error('Message:', error.message);
             if (error.response) console.error('Response Data:', error.response.data);
             
@@ -66,13 +71,13 @@ export const AuthProvider = ({ children }) => {
 
 
     const register = async (username, password) => {
-        const baseURL = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+        const baseURL = getApiUrl();
         const payload = { username, password };
         console.log("Register payload:", payload);
 
         try {
             const response = await axios.post(`${baseURL}/auth/register`, payload);
-            const { token, user: userData } = response.data;
+            const { token, user: userData } = response.data.data;
 
             if (!userData || !token) {
                 throw new Error('Invalid response from server');

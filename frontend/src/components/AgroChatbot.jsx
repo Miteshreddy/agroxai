@@ -3,7 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
 import axios from 'axios';
 
-const API = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+const API = getApiUrl();
 
 const SUGGESTIONS = [
   { label: '🌾 Best crop for my soil', message: 'What is the best crop for my current soil type?' },

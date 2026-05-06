@@ -8,8 +8,13 @@ import CountUp from 'react-countup';
 import T from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api',
+    baseURL: getApiUrl(),
 });
 
 const getSoilAdvice = (values) => {
@@ -44,7 +49,7 @@ const History = () => {
 
     const deleteItem = async (id) => {
         try {
-            await axios.delete(`/api/history/${id}`);
+            await apiClient.delete(`/history/${id}`);
             setHistory(history.filter(item => item._id !== id));
             toast.success('Record removed');
         } catch (error) {

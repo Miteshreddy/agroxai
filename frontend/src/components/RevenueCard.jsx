@@ -7,6 +7,12 @@ import CountUp from 'react-countup';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+const API = getApiUrl();
+
 const RevenueCard = ({ crop, rainfall, season }) => {
     const { t } = useLanguage();
     const [landArea, setLandArea] = useState(1);
@@ -18,7 +24,7 @@ const RevenueCard = ({ crop, rainfall, season }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('/api/revenue-prediction', {
+            const response = await axios.post(`${API}/revenue-prediction`, {
                 crop,
                 rainfall_level: rainfall,
                 season,

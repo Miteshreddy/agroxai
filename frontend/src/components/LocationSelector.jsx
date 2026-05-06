@@ -4,7 +4,11 @@ import { MapPin, Navigation, Loader2, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LocationSearch from './LocationSearch';
 
-const API = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+const API = getApiUrl();
 
 const LocationSelector = ({ onLocationSelect, loading }) => {
     const [locationMode, setLocationMode] = useState('current');
