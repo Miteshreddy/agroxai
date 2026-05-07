@@ -33,7 +33,7 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
                             <TD value={scheme.name} as="h4" className="font-black text-brand-dark uppercase tracking-tight text-lg" />
                             {isSpecific && (
                                 <span className="bg-brand-green/20 text-brand-green text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border border-brand-green/20">
-                                    <T>For</T> {cropName}
+                                    <T>For</T> <TD value={cropName} />
                                 </span>
                             )}
                         </div>
@@ -148,7 +148,7 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
             {crop_specific_schemes.length > 0 && (
                 <div className="mb-10">
                     <h4 className="text-[11px] font-black text-brand-dark uppercase tracking-[0.25em] mb-6 flex items-center gap-2 opacity-60">
-                        <BookmarkCheck className="text-brand-green" size={16} /> <T>Targeted Schemes for</T> {cropName}
+                        <BookmarkCheck className="text-brand-green" size={16} /> <T>Targeted Schemes for</T> <TD value={cropName} />
                     </h4>
                     <div className="space-y-2">
                         {crop_specific_schemes.map((scheme, idx) => (

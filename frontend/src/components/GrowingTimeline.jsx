@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Sprout, Droplets, Sun, Scissors, CheckCircle2, Clock } from 'lucide-react';
-import T from './T';
+import T, { TD } from './T';
 
 // Static timeline data per crop group
 const TIMELINE_DB = {
@@ -68,7 +68,9 @@ const GrowingTimeline = ({ crop }) => {
                 </div>
                 <div>
                     <T as="h3" className="text-xl font-black text-brand-text-primary uppercase tracking-tight">Growing Timeline</T>
-                    <T as="p" className="text-brand-text-secondary text-xs font-bold">Month-wise cultivation roadmap for {crop}</T>
+                    <p className="text-brand-text-secondary text-xs font-bold">
+                        <T>Month-wise cultivation roadmap for</T> <TD value={crop} />
+                    </p>
                 </div>
             </div>
 
@@ -96,11 +98,15 @@ const GrowingTimeline = ({ crop }) => {
                                 <div className="flex items-center gap-3 mb-3">
                                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full text-white ${step.color}`}>
                                         <Clock size={10} />
-                                        {step.month}
+                                        <TD value={step.month} />
                                     </span>
-                                    <span className="text-sm font-black text-brand-text-primary uppercase tracking-tight">{step.phase}</span>
+                                    <span className="text-sm font-black text-brand-text-primary uppercase tracking-tight">
+                                        <TD value={step.phase} />
+                                    </span>
                                 </div>
-                                <p className="text-sm text-brand-text-secondary font-medium leading-relaxed">{step.desc}</p>
+                                <p className="text-sm text-brand-text-secondary font-medium leading-relaxed">
+                                    <TD value={step.desc} />
+                                </p>
                             </div>
                         </motion.div>
                     );

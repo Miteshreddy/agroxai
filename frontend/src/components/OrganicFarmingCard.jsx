@@ -38,9 +38,9 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                     <h3 className="text-3xl font-black text-brand-dark uppercase tracking-tight flex items-center gap-3 italic">
                         🌿 <span className="text-brand-green text-shadow-glow"><T>Organic Farming</T></span> <T>Guide</T>
                     </h3>
-                    <T as="p" className="text-brand-olive font-medium text-sm mt-1">
-                        Sustainable methods to upgrade your {cropName} cultivation to global standards.
-                    </T>
+                    <p className="text-brand-olive font-medium text-sm mt-1">
+                        <T>Sustainable methods to upgrade your</T> <TD value={cropName} /> <T>cultivation to global standards.</T>
+                    </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                     <div className="px-4 py-2 bg-brand-green text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-2 shadow-lg shadow-brand-green/20">

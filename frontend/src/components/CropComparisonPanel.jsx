@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Droplets, Thermometer, Calendar, Crown, TrendingUp, Sprout } from 'lucide-react';
 import CountUp from 'react-countup';
-import T from './T';
+import T, { TD } from './T';
 
 // Static crop metadata for comparison cards
 const CROP_DB = {
@@ -105,7 +105,7 @@ const CropComparisonPanel = ({ crops }) => {
                         >
                             {isBest && (
                                 <div className="absolute -top-3 left-6 flex items-center gap-1.5 bg-brand-primary text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
-                                    <Crown size={10} /> BEST MATCH
+                                    <Crown size={10} /> <T>BEST MATCH</T>
                                 </div>
                             )}
 
@@ -113,10 +113,10 @@ const CropComparisonPanel = ({ crops }) => {
                                 <span className="text-3xl">{meta.emoji}</span>
                                 <div>
                                     <p className={`text-lg font-black capitalize ${isBest ? 'text-white' : 'text-brand-text-primary'}`}>
-                                        {c.crop}
+                                        <TD value={c.crop} />
                                     </p>
                                     <span className={`inline-block text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${suit.color}`}>
-                                        {suit.label}
+                                        <TD value={suit.label} />
                                     </span>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@ const CropComparisonPanel = ({ crops }) => {
                             {/* Confidence bar */}
                             <div className="mb-5">
                                 <div className="flex justify-between mb-1.5">
-                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${isBest ? 'text-white/50' : 'text-slate-400'}`}>Confidence</span>
+                                    <T className={`text-[10px] font-bold uppercase tracking-widest ${isBest ? 'text-white/50' : 'text-slate-400'}`}>Confidence</T>
                                     <span className={`text-sm font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`}>
                                         <CountUp end={+(c.confidence * 100).toFixed(1)} decimals={1} duration={1.5} suffix="%" />
                                     </span>
@@ -143,18 +143,18 @@ const CropComparisonPanel = ({ crops }) => {
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3">
                                     <Droplets size={14} className={isBest ? 'text-blue-300' : getWaterColor(meta.water)} />
-                                    <span className={`text-xs font-bold ${isBest ? 'text-white/70' : 'text-slate-500'}`}>Water Need:</span>
-                                    <span className={`text-xs font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`}>{meta.water}</span>
+                                    <T className={`text-xs font-bold ${isBest ? 'text-white/70' : 'text-slate-500'}`}>Water Need:</T>
+                                    <TD className={`text-xs font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`} value={meta.water} />
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Thermometer size={14} className={isBest ? 'text-orange-300' : 'text-orange-400'} />
-                                    <span className={`text-xs font-bold ${isBest ? 'text-white/70' : 'text-slate-500'}`}>Climate:</span>
-                                    <span className={`text-xs font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`}>{meta.climate}</span>
+                                    <T className={`text-xs font-bold ${isBest ? 'text-white/70' : 'text-slate-500'}`}>Climate:</T>
+                                    <TD className={`text-xs font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`} value={meta.climate} />
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Calendar size={14} className={isBest ? 'text-emerald-300' : 'text-emerald-500'} />
-                                    <span className={`text-xs font-bold ${isBest ? 'text-white/70' : 'text-slate-500'}`}>Duration:</span>
-                                    <span className={`text-xs font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`}>{meta.duration}</span>
+                                    <T className={`text-xs font-bold ${isBest ? 'text-white/70' : 'text-slate-500'}`}>Duration:</T>
+                                    <TD className={`text-xs font-black ${isBest ? 'text-white' : 'text-brand-text-primary'}`} value={meta.duration} />
                                 </div>
                             </div>
                         </motion.div>

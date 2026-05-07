@@ -51,7 +51,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-8 border-b border-brand-green/10">
                 <div>
                     <h3 className="text-3xl font-black text-brand-dark uppercase tracking-tight flex items-center gap-3 italic text-center md:text-left">
-                        📖 <span className="text-brand-green"><T>Growing</T></span> <T>Guide for</T> {cropName}
+                        📖 <span className="text-brand-green"><T>Growing</T></span> <T>Guide for</T> <TD value={cropName} />
                     </h3>
                     <T as="p" className="text-brand-olive font-medium text-sm mt-1 text-center md:text-left">
                         Scientific end-to-end cultivation cycles for peak performance.

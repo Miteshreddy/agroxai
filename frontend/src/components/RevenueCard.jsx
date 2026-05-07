@@ -55,7 +55,7 @@ const RevenueCard = ({ crop, rainfall, season }) => {
                     <T as="p" className="text-brand-olive font-medium text-sm mt-1">Estimating profitability based on market MSP (2024-25) and crop yield.</T>
                 </div>
                 <div className="px-6 py-2 bg-brand-green/10 rounded-2xl border border-brand-green/20">
-                    <span className="text-xs font-black text-brand-green uppercase tracking-[0.2em]">{crop} <T>Model</T></span>
+                    <span className="text-xs font-black text-brand-green uppercase tracking-[0.2em]"><TD value={crop} /> <T>Model</T></span>
                 </div>
             </div>
 
@@ -120,7 +120,7 @@ const RevenueCard = ({ crop, rainfall, season }) => {
                                     ₹<CountUp end={prediction.net_profit} duration={2} separator="," />
                                 </div>
                                 <p className="text-white/40 text-[10px] uppercase font-bold tracking-[0.2em]">
-                                    <T>Based on</T> {prediction.land_area_acres} <T>acres of</T> {prediction.crop_used}
+                                    <T>Based on</T> {prediction.land_area_acres} <T>acres of</T> <TD value={prediction.crop_used} />
                                 </p>
                             </div>
 
