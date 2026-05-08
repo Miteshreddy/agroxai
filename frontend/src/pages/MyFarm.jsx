@@ -358,20 +358,19 @@ const MyFarm = () => {
                   </motion.div>
                 )}
 
-                {/* QUICK INSIGHTS */}
-                <div className="bg-slate-950/40 rounded-[2.5rem] p-8 shadow-premium border border-white/5 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-3xl -mr-16 -mt-16" />
-                  <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-6 relative z-10">{t('quickInsightsHeader')}</h3>
+                <div className="bg-white dark:bg-slate-950/40 rounded-[2.5rem] p-8 shadow-premium border border-slate-100 dark:border-white/5 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
+                  <h3 className="text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-[0.3em] mb-6 relative z-10">{t('quickInsightsHeader')}</h3>
                   {onlyPositive && fields.length > 0 && crops.length > 0 && <HealthyFarmBanner />}
                   <div className="space-y-4 mt-4 relative z-10">
                     {insights.map((ins, i) => (
                       <motion.div key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.1 + 0.2 }}
-                        className="bg-white/5 border border-white/10 rounded-[1.5rem] p-5 hover:bg-white/[0.08] transition-all">
+                        className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[1.5rem] p-5 hover:bg-slate-100/50 dark:hover:bg-white/[0.08] transition-all">
                         <div className="flex items-center gap-3 mb-2">
                           <span className="text-xl">{ins.icon}</span>
                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ins.color }} />
                         </div>
-                        <p className="text-white/80 text-sm font-medium leading-relaxed">{ins.msg}</p>
+                        <p className="text-brand-text-secondary dark:text-white/80 text-sm font-medium leading-relaxed">{ins.msg}</p>
                       </motion.div>
                     ))}
                   </div>

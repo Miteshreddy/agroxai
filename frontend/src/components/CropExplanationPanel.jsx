@@ -152,13 +152,13 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                 <div className="w-24 h-24 bg-brand-green rounded-[2rem] mx-auto flex items-center justify-center text-brand-gold mb-8 rotate-12 hover:rotate-0 transition-transform shadow-2xl">
                     <Sprout size={48} />
                 </div>
-                <T as="h2" className="text-4xl font-black text-brand-dark mb-4">OPTIMIZED FOR SUCCESS.</T>
+                <T as="h2" className="text-4xl font-black text-brand-text-primary mb-4">OPTIMIZED FOR SUCCESS.</T>
                 <motion.p
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="text-brand-olive font-medium max-w-xl mx-auto mb-10 text-lg"
+                    className="text-brand-text-secondary font-medium max-w-xl mx-auto mb-10 text-lg"
                 >
                     <TD value={`Your field is scientifically prepared for this match. The ${inputs.soil_type} soil provides the perfect base for high-yield seeding.`} />
                 </motion.p>

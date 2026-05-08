@@ -22,7 +22,7 @@ const Footer = () => {
           <div className="flex gap-4">
             <SocialLink icon={<Twitter size={20} />} href="#" />
             <SocialLink icon={<Linkedin size={20} />} href="#" />
-            <SocialLink icon={<Github size={20} />} href="#" />
+            <SocialLink icon={<Github size={20} />} href="https://github.com/Miteshreddy/agroxai" />
           </div>
         </div>
 
@@ -65,7 +65,7 @@ const Footer = () => {
 };
 
 const SocialLink = ({ icon, href }) => (
-  <a href={href} className="w-11 h-11 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-white/5 rounded-xl flex items-center justify-center text-brand-text-primary hover:bg-brand-primary hover:text-brand-bg hover:border-brand-primary transition-all duration-300">
+  <a href={href} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-white/5 rounded-xl flex items-center justify-center text-brand-text-primary hover:bg-brand-primary hover:text-brand-bg hover:border-brand-primary transition-all duration-300">
     {icon}
   </a>
 );

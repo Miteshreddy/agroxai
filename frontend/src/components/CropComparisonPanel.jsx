@@ -100,7 +100,7 @@ const CropComparisonPanel = ({ crops }) => {
                             className={`relative rounded-3xl p-7 border transition-all duration-300 ${
                                 isBest
                                     ? 'bg-brand-primary text-brand-bg border-brand-primary/30 shadow-premium-hover scale-[1.02]'
-                                    : 'bg-slate-950/40 border-white/5 shadow-premium hover:shadow-premium-hover hover:-translate-y-1'
+                                    : 'bg-slate-50 dark:bg-slate-950/40 border-slate-100 dark:border-white/5 shadow-premium hover:shadow-premium-hover hover:-translate-y-1'
                             }`}
                         >
                             {isBest && (
@@ -129,7 +129,7 @@ const CropComparisonPanel = ({ crops }) => {
                                         <CountUp end={+(c.confidence * 100).toFixed(1)} decimals={1} duration={1.5} suffix="%" />
                                     </span>
                                 </div>
-                                <div className={`w-full h-2 rounded-full overflow-hidden ${isBest ? 'bg-black/15' : 'bg-slate-100'}`}>
+                                <div className={`w-full h-2 rounded-full overflow-hidden ${isBest ? 'bg-black/15' : 'bg-slate-200/50 dark:bg-slate-800'}`}>
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${c.confidence * 100}%` }}
