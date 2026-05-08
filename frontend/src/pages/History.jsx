@@ -78,7 +78,7 @@ const History = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white px-8 py-5 rounded-[2rem] border border-slate-100 shadow-premium flex items-center gap-6"
+                        className="bg-white dark:bg-slate-900 px-8 py-5 rounded-[2rem] border border-slate-100 dark:border-white/5 shadow-premium flex items-center gap-6"
                     >
                         <div className="text-right">
                             <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary tracking-widest opacity-60">Total Analyses</T>
@@ -103,11 +103,11 @@ const History = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="glass-card !p-0 overflow-hidden bg-white border border-slate-100"
+                        className="glass-card !p-0 overflow-hidden"
                     >
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
-                                <thead className="bg-slate-50/50 border-b border-slate-100">
+                                <thead className="bg-slate-50/50 dark:bg-slate-950/40 border-b border-slate-100 dark:border-white/5">
                                     <tr>
                                         <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Prediction (Crop & Soil)</T>
                                         <T as="th" className="px-8 py-6 text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em]">Confidence</T>
@@ -125,7 +125,7 @@ const History = () => {
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.5, delay: idx * 0.05 }}
-                                            className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group"
+                                            className="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors group"
                                         >
                                             <td className="px-8 py-7">
                                                 <div className="flex items-center gap-4">
@@ -140,7 +140,7 @@ const History = () => {
                                             </td>
                                             <td className="px-8 py-7">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                                    <div className="w-24 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                                         <motion.div
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${(record.result?.confidence || 0) * 100}%` }}
@@ -167,7 +167,7 @@ const History = () => {
                                                     whileHover={{ scale: 1.1, backgroundColor: '#EF4444', color: '#FFFFFF' }}
                                                     whileTap={{ scale: 0.95 }}
                                                     onClick={() => deleteItem(record._id)}
-                                                    className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center transition-all shadow-sm border border-slate-100"
+                                                    className="w-10 h-10 bg-slate-50 dark:bg-slate-900 text-slate-400 dark:text-slate-500 rounded-xl flex items-center justify-center transition-all shadow-sm border border-slate-100 dark:border-white/5"
                                                 >
                                                     <Trash2 size={18} />
                                                 </motion.button>
@@ -182,7 +182,7 @@ const History = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="text-center py-40 glass-card bg-white"
+                        className="text-center py-40 glass-card"
                     >
                         <div className="w-24 h-24 bg-brand-primary/10 rounded-[2.5rem] mx-auto flex items-center justify-center text-brand-primary mb-10 shadow-premium">
                             <HistoryIcon size={48} />
