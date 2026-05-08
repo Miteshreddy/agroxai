@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MapPin, Navigation, Loader2, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
 import LocationSearch from './LocationSearch';
 
 const getApiUrl = () => {
@@ -18,6 +19,40 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
     const [error, setError] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [locationLabel, setLocationLabel] = useState('');
+
+    const [searchParams] = useSearchParams();
+    const hasAutoLoaded = React.useRef(false);
+
+    useEffect(() => {
+        const districtParam = searchParams.get('district');
+        const stateParam = searchParams.get('state');
+        if ((districtParam || stateParam) && !hasAutoLoaded.current) {
+            hasAutoLoaded.current = true;
+            setLocationMode('manual');
+            const loc = { state: stateParam || '', district: districtParam || '' };
+            setManualLocation(loc);
+
+            if (districtParam) {
+                const autoFetch = async () => {
+                    setIsLoading(true);
+                    setError('');
+                    try {
+                        const geoRes = await axios.get(`${API}/geocode`, { params: loc });
+                        const lat = geoRes.data.latitude;
+                        const lon = geoRes.data.longitude;
+                        const label = `${loc.district || ''}${loc.district && loc.state ? ', ' : ''}${loc.state || ''}`;
+                        setSelectedCoords({ lat, lon });
+                        await fetchAndDisplayWeather(lat, lon, label);
+                    } catch (err) {
+                        console.error('Auto location link failed:', err);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                autoFetch();
+            }
+        }
+    }, [searchParams]);
 
     const fetchAndDisplayWeather = async (lat, lon, label = '') => {
         setIsLoading(true);

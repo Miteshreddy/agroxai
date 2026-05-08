@@ -116,13 +116,13 @@ const MyFarm = () => {
           </motion.div>
           {/* Quick Actions */}
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="flex flex-wrap gap-3">
-            <button onClick={() => setShowAddField(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-dark transition-all shadow-premium hover:shadow-premium-hover">
+            <button onClick={() => setShowAddField(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
               <Plus size={14} /> Add Field
             </button>
-            <Link to="/recommend" className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-brand-bg text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-dark hover:text-white transition-all shadow-premium hover:shadow-premium-hover">
+            <Link to="/recommend" className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
               <Zap size={14} /> Run Analysis
             </Link>
-            <Link to="/history" className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-50 transition-all shadow-sm">
+            <Link to="/history" className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-950/40 transition-all shadow-sm">
               <BarChart3 size={14} /> View History
             </Link>
           </motion.div>
@@ -218,42 +218,42 @@ const MyFarm = () => {
 
                         return (
                           <motion.div key={f.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-                            className="p-6 rounded-[2rem] border border-slate-100 bg-white hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300 group">
+                            className="p-6 rounded-[2rem] border border-slate-100 dark:border-white/5 bg-white dark:bg-slate-900 hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300 group">
                             <div className="flex items-start justify-between mb-4">
                               <div>
                                 <div className="flex items-center gap-3 mb-1">
                                   <p className="font-black text-brand-text-primary text-lg uppercase tracking-tight leading-none">{f.name}</p>
                                   <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${status.color}`}>{status.label}</span>
                                 </div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{f.district}{f.district && f.state ? ', ' : ''}{f.state}</p>
+                                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{f.district}{f.district && f.state ? ', ' : ''}{f.state}</p>
                               </div>
-                              <button onClick={() => deleteField(f.id)} className="w-9 h-9 flex items-center justify-center bg-slate-50 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all border border-slate-100">
+                              <button onClick={() => deleteField(f.id)} className="w-9 h-9 flex items-center justify-center bg-slate-50 dark:bg-slate-950/40 text-slate-300 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all border border-slate-100 dark:border-white/5">
                                 <Trash2 size={14} />
                               </button>
                             </div>
 
                             <div className="flex items-center gap-3 flex-wrap mb-5">
                               <span className="px-3 py-1.5 bg-brand-primary/10 text-brand-primary text-[10px] font-black rounded-xl uppercase tracking-wider">{t((f.soilType || 'Loamy').toLowerCase() + 'Soil')}</span>
-                              <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{f.area || 0} acres</span>
-                              <span className="text-[10px] text-slate-300 font-black uppercase tracking-widest">{fieldCropCount} crops logged</span>
+                              <span className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{f.area || 0} acres</span>
+                              <span className="text-[10px] text-slate-300 dark:text-slate-600 font-black uppercase tracking-widest">{fieldCropCount} crops logged</span>
                             </div>
 
                             {/* Success rate bar */}
                             {fieldCropCount > 0 && (
                               <div className="mb-5">
                                 <div className="flex justify-between mb-1">
-                                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Success Rate</span>
+                                  <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Success Rate</span>
                                   <span className="text-[9px] font-black text-brand-text-primary">{progressPct}%</span>
                                 </div>
-                                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                   <motion.div initial={{ width: 0 }} animate={{ width: `${progressPct}%` }} transition={{ duration: 1.2, delay: 0.3 }}
                                     className={`h-full rounded-full ${progressPct >= 60 ? 'bg-emerald-500' : progressPct >= 30 ? 'bg-amber-400' : 'bg-red-400'}`} />
                                 </div>
                               </div>
                             )}
 
-                            <button onClick={() => navigate('/recommend')}
-                              className="w-full py-3.5 bg-brand-primary text-brand-bg rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-brand-dark hover:text-white transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
+                            <button onClick={() => navigate(`/recommend?soil=${f.soilType}&district=${f.district}&state=${f.state}&autorun=true`)}
+                              className="w-full py-3.5 bg-brand-primary text-slate-950 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
                               {t('analyzeBtn')} <ArrowRight size={12} className="inline ml-2" />
                             </button>
                           </motion.div>
@@ -263,7 +263,7 @@ const MyFarm = () => {
                   )}
 
                   <button onClick={() => setShowAddField(true)}
-                    className="w-full mt-6 py-5 border-2 border-dashed border-slate-100 text-slate-400 hover:text-brand-primary hover:border-brand-primary/30 hover:bg-brand-primary/5 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
+                    className="w-full mt-6 py-5 border-2 border-dashed border-slate-100 dark:border-white/5 text-slate-400 dark:text-slate-500 hover:text-brand-primary hover:border-brand-primary/30 hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
                     <Plus size={18} /> {t('addNewField')}
                   </button>
                 </div>
@@ -282,12 +282,12 @@ const MyFarm = () => {
                         { label: 'pH Level', value: avgSoil.ph, max: 10, unit: '', isPH: true },
                       ].map((item, i) => (
                         <motion.div key={i} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5 + i * 0.1 }}
-                          className="p-5 bg-slate-50 border border-slate-100 rounded-2xl text-center">
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">{item.label}</p>
+                          className="p-5 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-white/5 rounded-2xl text-center">
+                          <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">{item.label}</p>
                           <p className="text-3xl font-black text-brand-text-primary mb-3">
                             <CountUp end={item.value} decimals={item.isPH ? 1 : 0} duration={1.5} />
                           </p>
-                          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min((item.value / item.max) * 100, 100)}%` }}
@@ -314,10 +314,10 @@ const MyFarm = () => {
                     <div className="space-y-3 max-h-[320px] overflow-y-auto custom-scrollbar pr-2">
                       {crops.slice().reverse().map((c, i) => (
                         <motion.div key={c.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.06 }}
-                          className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-100 hover:shadow-premium transition-all">
+                          className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 hover:shadow-premium transition-all">
                           <div>
                             <p className="text-sm font-black text-brand-text-primary uppercase tracking-tight">{c.cropName}</p>
-                            <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">{t((c.season || 'Kharif').toLowerCase())} {c.year} · {c.fieldName}</p>
+                            <p className="text-[9px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest">{t((c.season || 'Kharif').toLowerCase())} {c.year} · {c.fieldName}</p>
                           </div>
                           <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border ${OUTCOME_COLORS[c.outcome] || ''}`}>
                             {t(c.outcome === 'Good Yield' ? 'goodYield' : c.outcome === 'Average' ? 'averageYield' : 'poorYield')}
@@ -328,7 +328,7 @@ const MyFarm = () => {
                   )}
                   {fields.length > 0 && (
                     <button onClick={() => setShowLogCrop(true)}
-                      className="w-full mt-6 py-4 border-2 border-dashed border-slate-100 text-slate-400 hover:text-brand-primary hover:border-brand-primary/30 hover:bg-brand-primary/5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
+                      className="w-full mt-6 py-4 border-2 border-dashed border-slate-100 dark:border-white/5 text-slate-400 dark:text-slate-500 hover:text-brand-primary hover:border-brand-primary/30 hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
                       <Plus size={16} /> {t('logPastCrop')}
                     </button>
                   )}
@@ -392,14 +392,14 @@ const MyFarm = () => {
                   ) : (
                     <div className="space-y-3">
                       {history.slice(0, 5).map((h, i) => (
-                        <div key={h.id || i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                        <div key={h.id || i} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-brand-primary shadow-sm">
+                            <div className="w-10 h-10 bg-white dark:bg-slate-950/40 rounded-xl flex items-center justify-center text-brand-primary shadow-sm border border-slate-100 dark:border-white/5">
                               <Sprout size={18} />
                             </div>
                             <div>
                               <p className="text-sm font-black text-brand-text-primary uppercase">{h.crop}</p>
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{h.location} · {Math.round(h.confidence * 100)}% Match</p>
+                              <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{h.location} · {Math.round(h.confidence * 100)}% Match</p>
                             </div>
                           </div>
                           <Link to="/recommend" className="text-brand-primary p-2 hover:bg-brand-primary/10 rounded-lg">
@@ -416,10 +416,10 @@ const MyFarm = () => {
                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">{t('farmOverviewHeader')}</h3>
                   {uniqueSoils.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">{t('soilTypesLabel')}</p>
+                      <p className="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest mb-3">{t('soilTypesLabel')}</p>
                       <div className="flex flex-wrap gap-2">
                         {uniqueSoils.map(s => (
-                          <span key={s} className="px-3 py-1.5 bg-slate-50 border border-slate-100 text-slate-500 text-[9px] font-black rounded-lg uppercase tracking-wider">{t((s || 'Loamy').toLowerCase() + 'Soil')}</span>
+                          <span key={s} className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 text-slate-500 dark:text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-wider">{t((s || 'Loamy').toLowerCase() + 'Soil')}</span>
                         ))}
                       </div>
                     </div>

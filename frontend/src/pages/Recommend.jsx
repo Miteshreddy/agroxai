@@ -228,6 +228,17 @@ const Recommend = () => {
         }
     }, [result]);
 
+    // Deep Linking: Auto-populate soil types from query params
+    useEffect(() => {
+        const soilParam = searchParams.get('soil');
+        if (soilParam) {
+            const matched = SOIL_TYPES.find(s => s.toLowerCase() === soilParam.toLowerCase());
+            if (matched) {
+                setManualSoil(matched);
+            }
+        }
+    }, [searchParams]);
+
     // Demo mode: auto-fill and auto-submit
     useEffect(() => {
         const isDemo = searchParams.get('demo') === 'true';
@@ -249,19 +260,15 @@ const Recommend = () => {
             };
             setLocationData(demoLocation);
             setManualSoil('Loamy');
-            // Auto-trigger after a brief delay
-            setTimeout(() => {
-                // We need to trigger handleSubmit, but locationData might not be set yet
-                // So we'll use a flag
-            }, 500);
         }
     }, [searchParams]);
 
-    // Auto-submit for demo mode once locationData is set
+    // Auto-submit for demo / autorun mode once locationData is set
     const demoTriggered = useRef(false);
     useEffect(() => {
         const isDemo = searchParams.get('demo') === 'true';
-        if (isDemo && locationData && !demoTriggered.current && !result) {
+        const isAutorun = searchParams.get('autorun') === 'true';
+        if ((isDemo || isAutorun) && locationData && !demoTriggered.current && !result) {
             demoTriggered.current = true;
             setTimeout(() => handleSubmit(), 800);
         }
