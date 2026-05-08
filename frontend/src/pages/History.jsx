@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
-import T from '../components/T';
+import T, { TD } from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 
 const getApiUrl = () => {
@@ -152,15 +152,15 @@ const History = () => {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-7">
-                                                <p className="text-brand-text-primary font-bold text-sm mb-0.5">{record.inputs.season}</p>
-                                                <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary opacity-40 tracking-widest">{record.inputs.temperature}°C Engine Read</T>
+                                                <p className="text-brand-text-primary font-bold text-sm mb-0.5"><TD value={record.inputs?.season || record.workflow?.farmer_inputs?.season || 'Monsoon'} /></p>
+                                                <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary opacity-40 tracking-widest">{(record.inputs?.temperature || record.workflow?.farmer_inputs?.temperature || 25)}°C Engine Read</T>
                                             </td>
                                             <td className="px-8 py-7">
                                                 <span className="px-3 py-1 bg-brand-primary/10 text-brand-primary rounded-lg text-xs font-black uppercase italic">
                                                     {record.result?.total_duration || 'N/A'}
                                                 </span>
                                             </td>
-                                            <td className="px-8 py-7 text-brand-text-primary font-bold text-sm tracking-wide">{record.inputs.soil_type}</td>
+                                            <td className="px-8 py-7 text-brand-text-primary font-bold text-sm tracking-wide"><TD value={record.inputs?.soil_type || record.inputs?.manual_soil_type || record.workflow?.farmer_inputs?.soil_type || 'Loamy'} /></td>
                                             <td className="px-8 py-7 text-brand-text-secondary font-bold text-sm">{new Date(record.createdAt).toLocaleDateString()}</td>
                                             <td className="px-8 py-7 text-right">
                                                 <motion.button

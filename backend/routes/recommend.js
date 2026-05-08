@@ -116,10 +116,12 @@ router.post('/recommend', async (req, res) => {
         // Enrich with crop metadata
         const cropInfo = getCropMetadata(top1.crop);
 
-        // Save to Mongo
         const recommendation = new Recommendation({
             userId: req.user?.id || 'guest',
-            inputs: req.body,
+            inputs: {
+                ...req.body,
+                ...farmer_inputs
+            },
             workflow: {
                 location: { lat, lon },
                 weather,
