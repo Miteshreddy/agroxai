@@ -35,7 +35,7 @@ const DEMO_PRESETS = [
         label: 'Dry Region',
         icon: Sun,
         iconColor: 'text-orange-500',
-        color: 'bg-white border-slate-100 text-brand-text-primary hover:border-orange-200 hover:bg-orange-50/50 shadow-sm',
+        color: 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 text-slate-800 dark:text-slate-200 hover:border-orange-200 dark:hover:border-orange-500/30 hover:bg-orange-50/50 dark:hover:bg-orange-500/10 shadow-sm',
         lat: 26.9124, lon: 70.9120,
         soil: 'Sandy',
         weather: { temperature: 38, humidity: 22, rainfall: 15, season: 'Summer', climate_zone: 'Arid', location: { city: 'Jaisalmer' } }
@@ -45,7 +45,7 @@ const DEMO_PRESETS = [
         label: 'High Rainfall',
         icon: CloudRain,
         iconColor: 'text-blue-500',
-        color: 'bg-white border-slate-100 text-brand-text-primary hover:border-blue-200 hover:bg-blue-50/50 shadow-sm',
+        color: 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 text-slate-800 dark:text-slate-200 hover:border-blue-200 dark:hover:border-blue-500/30 hover:bg-blue-50/50 dark:hover:bg-blue-500/10 shadow-sm',
         lat: 25.2948, lon: 91.7362,
         soil: 'Loamy',
         weather: { temperature: 22, humidity: 92, rainfall: 280, season: 'Monsoon', climate_zone: 'Tropical', location: { city: 'Cherrapunji' } }
@@ -55,7 +55,7 @@ const DEMO_PRESETS = [
         label: 'Fertile Plains',
         icon: Wheat,
         iconColor: 'text-emerald-500',
-        color: 'bg-white border-slate-100 text-brand-text-primary hover:border-emerald-200 hover:bg-emerald-50/50 shadow-sm',
+        color: 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 text-slate-800 dark:text-slate-200 hover:border-emerald-200 dark:hover:border-emerald-500/30 hover:bg-emerald-50/50 dark:hover:bg-emerald-500/10 shadow-sm',
         lat: 30.9010, lon: 75.8573,
         soil: 'Alluvial',
         weather: { temperature: 28, humidity: 55, rainfall: 100, season: 'Monsoon', climate_zone: 'Semi-Arid', location: { city: 'Ludhiana' } }
@@ -320,29 +320,29 @@ const Recommend = () => {
                             <select
                                 value={manualSoil}
                                 onChange={e => setManualSoil(e.target.value)}
-                                className="w-full appearance-none px-5 py-4 rounded-2xl border border-slate-200 bg-white font-bold text-xs uppercase tracking-widest text-brand-text-primary outline-none focus:border-brand-primary transition-all shadow-sm"
+                                className="w-full appearance-none px-5 py-4 rounded-2xl border border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 font-bold text-xs uppercase tracking-widest text-brand-text-primary outline-none focus:border-brand-primary transition-all shadow-sm"
                             >
-                                {SOIL_TYPES.map(s => <option key={s} value={s}>{t(s.toLowerCase() + 'Soil')}</option>)}
+                                {SOIL_TYPES.map(s => <option key={s} value={s} className="bg-white dark:bg-slate-900 text-brand-text-primary">{t(s.toLowerCase() + 'Soil')}</option>)}
                             </select>
                             <ChevronDown size={14} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                         </div>
 
                         {/* Weather snapshot (if location selected) */}
                         {locationData?.weatherData && (
-                            <div className="mt-6 p-5 bg-slate-50 border border-slate-100 rounded-2xl">
-                                <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Environment Snapshot</T>
+                            <div className="mt-6 p-5 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-white/5 rounded-2xl">
+                                <T as="p" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">Environment Snapshot</T>
                                 <div className="grid grid-cols-3 gap-4 text-center">
                                     <div className="space-y-1">
                                         <p className="text-xl font-black text-brand-text-primary leading-none">{Math.round(locationData.weatherData.temperature)}°</p>
-                                        <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Temp</T>
+                                        <T as="p" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Temp</T>
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-xl font-black text-brand-text-primary leading-none">{locationData.weatherData.humidity}%</p>
-                                        <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Humidity</T>
+                                        <T as="p" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Humidity</T>
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-xl font-black text-brand-text-primary leading-none">{locationData.weatherData.rainfall}</p>
-                                        <T as="p" className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">mm Rain</T>
+                                        <T as="p" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-tighter">mm Rain</T>
                                     </div>
                                 </div>
                             </div>
@@ -357,7 +357,7 @@ const Recommend = () => {
                     onClick={handleSubmit}
                     disabled={loading || !locationData}
                     data-submit-btn
-                    className="w-full py-5 bg-brand-primary text-brand-bg font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover hover:bg-brand-dark hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4 group"
+                    className="w-full py-5 bg-brand-primary text-slate-950 font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4 group"
                 >
                     {loading
                         ? <><Loader2 className="animate-spin" size={18} /><T>Processing…</T></>
