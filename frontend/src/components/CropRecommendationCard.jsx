@@ -19,7 +19,7 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="bg-brand-text-primary rounded-[3rem] p-12 mb-10 relative overflow-hidden shadow-premium-hover border-t border-white/10"
+            className="bg-slate-950 dark:bg-slate-900 rounded-[3rem] p-12 mb-10 relative overflow-hidden shadow-premium-hover border border-slate-200 dark:border-white/5"
         >
             <div className="absolute top-8 right-8 flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                 <CheckCircle size={14} className="text-brand-primary" />

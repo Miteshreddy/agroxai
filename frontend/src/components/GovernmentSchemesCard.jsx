@@ -17,8 +17,8 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
 
     return (
         <div className={`overflow-hidden rounded-3xl border transition-all duration-300 mb-4 ${isSpecific
-                ? 'bg-brand-green/5 border-brand-green/20'
-                : 'bg-white border-brand-green/10'
+                ? 'bg-brand-green/5 dark:bg-brand-green/10 border-brand-green/20 dark:border-brand-green/30'
+                : 'bg-white dark:bg-slate-900 border-brand-green/10 dark:border-white/5'
             }`}>
             <div
                 className="p-6 cursor-pointer flex items-center justify-between gap-4"
@@ -30,14 +30,14 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
                     </div>
                     <div className="flex-grow">
                         <div className="flex items-center gap-2 mb-1">
-                            <TD value={scheme.name} as="h4" className="font-black text-brand-dark uppercase tracking-tight text-lg" />
+                            <TD value={scheme.name} as="h4" className="font-black text-brand-text-primary uppercase tracking-tight text-lg" />
                             {isSpecific && (
                                 <span className="bg-brand-green/20 text-brand-green text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border border-brand-green/20">
                                     <T>For</T> <TD value={cropName} />
                                 </span>
                             )}
                         </div>
-                        <TD value={scheme.benefit} as="p" className="text-sm text-brand-olive font-medium line-clamp-1" />
+                        <TD value={scheme.benefit} as="p" className="text-sm text-brand-text-secondary font-medium line-clamp-1" />
                     </div>
                 </div>
 
@@ -67,17 +67,17 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-4">
                                     <div>
-                                        <h5 className="text-[10px] font-black text-brand-olive uppercase tracking-[0.2em] mb-2 flex items-center gap-2 opacity-60">
+                                        <h5 className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-2 flex items-center gap-2 opacity-60">
                                             <Info size={12} /> <T>Full Name & Eligibility</T>
                                         </h5>
-                                        <TD value={scheme.fullName} as="p" className="text-xs font-black text-brand-dark mb-1" />
-                                        <TD value={scheme.eligibility} as="p" className="text-sm text-brand-olive font-medium leading-relaxed italic" />
+                                        <TD value={scheme.fullName} as="p" className="text-xs font-black text-brand-text-primary mb-1" />
+                                        <TD value={scheme.eligibility} as="p" className="text-sm text-brand-text-secondary font-medium leading-relaxed italic" />
                                     </div>
                                     <div>
-                                        <h5 className="text-[10px] font-black text-brand-olive uppercase tracking-[0.2em] mb-2 flex items-center gap-2 opacity-60">
+                                        <h5 className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-2 flex items-center gap-2 opacity-60">
                                             <HelpCircle size={12} /> <T>How to Apply</T>
                                         </h5>
-                                        <TD value={scheme.howToApply} as="p" className="text-sm text-brand-olive font-bold leading-relaxed" />
+                                        <TD value={scheme.howToApply} as="p" className="text-sm text-brand-text-secondary font-bold leading-relaxed" />
                                     </div>
                                 </div>
 
@@ -88,7 +88,7 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
                                         </h5>
                                         <div className="flex flex-wrap gap-2">
                                             {scheme.documents.map((doc, idx) => (
-                                                <span key={idx} className="bg-white px-3 py-1.5 rounded-xl border border-brand-green/10 text-[10px] font-bold text-brand-dark flex items-center gap-1">
+                                                <span key={idx} className="bg-white dark:bg-slate-950/40 px-3 py-1.5 rounded-xl border border-brand-green/10 dark:border-white/5 text-[10px] font-bold text-brand-text-primary flex items-center gap-1">
                                                     <CheckCircle2 size={10} className="text-brand-green" /> <TD value={doc} />
                                                 </span>
                                             ))}
@@ -128,12 +128,12 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
         >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-6 border-b border-brand-green/10 text-center md:text-left">
                 <div>
-                    <h3 className="text-3xl font-black text-brand-dark uppercase tracking-tight flex items-center gap-3 justify-center md:justify-start italic">
+                    <h3 className="text-3xl font-black text-brand-text-primary uppercase tracking-tight flex items-center gap-3 justify-center md:justify-start italic">
                         🏛️ <span className="text-brand-green"><T>Government</T></span> <T>Support</T>
                     </h3>
-                    <T as="p" className="text-brand-olive font-medium text-sm mt-1">Official subsidies, income support, and insurance schemes for your crop.</T>
+                    <T as="p" className="text-brand-text-secondary font-medium text-sm mt-1">Official subsidies, income support, and insurance schemes for your crop.</T>
                 </div>
-                <div className="bg-brand-green text-white px-6 py-4 rounded-[2rem] border-4 border-white shadow-xl flex items-center gap-4 justify-center">
+                <div className="bg-brand-green text-slate-950 px-6 py-4 rounded-[2rem] border-4 border-slate-950 dark:border-white/5 shadow-xl flex items-center gap-4 justify-center">
                     <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                         <PhoneCall size={20} />
                     </div>
@@ -147,7 +147,7 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
             {/* Crop Specific Section */}
             {crop_specific_schemes.length > 0 && (
                 <div className="mb-10">
-                    <h4 className="text-[11px] font-black text-brand-dark uppercase tracking-[0.25em] mb-6 flex items-center gap-2 opacity-60">
+                    <h4 className="text-[11px] font-black text-brand-text-primary uppercase tracking-[0.25em] mb-6 flex items-center gap-2 opacity-60">
                         <BookmarkCheck className="text-brand-green" size={16} /> <T>Targeted Schemes for</T> <TD value={cropName} />
                     </h4>
                     <div className="space-y-2">
@@ -160,7 +160,7 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
 
             {/* Universal Section */}
             <div>
-                <h4 className="text-[11px] font-black text-brand-dark uppercase tracking-[0.25em] mb-6 flex items-center gap-2 opacity-60">
+                <h4 className="text-[11px] font-black text-brand-text-primary uppercase tracking-[0.25em] mb-6 flex items-center gap-2 opacity-60">
                     <CheckCircle2 size={16} /> <T>Universal Farmer Support</T>
                 </h4>
                 <div className="space-y-2">
@@ -171,9 +171,9 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
             </div>
 
             {/* Context Note */}
-            <div className="mt-10 p-5 bg-brand-green/5 border border-brand-green/10 rounded-2xl flex items-center gap-4">
+            <div className="mt-10 p-5 bg-brand-green/5 dark:bg-brand-green/10 border border-brand-green/10 dark:border-brand-green/20 rounded-2xl flex items-center gap-4">
                 <Info className="text-brand-green shrink-0" size={20} />
-                <p className="text-xs text-brand-olive font-bold italic leading-relaxed">
+                <p className="text-xs text-brand-text-secondary font-bold italic leading-relaxed">
                     <T>Note:</T> <TD value={state_schemes_note} />
                 </p>
             </div>
