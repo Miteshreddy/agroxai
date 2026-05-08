@@ -7,26 +7,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        'brand-primary': '#1F7A63',
-        'brand-dark': '#145A4A',
-        'brand-soft': '#E6F4EF',
-        'brand-bg': '#F8FAFC',
-        'brand-text-primary': '#0F172A',
-        'brand-text-secondary': '#64748B',
-        'brand-cream': '#F5F5F0', // Keeping for backward compatibility if needed, but will transition
-        'brand-green': '#1F7A63', // Alias for primary
-        'brand-gold': '#C8A951',
-        'brand-olive': '#6B705C',
+        'brand-primary': '#10B981', // Neon emerald
+        'brand-dark': '#065F46', // Deep emerald
+        'brand-soft': 'rgba(16, 185, 129, 0.08)', // Glowing subtle emerald
+        'brand-bg': '#0B1020', // Premium deep space navy
+        'brand-text-primary': '#F8FAFC', // Slate-50 near-white
+        'brand-text-secondary': '#94A3B8', // Slate-400 cool gray
+        'brand-cream': 'rgba(255, 255, 255, 0.04)', // Glass dark backdrop
+        'brand-green': '#10B981', // Emerald alias
+        'brand-gold': '#22D3EE', // Brilliant cyber cyan
+        'brand-olive': '#1E293B', // Deep dark slate-800
       },
       borderRadius: {
-        '2xl': '12px',
-        '3xl': '16px',
-        '4xl': '24px',
+        '2xl': '16px',
+        '3xl': '24px',
+        '4xl': '32px',
       },
       boxShadow: {
-        'premium': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 10px -1px rgba(15, 23, 42, 0.03)',
-        'premium-hover': '0 20px 40px -12px rgba(15, 23, 42, 0.12)',
-        'glow': '0 0 15px rgba(31, 122, 99, 0.2)',
+        'premium': '0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px rgba(255, 255, 255, 0.05)',
+        'premium-hover': '0 12px 40px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(34, 211, 238, 0.15)',
+        'glow': '0 0 20px rgba(16, 185, 129, 0.25)',
       },
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
