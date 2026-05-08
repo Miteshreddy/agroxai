@@ -38,18 +38,17 @@ const LanguageSwitcher = ({ compact = false }) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         title={t('changeLanguage')}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 font-bold text-xs"
-        style={{
-          background: isOpen ? 'rgba(22,163,74,0.12)' : 'rgba(22,163,74,0.06)',
-          border: '1.5px solid rgba(22,163,74,0.2)',
-          color: '#16a34a',
-        }}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 font-bold text-xs border ${
+          isOpen 
+            ? 'bg-brand-primary/15 border-brand-primary/35 text-brand-primary' 
+            : 'bg-brand-primary/5 hover:bg-brand-primary/10 border-brand-primary/15 text-brand-primary'
+        }`}
       >
         <Globe size={15} />
         {!compact && (
           <span className="hidden sm:block max-w-[60px] truncate">{currentLanguage.nativeName}</span>
         )}
-        <span className="text-[10px] font-black px-1 py-0.5 rounded-md text-white" style={{ background: 'linear-gradient(135deg,#16a34a,#4ade80)' }}>
+        <span className="text-[10px] font-black px-1 py-0.5 rounded-md text-brand-bg" style={{ background: 'linear-gradient(135deg,var(--accent-primary),var(--accent-cyan))' }}>
           {currentLanguage.code === 'en' ? 'EN' : 'IN'}
         </span>
         <ChevronDown
@@ -66,39 +65,33 @@ const LanguageSwitcher = ({ compact = false }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="absolute right-0 mt-2 w-72 rounded-2xl overflow-hidden z-[200] shadow-2xl"
-            style={{
-              background: 'rgba(255,255,255,0.97)',
-              backdropFilter: 'blur(16px)',
-              border: '1px solid rgba(22,163,74,0.15)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
-            }}
+            className="absolute right-0 mt-2 w-72 rounded-2xl overflow-hidden z-[200] shadow-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/5 backdrop-blur-md"
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-green-100 flex items-center gap-2">
-              <Globe size={16} className="text-green-600" />
-              <span className="text-xs font-black text-gray-600 uppercase tracking-widest">{t('changeLanguage')}</span>
+            <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2">
+              <Globe size={16} className="text-brand-primary" />
+              <span className="text-xs font-black text-brand-text-secondary uppercase tracking-widest">{t('changeLanguage')}</span>
             </div>
 
             {/* Search */}
-            <div className="px-3 py-2 border-b border-green-50">
+            <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5">
               <div className="relative">
-                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
                   autoFocus
                   placeholder={t('searchPlaceholder')}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-gray-50 border border-gray-100 focus:outline-none focus:border-green-300 font-medium text-gray-700 placeholder-gray-400"
+                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-white/5 focus:outline-none focus:border-brand-primary font-medium text-brand-text-primary placeholder-slate-400"
                 />
               </div>
             </div>
 
             {/* Language List */}
-            <div className="max-h-64 overflow-y-auto py-1" style={{ scrollbarWidth: 'thin', scrollbarColor: '#16a34a transparent' }}>
+            <div className="max-h-64 overflow-y-auto py-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--accent-primary) transparent' }}>
               {filtered.length === 0 ? (
-                <div className="text-center py-6 text-gray-400 text-xs font-medium">No language found</div>
+                <div className="text-center py-6 text-brand-text-secondary text-xs font-medium">No language found</div>
               ) : (
                 filtered.map(lang => {
                   const isActive = lang.code === currentLanguage.code;
@@ -106,17 +99,17 @@ const LanguageSwitcher = ({ compact = false }) => {
                     <button
                       key={lang.code}
                       onClick={() => handleSelect(lang.code)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 transition-colors text-left group"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors text-left group"
                     >
-                      <span className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center text-[10px] font-black text-white" style={{ background: 'linear-gradient(135deg,#16a34a,#4ade80)' }}>
+                      <span className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center text-[10px] font-black text-white" style={{ background: 'linear-gradient(135deg,#10B981,#14B8A6)' }}>
                         {lang.code === 'en' ? 'EN' : 'IN'}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-black text-gray-800 leading-tight">{lang.nativeName}</div>
-                        <div className="text-[10px] text-gray-400 font-medium">{lang.name} • {lang.region}</div>
+                        <div className="text-sm font-black text-brand-text-primary leading-tight">{lang.nativeName}</div>
+                        <div className="text-[10px] text-brand-text-secondary font-medium">{lang.name} • {lang.region}</div>
                       </div>
                       {isActive && (
-                        <Check size={15} className="text-green-500 flex-shrink-0" strokeWidth={3} />
+                        <Check size={15} className="text-brand-primary flex-shrink-0" strokeWidth={3} />
                       )}
                     </button>
                   );
@@ -125,10 +118,10 @@ const LanguageSwitcher = ({ compact = false }) => {
             </div>
 
             {/* Footer link to full language page */}
-            <div className="border-t border-green-100 px-4 py-2.5">
+            <div className="border-t border-slate-100 dark:border-white/5 px-4 py-2.5 bg-slate-50/50 dark:bg-slate-950/20">
               <button
                 onClick={() => { setIsOpen(false); navigate('/language'); }}
-                className="w-full text-center text-xs text-green-600 font-black hover:text-green-700 transition-colors uppercase tracking-wider"
+                className="w-full text-center text-xs text-brand-primary font-black hover:opacity-80 transition-colors uppercase tracking-wider"
               >
                 {t('allLanguages')} →
               </button>

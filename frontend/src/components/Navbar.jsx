@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, History, Home as HomeIcon, Sprout, LogOut, User, Wheat } from 'lucide-react';
+import { Leaf, History, Home as HomeIcon, Sprout, LogOut, User, Wheat, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import T from './T';
 import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const { t } = useLanguage();
     const navigate = useNavigate();
     const location = useLocation();
@@ -39,7 +41,7 @@ const Navbar = () => {
         >
             <div className="max-w-7xl mx-auto px-6">
                 <div className={`flex items-center justify-between transition-all duration-500 px-6 py-3 rounded-[2rem] ${isScrolled
-                    ? 'bg-white/70 backdrop-blur-xl shadow-premium border border-white/40'
+                    ? 'bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-premium border border-white/40 dark:border-white/5'
                     : 'bg-transparent border border-transparent'
                     }`}>
                     <Link to="/" className="flex items-center space-x-3 px-2 group">
@@ -75,12 +77,25 @@ const Navbar = () => {
                         })}
 
                         {/* Language Switcher */}
-                        <div className="pl-2 border-l border-slate-200 ml-2">
+                        <div className="pl-2 border-l border-slate-200 dark:border-white/10 ml-2">
                             <LanguageSwitcher />
                         </div>
 
+                        {/* Theme Switcher */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2.5 bg-brand-primary/5 hover:bg-brand-primary/10 text-brand-primary rounded-xl border border-brand-primary/15 transition-all flex items-center justify-center cursor-pointer ml-2 relative overflow-hidden"
+                            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                        >
+                            {theme === 'dark' ? (
+                                <Sun size={15} />
+                            ) : (
+                                <Moon size={15} />
+                            )}
+                        </button>
+
                         {user && (
-                            <div className="flex items-center gap-4 pl-4 border-l border-slate-200 ml-2">
+                            <div className="flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-white/10 ml-2">
                                 <div className="hidden lg:flex items-center gap-2">
                                     <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary">
                                         <User size={16} />

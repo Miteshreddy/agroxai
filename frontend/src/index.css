@@ -4,87 +4,142 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #EEF2FF;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --accent-primary: #10B981;
+  --accent-hover: #059669;
+  --accent-soft: rgba(16, 185, 129, 0.05);
+  --accent-cyan: #14B8A6;
+  --border-color: rgba(15, 23, 42, 0.06);
+  
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-hover-bg: rgba(255, 255, 255, 0.85);
+  --card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.03), 0 4px 12px -3px rgba(15, 23, 42, 0.02);
+  --card-shadow-hover: 0 25px 50px -12px rgba(15, 23, 42, 0.08), 0 0 30px rgba(16, 185, 129, 0.04);
+}
+
+.dark {
+  --bg-primary: #020617;
+  --bg-secondary: #0F172A;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --accent-primary: #34D399;
+  --accent-hover: #059669;
+  --accent-soft: rgba(52, 211, 153, 0.06);
+  --accent-cyan: #22D3EE;
+  --border-color: rgba(255, 255, 255, 0.05);
+  
+  --card-bg: rgba(15, 23, 42, 0.7);
+  --card-hover-bg: rgba(15, 23, 42, 0.9);
+  --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.02);
+  --card-shadow-hover: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(52, 211, 153, 0.06);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-brand-bg text-brand-text-primary antialiased overflow-x-hidden relative;
+    @apply bg-brand-bg text-brand-text-primary antialiased overflow-x-hidden relative transition-colors duration-500;
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-image: 
-      radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(34, 211, 238, 0.05) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(11, 16, 32, 1) 0%, rgba(6, 9, 19, 1) 100%);
+      radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.01) 0%, transparent 45%),
+      radial-gradient(circle at 90% 80%, rgba(34, 211, 238, 0.01) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, var(--bg-secondary) 0%, var(--bg-primary) 100%);
     background-attachment: fixed;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-brand-text-primary font-black tracking-tight;
+    @apply text-brand-text-primary font-black tracking-tight transition-colors duration-500;
   }
 }
 
 @layer components {
   .btn-primary {
-    background: linear-gradient(135deg, #10B981 0%, #22D3EE 100%);
-    @apply px-8 py-3.5 text-brand-bg rounded-3xl font-black uppercase tracking-wider transition-all duration-300 hover:scale-[1.03] hover:shadow-premium-hover active:scale-[0.97] relative overflow-hidden flex items-center justify-center gap-2 border border-brand-primary/20;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-cyan) 100%);
+    @apply px-8 py-3.5 text-slate-950 rounded-3xl font-black uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] hover:shadow-premium-hover active:scale-[0.98] relative overflow-hidden flex items-center justify-center gap-2;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--card-bg);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    @apply rounded-3xl p-8 transition-all duration-500 shadow-premium;
+    border: 1px solid var(--border-color);
+    @apply rounded-3xl p-8 transition-all duration-500;
+    box-shadow: var(--card-shadow);
   }
 
   .glass-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(34, 211, 238, 0.25);
-    @apply -translate-y-1.5 shadow-premium-hover;
+    background: var(--card-hover-bg);
+    border-color: var(--accent-primary);
+    @apply -translate-y-1;
+    box-shadow: var(--card-shadow-hover);
   }
 
   .input-field {
+    background: rgba(15, 23, 42, 0.02);
+    border: 1px solid var(--border-color);
+    @apply w-full px-5 py-3.5 rounded-2xl focus:outline-none transition-all duration-300 text-brand-text-primary font-bold text-xs tracking-wider placeholder:text-slate-400 dark:placeholder:text-slate-500;
+  }
+  .dark .input-field {
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    @apply w-full px-5 py-3.5 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all duration-300 text-brand-text-primary font-bold text-xs tracking-wider placeholder:text-slate-500;
+  }
+  .input-field:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px var(--accent-soft);
   }
 
   .premium-card {
-    background: rgba(15, 23, 42, 0.4);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    @apply rounded-3xl p-6 transition-all duration-500 shadow-premium;
+    border: 1px solid var(--border-color);
+    @apply rounded-3xl p-6 transition-all duration-500;
+    box-shadow: var(--card-shadow);
   }
 
   .premium-card:hover {
-    background: rgba(15, 23, 42, 0.6);
-    border-color: rgba(16, 185, 129, 0.25);
-    @apply -translate-y-1 shadow-premium-hover;
+    background: var(--card-hover-bg);
+    border-color: var(--accent-primary);
+    @apply -translate-y-0.5;
+    box-shadow: var(--card-shadow-hover);
   }
 
   .glass-panel {
-    background: rgba(15, 23, 42, 0.3);
+    background: var(--card-bg);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    @apply shadow-premium;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
   }
 
   /* Status Badges */
   .badge-premium {
-    @apply px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5;
+    @apply px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-500;
   }
 
   .badge-ai {
-    @apply badge-premium bg-brand-primary/10 text-brand-primary border border-brand-primary/20;
+    @apply badge-premium;
+    background: var(--accent-soft);
+    color: var(--accent-primary);
+    border: 1px solid var(--border-color);
   }
 
   .badge-verified {
-    @apply badge-premium bg-cyan-500/10 text-cyan-400 border border-cyan-500/25 shadow-[0_0_10px_rgba(34,211,238,0.1)];
+    @apply badge-premium;
+    background: rgba(6, 182, 212, 0.1);
+    color: var(--accent-cyan);
+    border: 1px solid rgba(6, 182, 212, 0.15);
   }
 
   .badge-confidence {
-    @apply badge-premium bg-amber-500/10 text-amber-400 border border-amber-500/25 shadow-[0_0_10px_rgba(245,158,11,0.1)];
+    @apply badge-premium;
+    background: rgba(245, 158, 11, 0.1);
+    color: #F59E0B;
+    border: 1px solid rgba(245, 158, 11, 0.15);
   }
 }
 
@@ -135,7 +190,7 @@
 
 /* Scroll progress bar */
 #scroll-progress {
-  @apply fixed top-0 left-0 h-1 bg-brand-green z-[100] transition-all duration-150;
+  @apply fixed top-0 left-0 h-1 bg-emerald-500 z-[100] transition-all duration-150;
   width: 0%;
 }
 
@@ -147,7 +202,7 @@
 
 /* Floating Particles */
 .particle {
-  @apply absolute rounded-full bg-brand-green/10 pointer-events-none;
+  @apply absolute rounded-full bg-emerald-500/10 pointer-events-none;
   animation: particleFloat linear infinite;
 }
 
@@ -229,17 +284,17 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(11, 16, 32, 0.5);
+  background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #10B981 0%, #22D3EE 100%);
+  background: var(--accent-primary);
   border-radius: 10px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #22D3EE;
+  background: var(--accent-cyan);
 }
 
 @keyframes float {

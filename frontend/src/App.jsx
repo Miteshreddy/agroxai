@@ -18,6 +18,7 @@ import BackToTop from './components/effects/BackToTop';
 import { AuthProvider } from './context/AuthContext';
 import { RecommendationProvider } from './context/RecommendationContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AgroChatbot from './components/AgroChatbot';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -80,13 +81,15 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <LanguageProvider>
-        <AuthProvider>
-          <RecommendationProvider>
-            <AppContent />
-          </RecommendationProvider>
-        </AuthProvider>
-      </LanguageProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <RecommendationProvider>
+              <AppContent />
+            </RecommendationProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </Router>
   );
 }

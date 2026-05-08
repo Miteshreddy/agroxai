@@ -99,12 +99,12 @@ const Home = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
                 onClick={scrollToHowItWorks}
-                className="px-8 py-3.5 bg-white border border-slate-200 text-brand-text-primary rounded-3xl font-bold shadow-premium hover:shadow-premium-hover hover:-translate-y-1 transition-all"
+                className="px-8 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-slate-800 dark:text-slate-200 rounded-3xl font-bold shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300"
               >
                 <T>How it Works</T>
               </motion.button>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}>
-                <Link to="/recommend?demo=true" className="flex items-center gap-2 px-6 py-3.5 text-brand-primary font-bold rounded-3xl border border-brand-primary/20 hover:bg-brand-primary/5 hover:-translate-y-1 transition-all">
+                <Link to="/recommend?demo=true" className="flex items-center gap-2 px-6 py-3.5 text-brand-primary font-bold rounded-3xl border border-brand-primary/20 hover:bg-brand-primary/5 hover:-translate-y-0.5 transition-all duration-300">
                   <Play size={16} fill="currentColor" />
                   <T>Try Demo</T>
                 </Link>

@@ -39,12 +39,12 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center p-6 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,122,99,0.05),transparent)] pointer-events-none" />
+        <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center p-6 relative overflow-hidden transition-colors duration-500">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.03),transparent)] pointer-events-none" />
             
             <div className="text-center mb-12 relative z-10">
                 <div className="w-16 h-16 bg-brand-primary rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 shadow-premium">
-                    <Leaf className="text-white" size={32} />
+                    <Leaf className="text-slate-950" size={32} />
                 </div>
                 <h1 className="text-4xl font-black text-brand-text-primary uppercase tracking-tighter mb-2">Agro<span className="text-brand-primary italic">XAI</span></h1>
                 <T as="p" className="text-brand-text-secondary font-medium tracking-wide">Welcome back to precision farming</T>
@@ -55,7 +55,7 @@ const Login = () => {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="space-y-2">
-                        <T as="label" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Username</T>
+                        <T as="label" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Username</T>
                         <input
                             type="text"
                             className="input-field"
@@ -66,7 +66,7 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <T as="label" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</T>
+                        <T as="label" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Password</T>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -86,7 +86,7 @@ const Login = () => {
                     </div>
 
                     {error && (
-                        <div className="bg-red-50 text-red-500 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-100 animate-shake text-center">
+                        <div className="bg-red-500/10 text-red-500 dark:text-red-400 p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-500/25 animate-shake text-center">
                             ⚠️ {error}
                         </div>
                     )}
@@ -94,7 +94,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-4 bg-brand-primary text-brand-bg rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-brand-dark hover:text-white transition-all shadow-premium active:scale-[0.98] disabled:opacity-70"
+                        className="w-full py-4 bg-brand-primary text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:opacity-90 transition-all shadow-premium active:scale-[0.98] disabled:opacity-70"
                     >
                         {loading ? (
                             <><Loader2 size={16} className="animate-spin" /><T>Authenticating...</T></>
@@ -104,7 +104,7 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="mt-10 text-center border-t border-slate-100 pt-8">
+                <div className="mt-10 text-center border-t border-slate-100 dark:border-white/5 pt-8">
                     <p className="text-xs text-brand-text-secondary font-bold">
                         <T>Don't have an account?</T>{' '}
                         <Link to="/register" className="text-brand-primary font-black hover:underline underline-offset-4 transition-all">
