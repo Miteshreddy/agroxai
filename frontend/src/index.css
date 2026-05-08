@@ -47,7 +47,7 @@
   .input-field {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    @apply w-full px-5 py-3.5 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all duration-300 text-brand-text-primary font-bold text-xs uppercase tracking-wider placeholder:text-slate-500;
+    @apply w-full px-5 py-3.5 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all duration-300 text-brand-text-primary font-bold text-xs tracking-wider placeholder:text-slate-500;
   }
 
   .premium-card {

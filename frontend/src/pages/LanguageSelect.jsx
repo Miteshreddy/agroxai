@@ -20,16 +20,10 @@ const LanguageSelect = () => {
     selectLanguage(selected);
     navigate('/');
   };
-
   const selectedLang = LANGUAGES.find(l => l.code === selected);
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
-      style={{
-        background: '#F8FAFC',
-      }}
-    >
+    <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center p-6 relative overflow-hidden">
       {/* Animated background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -75,7 +69,7 @@ const LanguageSelect = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-premium-hover"
+          className="glass-card !p-0 overflow-hidden w-full"
         >
           {/* Search bar */}
           <div className="p-6 border-b border-slate-50">
@@ -86,7 +80,7 @@ const LanguageSelect = () => {
                 placeholder={t('searchPlaceholder')}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 text-brand-text-primary placeholder:text-slate-300 text-sm font-bold focus:outline-none focus:bg-white focus:border-brand-primary/30 transition-all"
+                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-slate-950/20 border border-white/10 text-brand-text-primary placeholder:text-slate-500 text-sm font-bold focus:outline-none focus:border-brand-primary/40 transition-all"
               />
             </div>
           </div>
@@ -113,8 +107,8 @@ const LanguageSelect = () => {
                         onClick={() => setSelected(lang.code)}
                         className={`relative p-5 rounded-2xl text-left transition-all duration-300 group border ${
                           isSelected 
-                            ? 'bg-brand-text-primary border-brand-text-primary shadow-premium' 
-                            : 'bg-white border-slate-100 hover:border-brand-primary/30 hover:shadow-premium'
+                            ? 'bg-brand-primary text-brand-bg border-brand-primary shadow-glow' 
+                            : 'bg-white/5 border-white/5 hover:border-brand-primary/30 hover:shadow-premium'
                         }`}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
@@ -129,12 +123,12 @@ const LanguageSelect = () => {
                           </motion.div>
                         )}
                         <div className={`mb-4 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black shadow-sm ${
-                          isSelected ? 'bg-white/10 text-white' : 'bg-brand-primary/10 text-brand-primary'
+                          isSelected ? 'bg-black/20 text-brand-bg' : 'bg-brand-primary/10 text-brand-primary'
                         }`}>
                           {lang.code === 'en' ? 'EN' : 'IN'}
                         </div>
-                        <div className={`font-black text-base leading-tight uppercase tracking-tight ${isSelected ? 'text-white' : 'text-brand-text-primary'}`}>{lang.nativeName}</div>
-                        <div className={`text-[10px] mt-1 font-bold uppercase tracking-widest ${isSelected ? 'text-white/60' : 'text-brand-text-secondary'}`}>{lang.name}</div>
+                        <div className={`font-black text-base leading-tight uppercase tracking-tight ${isSelected ? 'text-brand-bg' : 'text-brand-text-primary'}`}>{lang.nativeName}</div>
+                        <div className={`text-[10px] mt-1 font-bold uppercase tracking-widest ${isSelected ? 'text-brand-bg/80' : 'text-brand-text-secondary'}`}>{lang.name}</div>
                       </motion.button>
                     );
                   })}
@@ -146,7 +140,7 @@ const LanguageSelect = () => {
           {/* Footer / Continue Button */}
           <div className="p-6 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-xs font-black text-brand-primary shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-slate-950/20 border border-white/5 flex items-center justify-center text-xs font-black text-brand-primary shadow-sm">
                 {selectedLang?.code === 'en' ? 'EN' : 'IN'}
               </div>
               <div className="text-left">
@@ -158,7 +152,7 @@ const LanguageSelect = () => {
               onClick={handleContinue}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-4 bg-brand-text-primary text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-4 bg-brand-primary text-brand-bg rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-premium hover:bg-brand-dark hover:text-white transition-all"
             >
               {t('continueBtn')}
               <ArrowRight size={16} />

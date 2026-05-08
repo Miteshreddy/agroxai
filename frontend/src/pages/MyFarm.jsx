@@ -119,7 +119,7 @@ const MyFarm = () => {
             <button onClick={() => setShowAddField(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-dark transition-all shadow-premium hover:shadow-premium-hover">
               <Plus size={14} /> Add Field
             </button>
-            <Link to="/recommend" className="flex items-center gap-2 px-5 py-3 bg-brand-text-primary text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-800 transition-all shadow-premium">
+            <Link to="/recommend" className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-brand-bg text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-dark hover:text-white transition-all shadow-premium hover:shadow-premium-hover">
               <Zap size={14} /> Run Analysis
             </Link>
             <Link to="/history" className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-50 transition-all shadow-sm">
@@ -181,7 +181,7 @@ const MyFarm = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-brand-text-primary rounded-3xl p-8 mb-10 relative overflow-hidden"
+                className="bg-slate-950/40 border border-white/5 rounded-3xl p-8 mb-10 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl -mr-20 -mt-20" />
                 <div className="flex items-start gap-4 relative z-10">
@@ -253,7 +253,7 @@ const MyFarm = () => {
                             )}
 
                             <button onClick={() => navigate('/recommend')}
-                              className="w-full py-3.5 bg-brand-text-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-brand-dark transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
+                              className="w-full py-3.5 bg-brand-primary text-brand-bg rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-brand-dark hover:text-white transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
                               {t('analyzeBtn')} <ArrowRight size={12} className="inline ml-2" />
                             </button>
                           </motion.div>
@@ -359,7 +359,7 @@ const MyFarm = () => {
                 )}
 
                 {/* QUICK INSIGHTS */}
-                <div className="bg-brand-text-primary rounded-[2.5rem] p-8 shadow-premium border border-white/5 relative overflow-hidden">
+                <div className="bg-slate-950/40 rounded-[2.5rem] p-8 shadow-premium border border-white/5 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-3xl -mr-16 -mt-16" />
                   <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-6 relative z-10">{t('quickInsightsHeader')}</h3>
                   {onlyPositive && fields.length > 0 && crops.length > 0 && <HealthyFarmBanner />}

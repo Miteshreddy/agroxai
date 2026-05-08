@@ -113,7 +113,7 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                         <button
                             onClick={handleAutoGPS}
                             disabled={isLoading}
-                            className="w-full py-4 bg-brand-text-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-brand-dark transition-all active:scale-[0.98] disabled:opacity-70 shadow-premium"
+                            className="w-full py-4 bg-brand-primary text-brand-bg rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-brand-dark hover:text-white transition-all active:scale-[0.98] disabled:opacity-70 shadow-premium"
                         >
                             {isLoading ? <Loader2 className="animate-spin" size={16} /> : <Navigation size={16} className="transition-transform group-hover:rotate-12" />}
                             {isLoading ? 'Detecting...' : 'Detect My Location'}
@@ -170,7 +170,7 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                     )}
                 </div>
             ) : (
-                <div className="mt-4 bg-brand-text-primary rounded-[2rem] p-7 text-white relative overflow-hidden shadow-premium-hover">
+                <div className="mt-4 bg-slate-950/40 border border-white/5 rounded-[2rem] p-7 text-white relative overflow-hidden shadow-premium-hover">
                     <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/40 to-transparent opacity-60" />
                     <button
                         onClick={() => setWeatherData(null)}

@@ -357,7 +357,7 @@ const Recommend = () => {
                     onClick={handleSubmit}
                     disabled={loading || !locationData}
                     data-submit-btn
-                    className="w-full py-5 bg-brand-text-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4 group"
+                    className="w-full py-5 bg-brand-primary text-brand-bg font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover hover:bg-brand-dark hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4 group"
                 >
                     {loading
                         ? <><Loader2 className="animate-spin" size={18} /><T>Processing…</T></>

@@ -20,7 +20,7 @@ export const TABS = [
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
     return (
-        <div className="w-full md:w-72 shrink-0 bg-white md:bg-transparent rounded-3xl md:rounded-none overflow-x-auto md:overflow-visible shadow-premium md:shadow-none p-3 md:p-0 border border-slate-100 md:border-none mb-8 md:mb-0">
+        <div className="w-full md:w-72 shrink-0 bg-slate-950/20 md:bg-transparent rounded-3xl md:rounded-none overflow-x-auto md:overflow-visible shadow-premium md:shadow-none p-3 md:p-0 border border-white/5 md:border-none mb-8 md:mb-0">
             <div className="flex flex-row md:flex-col gap-2 min-w-max md:min-w-0 md:sticky md:top-32">
                 {TABS.map((tab) => {
                     const isActive = activeTab === tab.id;
@@ -31,8 +31,8 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 relative outline-none ${
                                 isActive 
-                                    ? 'bg-brand-text-primary text-white font-black shadow-premium-hover' 
-                                    : 'text-brand-text-secondary hover:text-brand-text-primary hover:bg-white hover:shadow-premium font-bold border border-transparent'
+                                    ? 'bg-brand-primary text-brand-bg font-black shadow-premium-hover' 
+                                    : 'text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/5 hover:shadow-premium font-bold border border-transparent'
                             }`}
                         >
                             <Icon size={18} className={isActive ? 'text-brand-primary' : 'text-slate-400 group-hover:text-brand-primary'} />
