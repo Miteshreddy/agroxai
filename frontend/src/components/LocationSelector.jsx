@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { MapPin, Navigation, Loader2, AlertCircle } from 'lucide-react';
+import { MapPin, Navigation, Loader2, AlertCircle, Droplets, CloudRain } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSearchParams } from 'react-router-dom';
 import LocationSearch from './LocationSearch';
@@ -205,11 +205,11 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                     )}
                 </div>
             ) : (
-                <div className="mt-4 bg-slate-950/40 border border-white/5 rounded-[2rem] p-7 text-white relative overflow-hidden shadow-premium-hover">
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/40 to-transparent opacity-60" />
+                <div className="mt-4 bg-gradient-to-br from-emerald-600 via-emerald-700 to-cyan-700 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950/40 border border-emerald-500/10 dark:border-white/5 rounded-[2rem] p-7 text-white relative overflow-hidden shadow-premium-hover hover:scale-[1.01] transition-transform duration-300">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 dark:bg-emerald-500/10 rounded-full blur-2xl -mr-6 -mt-6 pointer-events-none" />
                     <button
                         onClick={() => setWeatherData(null)}
-                        className="absolute top-6 right-6 text-[10px] font-black uppercase tracking-widest bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors z-10"
+                        className="absolute top-6 right-6 text-[10px] font-black uppercase tracking-widest bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 dark:border-white/5 transition-colors z-10"
                     >
                         Change
                     </button>
@@ -218,9 +218,9 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                         <p className="text-2xl font-black mb-6 tracking-tight">{locationLabel}</p>
                         <div className="flex items-end gap-6">
                             <span className="text-6xl font-black tracking-tighter">{Math.round(weatherData.temperature)}°<span className="text-2xl opacity-40 ml-1">C</span></span>
-                            <div className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2 space-y-1">
-                                <p className="flex items-center gap-2"><span className="text-brand-primary">💧</span> {weatherData.humidity}% Humidity</p>
-                                <p className="flex items-center gap-2"><span className="text-brand-primary">🌧️</span> {weatherData.rainfall}mm Rain</p>
+                            <div className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2 space-y-2">
+                                <p className="flex items-center gap-2"><Droplets size={12} className="text-cyan-300 dark:text-brand-primary animate-pulse" /> {weatherData.humidity}% Humidity</p>
+                                <p className="flex items-center gap-2"><CloudRain size={12} className="text-cyan-300 dark:text-brand-primary animate-bounce" /> {weatherData.rainfall}mm Rain</p>
                             </div>
                         </div>
                     </div>
