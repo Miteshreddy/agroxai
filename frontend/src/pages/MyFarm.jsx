@@ -83,22 +83,124 @@ const MyFarm = () => {
 
   useEffect(() => {
     if (user?.id) {
-      setFields(getFields(user.id));
-      setCrops(getCrops(user.id));
+      setLoading(true);
       
-      // Fetch real history from backend
+      // 1. Fetch real farms/fields from MongoDB Atlas
+      apiClient.get(`/farms/user/${user.id}`)
+        .then(res => {
+          const fetchedFarms = res.data.data || res.data;
+          if (Array.isArray(fetchedFarms) && fetchedFarms.length > 0) {
+            setFields(fetchedFarms);
+            saveFields(user.id, fetchedFarms);
+          } else {
+            setFields(getFields(user.id));
+          }
+        })
+        .catch(err => {
+          console.error('Failed to fetch farms from MongoDB, using fallback:', err);
+          setFields(getFields(user.id));
+        });
+
+      // 2. Fetch real history and crops from MongoDB Atlas
       apiClient.get(`/history/user/${user.id}`)
-        .then(res => setHistory(res.data.data || res.data))
-        .catch(err => console.error('Failed to fetch history:', err));
+        .then(res => {
+          const records = res.data.data || res.data;
+          setHistory(records || []);
+          
+          if (Array.isArray(records)) {
+            // Map actual recommendation records as real crop history logs
+            const derivedCrops = records.map(r => ({
+              id: r._id,
+              cropName: r.predictionResult?.crop || 'Unknown',
+              fieldName: r.farmName || r.location || 'Manual Run',
+              season: r.environmentalData?.season || 'Monsoon',
+              year: new Date(r.createdAt).getFullYear(),
+              outcome: 'Good Yield'
+            }));
+            
+            // Get manually logged past crops from localStorage
+            const localCrops = getCrops(user.id);
+            // Merge both and remove duplicates
+            const merged = [...localCrops];
+            derivedCrops.forEach(dc => {
+              const exists = merged.some(lc => lc.cropName === dc.cropName && lc.fieldName === dc.fieldName && lc.year === dc.year);
+              if (!exists) merged.push(dc);
+            });
+            setCrops(merged);
+          } else {
+            setCrops(getCrops(user.id));
+          }
+        })
+        .catch(err => {
+          console.error('Failed to fetch history, using fallback:', err);
+          setCrops(getCrops(user.id));
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
-    
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
   }, [user]);
 
-  const addField = (f) => { if (!user?.id) return; const nf = [...fields, f]; setFields(nf); saveFields(user.id, nf); };
-  const deleteField = (id) => { if (!user?.id) return; const nf = fields.filter(f => f.id !== id); setFields(nf); saveFields(user.id, nf); };
-  const addCrop = (c) => { if (!user?.id) return; const nc = [...crops, c]; setCrops(nc); saveCrops(user.id, nc); };
+  const addField = async (f) => { 
+    if (!user?.id) return; 
+    try {
+      const res = await apiClient.post('/farms', {
+        userId: user.id,
+        name: f.name,
+        soilType: f.soilType,
+        district: f.district,
+        state: f.state,
+        area: f.area
+      });
+      const savedFarm = res.data.data || res.data;
+      const nf = [...fields, { ...f, _id: savedFarm._id, id: savedFarm._id }];
+      setFields(nf); 
+      saveFields(user.id, nf);
+      // Removed toast for simplicity
+    } catch (err) {
+      console.error('Failed to save field to MongoDB, saving locally:', err);
+      const nf = [...fields, f];
+      setFields(nf);
+      saveFields(user.id, nf);
+    }
+  };
+
+  const deleteField = async (id) => { 
+    if (!user?.id) return; 
+    try {
+      await apiClient.delete(`/farms/${id}`);
+      const nf = fields.filter(f => f._id !== id && f.id !== id); 
+      setFields(nf); 
+      saveFields(user.id, nf);
+    } catch (err) {
+      console.error('Failed to delete field from MongoDB:', err);
+      const nf = fields.filter(f => f.id !== id && f._id !== id); 
+      setFields(nf); 
+      saveFields(user.id, nf);
+    }
+  };
+
+  const addCrop = async (c) => { 
+    if (!user?.id) return; 
+    const targetFarm = fields.find(f => f.name === c.fieldName);
+    if (targetFarm && (targetFarm._id || targetFarm.id)) {
+      try {
+        await apiClient.post(`/farms/${targetFarm._id || targetFarm.id}/crops`, {
+          cropName: c.cropName,
+          season: c.season,
+          year: c.year,
+          outcome: c.outcome
+        });
+      } catch (err) {
+        console.error('Failed to log crop to MongoDB:', err);
+      }
+    }
+    const nc = [...crops, c]; 
+    setCrops(nc); 
+    saveCrops(user.id, nc); 
+  };
 
   const insights = generateInsights(fields, crops);
   const totalArea = (fields || []).reduce((s, f) => s + (parseFloat(f?.area) || 0), 0);
@@ -234,7 +336,7 @@ const MyFarm = () => {
                         const progressPct = fieldCropCount > 0 ? Math.round((goodCount / fieldCropCount) * 100) : 0;
 
                         return (
-                          <motion.div key={f.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+                          <motion.div key={f._id || f.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
                             className="p-6 rounded-[2rem] border border-brand-border bg-brand-surface hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300 group">
                             <div className="flex items-start justify-between mb-4">
                               <div>
@@ -244,17 +346,17 @@ const MyFarm = () => {
                                 </div>
                                 <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest">{f.district}{f.district && f.state ? ', ' : ''}{f.state}</p>
                               </div>
-                              <button onClick={() => deleteField(f.id)} className="w-9 h-9 flex items-center justify-center bg-brand-surface-inset text-brand-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-brand-border">
+                              <button onClick={() => deleteField(f._id || f.id)} className="w-9 h-9 flex items-center justify-center bg-brand-surface-inset text-brand-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-brand-border">
                                 <Trash2 size={14} />
                               </button>
                             </div>
-
+ 
                             <div className="flex items-center gap-3 flex-wrap mb-5">
                               <span className="px-3 py-1.5 bg-brand-primary/10 text-brand-primary text-[10px] font-black rounded-xl uppercase tracking-wider">{t((f.soilType || 'Loamy').toLowerCase() + 'Soil')}</span>
                               <span className="text-[10px] text-brand-text-secondary font-black uppercase tracking-widest">{f.area || 0} acres</span>
                               <span className="text-[10px] text-brand-text-secondary font-black uppercase tracking-widest">{fieldCropCount} crops logged</span>
                             </div>
-
+ 
                             {/* Success rate bar */}
                             {fieldCropCount > 0 && (
                               <div className="mb-5">
@@ -268,8 +370,8 @@ const MyFarm = () => {
                                 </div>
                               </div>
                             )}
-
-                            <button onClick={() => navigate(`/recommend?farmId=${f.id}&farmName=${encodeURIComponent(f.name || '')}&soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)}
+ 
+                            <button onClick={() => navigate(`/recommend?farmId=${f._id || f.id}&farmName=${encodeURIComponent(f.name || '')}&soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)}
                               className="w-full py-3.5 bg-brand-primary text-slate-950 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
                               {t('analyzeBtn')} <ArrowRight size={12} className="inline ml-2" />
                             </button>

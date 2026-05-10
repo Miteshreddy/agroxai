@@ -60,6 +60,7 @@ const authRouter = require('./routes/auth');
 const weatherRouter = require('./routes/weather');
 const chatRouter = require('./routes/chat');
 const historyRouter = require('./routes/history');
+const farmsRouter = require('./routes/farms');
 
 app.use('/api', recommendRouter);
 app.use('/api', riskRouter);
@@ -75,6 +76,7 @@ app.use('/api/auth', authRouter);
 app.use('/api', weatherRouter);
 app.use('/api', chatRouter);
 app.use('/api', historyRouter);
+app.use('/api', farmsRouter);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
