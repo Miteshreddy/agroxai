@@ -9,9 +9,13 @@ import CropExplanationPanel from '../CropExplanationPanel';
 
 const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
     const [isExporting, setIsExporting] = useState(false);
-    const [notes, setNotes] = useState(record.notes || '');
+    const [notes, setNotes] = useState(record?.notes || '');
     const [isSavingNote, setIsSavingNote] = useState(false);
     const reportRef = useRef(null);
+
+    React.useEffect(() => {
+        if (record) setNotes(record.notes || '');
+    }, [record]);
 
     if (!record) return null;
 
