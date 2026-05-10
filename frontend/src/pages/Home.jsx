@@ -183,7 +183,7 @@ const Home = () => {
 
         {/* 4. Futuristic AI analytics HUD fragments */}
         <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center p-6">
-          <div className="w-full h-full max-w-5xl border border-brand-primary/5 rounded-[3rem] relative">
+          <div className="w-full h-full max-w-5xl relative">
             <div className="absolute -top-1 -left-1 w-5 h-5 border-t border-l border-brand-primary/20" />
             <div className="absolute -top-1 -right-1 w-5 h-5 border-t border-r border-brand-primary/20" />
             <div className="absolute -bottom-1 -left-1 w-5 h-5 border-b border-l border-brand-primary/20" />
