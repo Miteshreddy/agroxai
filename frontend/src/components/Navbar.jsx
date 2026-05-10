@@ -77,7 +77,7 @@ const Navbar = () => {
                         })}
 
                         {/* Language Switcher */}
-                        <div className="pl-2 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <div className="pl-2 border-l border-brand-border ml-2">
                             <LanguageSwitcher />
                         </div>
 
@@ -87,15 +87,23 @@ const Navbar = () => {
                             className="p-2.5 bg-brand-primary/5 hover:bg-brand-primary/10 text-brand-primary rounded-xl border border-brand-primary/15 transition-all flex items-center justify-center cursor-pointer ml-2 relative overflow-hidden"
                             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                         >
-                            {theme === 'dark' ? (
-                                <Sun size={15} />
-                            ) : (
-                                <Moon size={15} />
-                            )}
+                            <motion.div
+                                key={theme}
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: 20, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                {theme === 'dark' ? (
+                                    <Sun size={15} />
+                                ) : (
+                                    <Moon size={15} />
+                                )}
+                            </motion.div>
                         </button>
 
                         {user && (
-                            <div className="flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-white/10 ml-2">
+                            <div className="flex items-center gap-4 pl-4 border-l border-brand-border ml-2">
                                 <div className="hidden lg:flex items-center gap-2">
                                     <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary">
                                         <User size={16} />
@@ -104,7 +112,7 @@ const Navbar = () => {
                                 </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="p-2.5 hover:bg-red-50 text-brand-text-secondary hover:text-red-500 rounded-xl transition-all group"
+                                    className="p-2.5 hover:bg-red-500/10 text-brand-text-secondary hover:text-red-500 rounded-xl transition-all group"
                                     title="Logout"
                                 >
                                     <LogOut size={18} className="group-hover:translate-x-0.5 transition-transform" />

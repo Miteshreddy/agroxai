@@ -27,6 +27,7 @@ import T from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import MagneticButton from '../components/effects/MagneticButton';
 
 // Demo presets for expo
 const DEMO_PRESETS = [
@@ -325,7 +326,7 @@ const Recommend = () => {
                             <T>REAL-TIME DATA</T>
                         </span>
                     </div>
-                    <T as="h1" className="text-5xl md:text-6xl font-black text-brand-text-primary tracking-tight mb-4 uppercase">
+                    <T as="h1" className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-brand-gold to-brand-primary animate-gradient-x tracking-tight mb-4 uppercase">
                         PRECISION ANALYSIS
                     </T>
                     <T as="p" className="text-brand-text-secondary font-medium text-base max-w-2xl mx-auto">
@@ -381,19 +382,23 @@ const Recommend = () => {
                 </div>
 
                 {/* Submit button */}
-                <motion.button
-                    whileHover={{ scale: 1.01, boxShadow: '0 0 30px rgba(31, 122, 99, 0.15)' }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleSubmit}
-                    disabled={loading || !locationData}
-                    data-submit-btn
-                    className="w-full py-5 bg-brand-primary text-slate-950 font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-premium hover:shadow-premium-hover hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all mb-4 group"
-                >
-                    {loading
-                        ? <><Loader2 className="animate-spin" size={18} /><T>Processing…</T></>
-                        : <><Sprout size={18} className="transition-transform group-hover:scale-110" /><T>Get Best Crop Match</T></>
-                    }
-                </motion.button>
+                <div className="w-full mb-4">
+                  <MagneticButton className="w-full">
+                      <motion.button
+                          whileHover={{ scale: 1.01, boxShadow: '0 0 30px rgba(16, 185, 129, 0.25)' }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={handleSubmit}
+                          disabled={loading || !locationData}
+                          data-submit-btn
+                          className="w-full py-5 btn-primary font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed group"
+                      >
+                          {loading
+                              ? <><Loader2 className="animate-spin" size={18} /><T>Processing…</T></>
+                              : <><Sprout size={18} className="transition-transform group-hover:scale-110" /><T>Get Best Crop Match</T></>
+                          }
+                      </motion.button>
+                  </MagneticButton>
+                </div>
 
                 {/* Demo Presets */}
                 {!result && !loading && (

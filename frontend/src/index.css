@@ -37,6 +37,12 @@
   --border-color: rgba(15, 23, 42, 0.08);
   --border-strong: rgba(15, 23, 42, 0.12);
 
+  /* ── Semantic Status ── */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #3B82F6;
+
   /* ── Shadows ── */
   --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
   --card-shadow-hover: 0 8px 30px rgba(15, 23, 42, 0.08), 0 0 20px rgba(16, 185, 129, 0.04);
@@ -72,6 +78,12 @@
   /* ── Borders ── */
   --border-color: rgba(255, 255, 255, 0.06);
   --border-strong: rgba(255, 255, 255, 0.10);
+
+  /* ── Semantic Status ── */
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --info: #60A5FA;
 
   /* ── Shadows ── */
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
@@ -127,10 +139,19 @@
   /* ── Primary Button ── */
   .btn-primary {
     background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-cyan) 100%);
-    @apply px-8 py-3.5 rounded-3xl font-black uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden flex items-center justify-center gap-2;
+    @apply px-8 py-4 rounded-3xl font-black uppercase tracking-widest transition-all duration-300 relative overflow-hidden flex items-center justify-center gap-2;
     color: #0F172A;
     border: 1px solid rgba(16, 185, 129, 0.2);
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+  }
+
+  .btn-primary:hover {
+    @apply scale-[1.02] -translate-y-0.5;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);
+  }
+  
+  .btn-primary:active {
+    @apply scale-[0.98] translate-y-0;
   }
 
   /* ── Glass Card ── */

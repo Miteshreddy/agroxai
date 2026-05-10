@@ -12,7 +12,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import T from '../components/T';
 
-const OUTCOME_COLORS = { 'Good Yield': 'bg-emerald-100 text-emerald-700 border-emerald-200', 'Average': 'bg-amber-100 text-amber-700 border-amber-200', 'Poor': 'bg-red-100 text-red-700 border-red-200' };
+const OUTCOME_COLORS = { 'Good Yield': 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20', 'Average': 'bg-amber-500/10 text-amber-500 border-amber-500/20', 'Poor': 'bg-red-500/10 text-red-500 border-red-500/20' };
 
 const getApiUrl = () => {
     const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
@@ -41,25 +41,25 @@ const getNPKColor = (val, max) => {
 };
 
 const getRiskLevel = (fields = [], crops = []) => {
-  if (!fields || !fields.length) return { level: '—', color: 'text-slate-400', bg: 'bg-slate-50' };
+  if (!fields || !fields.length) return { level: '—', color: 'text-brand-text-secondary', bg: 'bg-brand-surface-inset border-brand-border' };
   const safeCrops = crops || [];
   const poorCount = safeCrops.filter(c => c.outcome === 'Poor').length;
   const total = safeCrops.length || 1;
   const ratio = poorCount / total;
-  if (ratio > 0.4) return { level: 'High', color: 'text-red-600', bg: 'bg-red-50 border-red-200' };
-  if (ratio > 0.15) return { level: 'Medium', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' };
-  return { level: 'Low', color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' };
+  if (ratio > 0.4) return { level: 'High', color: 'text-brand-danger', bg: 'bg-red-500/10 border-red-500/20' };
+  if (ratio > 0.15) return { level: 'Medium', color: 'text-brand-warning', bg: 'bg-amber-500/10 border-amber-500/20' };
+  return { level: 'Low', color: 'text-brand-success', bg: 'bg-emerald-500/10 border-emerald-500/20' };
 };
 
 const getFieldStatus = (fieldName, crops = []) => {
   const safeCrops = crops || [];
   const fc = safeCrops.filter(c => c.fieldName === fieldName);
-  if (!fc.length) return { label: 'New', color: 'text-blue-600 bg-blue-50 border-blue-200' };
+  if (!fc.length) return { label: 'New', color: 'text-brand-info bg-brand-info/10 border-brand-info/20' };
   const last = fc[fc.length - 1];
-  if (!last) return { label: 'New', color: 'text-blue-600 bg-blue-50 border-blue-200' };
-  if (last.outcome === 'Poor') return { label: 'At Risk', color: 'text-red-600 bg-red-50 border-red-200' };
-  if (last.outcome === 'Good Yield') return { label: 'Healthy', color: 'text-emerald-600 bg-emerald-50 border-emerald-200' };
-  return { label: 'Moderate', color: 'text-amber-600 bg-amber-50 border-amber-200' };
+  if (!last) return { label: 'New', color: 'text-brand-info bg-brand-info/10 border-brand-info/20' };
+  if (last.outcome === 'Poor') return { label: 'At Risk', color: 'text-brand-danger bg-brand-danger/10 border-brand-danger/20' };
+  if (last.outcome === 'Good Yield') return { label: 'Healthy', color: 'text-brand-success bg-brand-success/10 border-brand-success/20' };
+  return { label: 'Moderate', color: 'text-brand-warning bg-brand-warning/10 border-brand-warning/20' };
 };
 
 const AI_SUMMARIES = [
@@ -151,10 +151,10 @@ const MyFarm = () => {
             [...Array(5)].map((_, i) => <CardSkeleton key={i} />)
           ) : (
             [
-              { label: 'Total Fields', value: fields.length, icon: MapPin, color: 'text-brand-primary', bg: 'bg-emerald-50/50' },
-              { label: 'Total Area', value: totalArea, suffix: ' ac', icon: Layers, color: 'text-brand-primary', bg: 'bg-emerald-50/50' },
-              { label: 'Active Crops', value: activeCrops, icon: Sprout, color: 'text-brand-primary', bg: 'bg-emerald-50/50' },
-              { label: 'Crop Records', value: crops.length, icon: BarChart3, color: 'text-brand-primary', bg: 'bg-emerald-50/50' },
+              { label: 'Total Fields', value: fields.length, icon: MapPin, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { label: 'Total Area', value: totalArea, suffix: ' ac', icon: Layers, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { label: 'Active Crops', value: activeCrops, icon: Sprout, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { label: 'Crop Records', value: crops.length, icon: BarChart3, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
               { label: 'Risk Level', value: null, icon: Shield, color: risk.color, bg: risk.bg },
             ].map((card, i) => (
               <motion.div
@@ -162,7 +162,7 @@ const MyFarm = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
-                className={`rounded-2xl p-5 border shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 ${card.bg} border-slate-100`}
+                className={`rounded-2xl p-5 border shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 bg-brand-surface-inset border-brand-border`}
               >
                 <card.icon size={18} className={`${card.color} mb-3`} />
                 {card.value !== null ? (
@@ -172,7 +172,7 @@ const MyFarm = () => {
                 ) : (
                   <p className={`text-2xl font-black leading-none mb-1 ${risk.color}`}>{risk.level}</p>
                 )}
-                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{card.label}</p>
+                <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{card.label}</p>
               </motion.div>
             ))
           )}
@@ -358,16 +358,16 @@ const MyFarm = () => {
                       <Calendar size={18} className="text-brand-primary" /> <T>Recent Activity</T>
                     </h3>
                     <div className="relative pl-6">
-                      <div className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-slate-100" />
+                      <div className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-brand-border" />
                       {[
                         ...(fields || []).slice(-3).map(f => ({ type: 'field', text: `Added field "${f.name || 'Unnamed'}"`, sub: `${f.soilType || 'Soil'} · ${f.area || 0} acres`, date: f.updatedAt })),
                         ...(crops || []).slice(-3).map(c => ({ type: 'crop', text: `Logged ${c.cropName || 'Crop'}`, sub: `${c.season || ''} ${c.year || ''} · ${c.fieldName || ''}`, date: `${c.season || ''} ${c.year || ''}` })),
                       ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).map((item, i) => (
                         <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + i * 0.1 }} className="relative mb-5 last:mb-0">
-                          <div className={`absolute -left-6 top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm z-10 ${item.type === 'field' ? 'bg-blue-400' : 'bg-emerald-400'}`} />
+                          <div className={`absolute -left-6 top-1.5 w-3.5 h-3.5 rounded-full border-2 border-brand-surface shadow-sm z-10 ${item.type === 'field' ? 'bg-blue-400' : 'bg-emerald-400'}`} />
                           <div className="ml-3">
                             <p className="text-sm font-bold text-brand-text-primary">{item.text}</p>
-                            <p className="text-[10px] font-bold text-slate-400">{item.sub}</p>
+                            <p className="text-[10px] font-bold text-brand-text-tertiary">{item.sub}</p>
                           </div>
                         </motion.div>
                       ))}

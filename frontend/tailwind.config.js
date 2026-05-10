@@ -35,6 +35,12 @@ export default {
         'brand-border': 'var(--border-color)',
         'brand-border-strong': 'var(--border-strong)',
 
+        // Semantic Status
+        'brand-success': 'var(--success)',
+        'brand-warning': 'var(--warning)',
+        'brand-danger': 'var(--danger)',
+        'brand-info': 'var(--info)',
+
         // Legacy aliases (backward compatibility)
         'brand-cream': 'var(--surface-solid)',
         'brand-olive': 'var(--text-secondary)',

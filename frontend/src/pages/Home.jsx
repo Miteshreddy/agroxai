@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Zap, ArrowRight, ShieldCheck, Sprout, CheckCircle2, Leaf, MousePointer2, Play } from 'lucide-react';
+import { Zap, ArrowRight, ShieldCheck, Sprout, CheckCircle2, Leaf, MousePointer2, Play, Activity } from 'lucide-react';
 import FloatingParticles from '../components/effects/FloatingParticles';
+import MagneticButton from '../components/effects/MagneticButton';
 import T from '../components/T';
 
 const HERO_IMAGES = [
@@ -72,41 +73,51 @@ const Home = () => {
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-6xl md:text-[5.5rem] font-black text-brand-text-primary leading-[0.85] tracking-tighter mb-8"
+              transition={{ duration: 0.8, delay: 0.1, type: "spring", stiffness: 100 }}
+              className="text-6xl md:text-[5.5rem] font-black text-brand-text-primary leading-[1.05] tracking-tight mb-8"
             >
-              <T>GROW THE RIGHT CROP EVERY TIME.</T>
+              <T>GROW THE RIGHT</T><br/>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-gold to-brand-primary animate-gradient-x">
+                <T>CROP EVERY TIME</T>
+              </span>.
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-brand-text-secondary max-w-lg mb-10 leading-relaxed font-medium"
+              className="text-xl text-brand-text-secondary max-w-lg mb-12 leading-relaxed font-medium"
             >
               <T>Join the next generation of precision farming with AgroXAI — where explainable machine learning meets the field.</T>
             </motion.p>
 
-            <div className="flex flex-wrap gap-4">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
-                <Link to="/recommend" className="btn-primary group">
-                  <T>Start Recommendation</T>
-                  <ArrowRight className="inline ml-1 transition-transform group-hover:translate-x-1" size={20} />
-                </Link>
+            <div className="flex flex-wrap items-center gap-6">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.3, type: "spring" }}>
+                <MagneticButton>
+                  <Link to="/recommend" className="btn-primary group">
+                    <T>Start Recommendation</T>
+                    <ArrowRight className="inline ml-1 transition-transform group-hover:translate-x-1" size={20} />
+                  </Link>
+                </MagneticButton>
               </motion.div>
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                onClick={scrollToHowItWorks}
-                className="px-8 py-3.5 bg-brand-surface-elevated border border-brand-border text-brand-text-primary rounded-3xl font-bold shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <T>How it Works</T>
-              </motion.button>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}>
-                <Link to="/recommend?demo=true" className="flex items-center gap-2 px-6 py-3.5 text-brand-primary font-bold rounded-3xl border border-brand-primary/20 hover:bg-brand-primary/5 hover:-translate-y-0.5 transition-all duration-300">
-                  <Play size={16} fill="currentColor" />
-                  <T>Try Demo</T>
+              
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.4, type: "spring" }}>
+                <MagneticButton>
+                  <button
+                    onClick={scrollToHowItWorks}
+                    className="px-8 py-4 bg-brand-surface border border-brand-border text-brand-text-primary rounded-3xl font-bold shadow-sm hover:shadow-premium hover:-translate-y-0.5 hover:border-brand-primary/30 transition-all duration-300"
+                  >
+                    <T>How it Works</T>
+                  </button>
+                </MagneticButton>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.6 }}>
+                <Link to="/recommend?demo=true" className="flex items-center gap-2 px-4 py-2 text-brand-text-secondary font-bold hover:text-brand-primary transition-colors group">
+                  <div className="p-2 bg-brand-surface-inset rounded-full group-hover:scale-110 transition-transform">
+                    <Play size={14} fill="currentColor" />
+                  </div>
+                  <T>Watch Demo</T>
                 </Link>
               </motion.div>
             </div>
@@ -122,35 +133,37 @@ const Home = () => {
               <div className="absolute -inset-10 bg-brand-primary/20 blur-[100px] rounded-full opacity-30 animate-pulse pointer-events-none" />
               
               <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
-                className="relative w-full h-full rounded-[4rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)] z-10"
+                className="relative w-full h-[600px] rounded-[3rem] overflow-hidden shadow-[0_20px_80px_rgba(16,185,129,0.15)] z-10 border border-brand-border/50 bg-brand-surface"
               >
-                <AnimatePresence initial={false}>
-                  <motion.div
-                    key={imgIndex}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ opacity: { duration: 1.5, ease: "easeInOut" } }}
-                    className="absolute inset-0"
-                  >
-                    <motion.img
-                      src={HERO_IMAGES[imgIndex]}
-                      alt="Modern Agriculture"
-                      initial={{ scale: 1 }}
-                      animate={{ scale: 1.05 }}
-                      transition={{ duration: 6, ease: "linear" }}
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-                
-                {/* Cinematic gradient & vignette overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-dark/60 via-transparent to-transparent opacity-80 z-20" />
-                <div className="absolute inset-0 bg-brand-primary/5 mix-blend-multiply z-20" />
-                <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.3)] z-20" />
+                {/* Device Inner Border */}
+                <div className="absolute inset-[8px] rounded-[2.5rem] overflow-hidden border border-brand-border/30 z-20">
+                    <AnimatePresence initial={false}>
+                    <motion.div
+                        key={imgIndex}
+                        initial={{ opacity: 0, filter: "blur(10px)" }}
+                        animate={{ opacity: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, filter: "blur(10px)" }}
+                        transition={{ duration: 1.5, ease: "easeInOut" }}
+                        className="absolute inset-0"
+                    >
+                        <motion.img
+                        src={HERO_IMAGES[imgIndex]}
+                        alt="Modern Agriculture"
+                        initial={{ scale: 1 }}
+                        animate={{ scale: 1.05 }}
+                        transition={{ duration: 8, ease: "linear" }}
+                        className="w-full h-full object-cover"
+                        />
+                    </motion.div>
+                    </AnimatePresence>
+                    
+                    {/* Cinematic overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent z-20 pointer-events-none" />
+                    <div className="absolute inset-0 bg-brand-primary/5 mix-blend-overlay z-20 pointer-events-none" />
+                </div>
               </motion.div>
 
               {/* Floating Badges (Repositioned for better visual balance) */}
@@ -158,14 +171,15 @@ const Home = () => {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="absolute top-10 -left-10 glass-card !p-5 !rounded-2xl shadow-premium-hover flex items-center space-x-3 border-white/40 z-30 float-animation"
+                className="absolute top-16 -left-8 glass-card !p-4 !rounded-2xl shadow-premium flex items-center space-x-4 border-brand-border/50 z-30 float-animation backdrop-blur-xl"
               >
-                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
-                  <ShieldCheck className="text-brand-primary" size={24} />
+                <div className="w-10 h-10 bg-brand-primary/10 rounded-full flex items-center justify-center relative">
+                  <div className="absolute inset-0 border-2 border-brand-primary/30 rounded-full animate-ping" />
+                  <Activity className="text-brand-primary" size={18} />
                 </div>
                 <div>
-                  <T as="p" className="text-[10px] uppercase font-black text-brand-text-primary tracking-tighter opacity-40">Precision AI</T>
-                  <T as="p" className="text-sm font-bold text-brand-text-primary">VERIFIED MATCH</T>
+                  <T as="p" className="text-[9px] uppercase font-black text-brand-text-tertiary tracking-widest">Scanning Environment</T>
+                  <T as="p" className="text-xs font-black text-brand-text-primary">LIVE METRICS</T>
                 </div>
               </motion.div>
 
@@ -173,14 +187,14 @@ const Home = () => {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 1 }}
-                className="absolute bottom-10 -right-10 glass-card !p-5 !rounded-2xl shadow-premium-hover flex items-center space-x-3 border-white/40 z-30 float-animation-delayed"
+                className="absolute bottom-24 -right-8 glass-card !p-4 !rounded-2xl shadow-premium flex items-center space-x-4 border-brand-border/50 z-30 float-animation-delayed backdrop-blur-xl"
               >
-                <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center">
-                  <CheckCircle2 className="text-blue-500" size={24} />
+                <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center relative">
+                  <CheckCircle2 className="text-blue-500" size={20} />
                 </div>
                 <div>
-                  <T as="p" className="text-[10px] uppercase font-black text-brand-text-primary tracking-tighter opacity-40">Healthy Growth</T>
-                  <T as="p" className="text-sm font-bold text-brand-text-primary">92% CONFIDENCE</T>
+                  <T as="p" className="text-[9px] uppercase font-black text-brand-text-tertiary tracking-widest">Growth Probability</T>
+                  <T as="p" className="text-xs font-black text-brand-text-primary">92% CONFIDENCE</T>
                 </div>
               </motion.div>
             </motion.div>
