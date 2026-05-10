@@ -203,3 +203,54 @@ export const LogCropModal = ({ open, onClose, onSave, fields }) => {
     </AnimatePresence>
   );
 };
+
+export const SelectFarmModal = ({ open, onClose, fields, onSelect }) => {
+  const { t } = useLanguage();
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <Backdrop onClose={onClose}>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-black text-brand-text-primary uppercase">Select Farm to Analyze</h3>
+              <button onClick={onClose} className="p-1 hover:bg-brand-surface-hover rounded-lg text-brand-text-secondary"><X size={18} /></button>
+            </div>
+            
+            {fields.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-sm font-bold text-brand-text-secondary mb-4">No fields added yet.</p>
+                <button onClick={onClose} className="py-2 px-4 bg-brand-primary text-slate-950 rounded-xl text-xs font-black uppercase tracking-widest">
+                  Close
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                {fields.map(f => (
+                  <button
+                    key={f.id}
+                    onClick={() => {
+                      onSelect(f);
+                      onClose();
+                    }}
+                    className="w-full text-left p-4 rounded-xl border border-brand-border bg-brand-surface hover:border-brand-primary hover:bg-brand-surface-inset transition-all group flex justify-between items-center"
+                  >
+                    <div>
+                      <p className="text-sm font-black text-brand-text-primary uppercase">{f.name}</p>
+                      <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest mt-1">
+                        {f.district}{f.district && f.state ? ', ' : ''}{f.state} · {f.soilType}
+                      </p>
+                    </div>
+                    <div className="w-8 h-8 rounded-lg bg-brand-surface-elevated border border-brand-border flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-slate-950 transition-colors">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </Backdrop>
+      )}
+    </AnimatePresence>
+  );
+};

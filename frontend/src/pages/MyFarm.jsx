@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import CountUp from 'react-countup';
 import { getFields, saveFields, getCrops, saveCrops, getHistory, generateInsights } from '../utils/farmInsights';
 import { NoFieldsSVG, NoCropsSVG, HealthyFarmBanner } from '../components/FarmIllustrations';
-import { AddFieldModal, LogCropModal } from '../components/FarmModals';
+import { AddFieldModal, LogCropModal, SelectFarmModal } from '../components/FarmModals';
 import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
 import T from '../components/T';
@@ -66,6 +66,7 @@ const MyFarm = () => {
   const [history, setHistory] = useState([]);
   const [showAddField, setShowAddField] = useState(false);
   const [showLogCrop, setShowLogCrop] = useState(false);
+  const [showSelectFarm, setShowSelectFarm] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -119,9 +120,9 @@ const MyFarm = () => {
             <button onClick={() => setShowAddField(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
               <Plus size={14} /> Add Field
             </button>
-            <Link to="/recommend" className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
+            <button onClick={() => setShowSelectFarm(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
               <Zap size={14} /> Run Analysis
-            </Link>
+            </button>
             <Link to="/history" className="flex items-center gap-2 px-5 py-3 bg-brand-surface-elevated border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-surface-hover transition-all shadow-sm">
               <BarChart3 size={14} /> View History
             </Link>
@@ -252,7 +253,7 @@ const MyFarm = () => {
                               </div>
                             )}
 
-                            <button onClick={() => navigate(`/recommend?soil=${f.soilType}&district=${f.district}&state=${f.state}&autorun=true`)}
+                            <button onClick={() => navigate(`/recommend?soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)}
                               className="w-full py-3.5 bg-brand-primary text-slate-950 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
                               {t('analyzeBtn')} <ArrowRight size={12} className="inline ml-2" />
                             </button>
@@ -432,6 +433,12 @@ const MyFarm = () => {
 
       <AddFieldModal open={showAddField} onClose={() => setShowAddField(false)} onSave={addField} />
       <LogCropModal open={showLogCrop} onClose={() => setShowLogCrop(false)} onSave={addCrop} fields={fields} />
+      <SelectFarmModal 
+        open={showSelectFarm} 
+        onClose={() => setShowSelectFarm(false)} 
+        fields={fields} 
+        onSelect={(f) => navigate(`/recommend?soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)} 
+      />
     </motion.div>
   );
 };
