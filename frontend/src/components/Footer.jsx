@@ -20,8 +20,8 @@ const Footer = () => {
             Revolutionizing agriculture through explainable artificial intelligence. Empowering farmers with precise, data-driven crop recommendations.
           </T>
           <div className="flex gap-4">
-            <SocialLink icon={<Twitter size={20} />} href="#" />
-            <SocialLink icon={<Linkedin size={20} />} href="#" />
+            <SocialLink icon={<Twitter size={20} />} href="https://github.com/Miteshreddy/agroxai" />
+            <SocialLink icon={<Linkedin size={20} />} href="https://github.com/Miteshreddy/agroxai" />
             <SocialLink icon={<Github size={20} />} href="https://github.com/Miteshreddy/agroxai" />
           </div>
         </div>
