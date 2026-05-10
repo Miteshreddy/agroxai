@@ -26,61 +26,64 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 
 const AppContent = () => {
+  const location = useLocation();
+  const isAuthRoute = ['/login', '/register', '/language'].includes(location.pathname);
+
   return (
     <ErrorBoundary>
       <div className="flex flex-col min-h-screen bg-brand-bg">
-      <ScrollProgress />
-      <BackToTop />
-      <Toaster position="top-center" />
-      <Navbar />
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        <ScrollProgress />
+        <BackToTop />
+        <Toaster position="top-center" />
+        {!isAuthRoute && <Navbar />}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Language selection page — protected, shown after login */}
-          <Route path="/language" element={
-            <ProtectedRoute>
-              <LanguageSelect />
-            </ProtectedRoute>
-          } />
+            {/* Language selection page — protected, shown after login */}
+            <Route path="/language" element={
+              <ProtectedRoute>
+                <LanguageSelect />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/" element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          } />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/recommend" element={
-            <ProtectedRoute>
-              <Recommend />
-            </ProtectedRoute>
-          } />
+            <Route path="/recommend" element={
+              <ProtectedRoute>
+                <Recommend />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/my-farm" element={
-            <ProtectedRoute>
-              <MyFarm />
-            </ProtectedRoute>
-          } />
+            <Route path="/my-farm" element={
+              <ProtectedRoute>
+                <MyFarm />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/history" element={
-            <ProtectedRoute>
-              <History />
-            </ProtectedRoute>
-          } />
+            <Route path="/history" element={
+              <ProtectedRoute>
+                <History />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/intelligence" element={
-            <ProtectedRoute>
-              <FarmIntelligence />
-            </ProtectedRoute>
-          } />
+            <Route path="/intelligence" element={
+              <ProtectedRoute>
+                <FarmIntelligence />
+              </ProtectedRoute>
+            } />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
-      <AgroChatbot />
-      <Footer />
-    </div>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+        {!isAuthRoute && <AgroChatbot />}
+        {!isAuthRoute && <Footer />}
+      </div>
     </ErrorBoundary>
   );
 };
