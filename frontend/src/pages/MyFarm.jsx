@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { MapPin, Trash2, Sprout, Plus, Layers, Activity, CloudSun, Zap, BarChart3, Shield, TrendingUp, Droplets, Thermometer, Wind, Brain, ArrowRight, Calendar, CheckCircle2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CountUp from 'react-countup';
-import { getFields, saveFields, getCrops, saveCrops, getHistory, generateInsights } from '../utils/farmInsights';
+import axios from 'axios';
+import { getFields, saveFields, getCrops, saveCrops, generateInsights } from '../utils/farmInsights';
 import { NoFieldsSVG, NoCropsSVG, HealthyFarmBanner } from '../components/FarmIllustrations';
 import { AddFieldModal, LogCropModal, SelectFarmModal } from '../components/FarmModals';
 import { CardSkeleton } from '../components/Skeleton';
@@ -11,6 +12,15 @@ import { useLanguage } from '../context/LanguageContext';
 import T from '../components/T';
 
 const OUTCOME_COLORS = { 'Good Yield': 'bg-emerald-100 text-emerald-700 border-emerald-200', 'Average': 'bg-amber-100 text-amber-700 border-amber-200', 'Poor': 'bg-red-100 text-red-700 border-red-200' };
+
+const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
+    return url.endsWith('/api') ? url : `${url}/api`;
+};
+
+const apiClient = axios.create({
+    baseURL: getApiUrl(),
+});
 
 // Static NPK/pH estimates per soil type
 const SOIL_HEALTH = {
@@ -70,12 +80,14 @@ const MyFarm = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initial load from storage
     setFields(getFields());
     setCrops(getCrops());
-    setHistory(getHistory());
     
-    // Artificial delay to make AI dashboard feel "active"
+    // Fetch real history from backend
+    apiClient.get('/history')
+      .then(res => setHistory(res.data))
+      .catch(err => console.error('Failed to fetch history:', err));
+    
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
   }, []);
@@ -253,7 +265,7 @@ const MyFarm = () => {
                               </div>
                             )}
 
-                            <button onClick={() => navigate(`/recommend?soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)}
+                            <button onClick={() => navigate(`/recommend?farmId=${f.id}&farmName=${encodeURIComponent(f.name || '')}&soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)}
                               className="w-full py-3.5 bg-brand-primary text-slate-950 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-sm group-hover:shadow-premium active:scale-[0.98]">
                               {t('analyzeBtn')} <ArrowRight size={12} className="inline ml-2" />
                             </button>
@@ -398,8 +410,8 @@ const MyFarm = () => {
                               <Sprout size={18} />
                             </div>
                             <div>
-                              <p className="text-sm font-black text-brand-text-primary uppercase">{h.crop}</p>
-                              <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{h.location} · {Math.round(h.confidence * 100)}% Match</p>
+                              <p className="text-sm font-black text-brand-text-primary uppercase">{h.predictionResult?.crop || h.result?.crop || 'Unknown'}</p>
+                              <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{h.location} · {Math.round((h.predictionResult?.confidence || h.result?.confidence || 0) * 100)}% Match</p>
                             </div>
                           </div>
                           <Link to="/recommend" className="text-brand-primary p-2 hover:bg-brand-primary/10 rounded-lg">
@@ -437,7 +449,7 @@ const MyFarm = () => {
         open={showSelectFarm} 
         onClose={() => setShowSelectFarm(false)} 
         fields={fields} 
-        onSelect={(f) => navigate(`/recommend?soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)} 
+        onSelect={(f) => navigate(`/recommend?farmId=${f.id}&farmName=${encodeURIComponent(f.name || '')}&soil=${encodeURIComponent(f.soilType || 'Loamy')}&district=${encodeURIComponent(f.district || '')}&state=${encodeURIComponent(f.state || '')}&autorun=true`)} 
       />
     </motion.div>
   );

@@ -59,6 +59,7 @@ const organicRouter = require('./routes/organic');
 const authRouter = require('./routes/auth');
 const weatherRouter = require('./routes/weather');
 const chatRouter = require('./routes/chat');
+const historyRouter = require('./routes/history');
 
 app.use('/api', recommendRouter);
 app.use('/api', riskRouter);
@@ -73,6 +74,7 @@ app.use('/api', organicRouter);
 app.use('/api/auth', authRouter);
 app.use('/api', weatherRouter);
 app.use('/api', chatRouter);
+app.use('/api', historyRouter);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

@@ -187,7 +187,8 @@ router.get('/geocode', async (req, res) => {
         console.log(`[Geocode] strategies: ${tried.join('→')} | result: ${best ? best.display_name : 'NOT FOUND'}`);
 
         if (!best) {
-            return res.status(404).json({ error: 'Location not found. Please check the spelling and try again.' });
+            console.warn(`[Geocode] Location not found for strategies: ${tried.join('→')}. Using fallback.`);
+            throw new Error('Location not found in Nominatim');
         }
 
         res.json({

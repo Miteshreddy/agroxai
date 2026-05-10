@@ -133,8 +133,8 @@ const History = () => {
                                                         <Sprout size={24} />
                                                     </div>
                                                     <div>
-                                                        <span className="font-black text-brand-text-primary uppercase italic tracking-tighter text-xl block leading-tight">{record.result?.crop || 'Unknown'}</span>
-                                                        <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.1em] opacity-80">{getSoilAdvice(record.result?.mapped_values)}</p>
+                                                        <span className="font-black text-brand-text-primary uppercase italic tracking-tighter text-xl block leading-tight">{record.predictionResult?.crop || record.result?.crop || 'Unknown'}</span>
+                                                        <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.1em] opacity-80">{getSoilAdvice(record.predictionResult?.mappedValues || record.result?.mapped_values)}</p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -143,24 +143,24 @@ const History = () => {
                                                     <div className="w-24 h-2 bg-brand-border rounded-full overflow-hidden">
                                                         <motion.div
                                                             initial={{ width: 0 }}
-                                                            animate={{ width: `${(record.result?.confidence || 0) * 100}%` }}
+                                                            animate={{ width: `${(record.predictionResult?.confidence || record.result?.confidence || 0) * 100}%` }}
                                                             transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 + (idx * 0.05) }}
                                                             className="h-full bg-brand-primary"
                                                         />
                                                     </div>
-                                                    <span className="text-xs font-black text-brand-text-primary">{((record.result?.confidence || 0) * 100).toFixed(0)}%</span>
+                                                    <span className="text-xs font-black text-brand-text-primary">{((record.predictionResult?.confidence || record.result?.confidence || 0) * 100).toFixed(0)}%</span>
                                                 </div>
                                             </td>
                                             <td className="px-8 py-7">
-                                                <p className="text-brand-text-primary font-bold text-sm mb-0.5"><TD value={record.inputs?.season || record.workflow?.farmer_inputs?.season || 'Monsoon'} /></p>
-                                                <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary opacity-40 tracking-widest">{(record.inputs?.temperature || record.workflow?.farmer_inputs?.temperature || 25)}°C Engine Read</T>
+                                                <p className="text-brand-text-primary font-bold text-sm mb-0.5"><TD value={record.environmentalData?.season || record.inputs?.season || record.workflow?.farmer_inputs?.season || 'Monsoon'} /></p>
+                                                <T as="p" className="text-[10px] uppercase font-black text-brand-text-secondary opacity-40 tracking-widest">{(record.environmentalData?.temperature || record.inputs?.temperature || record.workflow?.farmer_inputs?.temperature || 25)}°C Engine Read</T>
                                             </td>
                                             <td className="px-8 py-7">
                                                 <span className="px-3 py-1 bg-brand-primary/10 text-brand-primary rounded-lg text-xs font-black uppercase italic">
-                                                    {record.result?.total_duration || 'N/A'}
+                                                    {record.predictionResult?.growthPeriod || record.result?.total_duration || 'N/A'}
                                                 </span>
                                             </td>
-                                            <td className="px-8 py-7 text-brand-text-primary font-bold text-sm tracking-wide"><TD value={record.inputs?.soil_type || record.inputs?.manual_soil_type || record.workflow?.farmer_inputs?.soil_type || 'Loamy'} /></td>
+                                            <td className="px-8 py-7 text-brand-text-primary font-bold text-sm tracking-wide"><TD value={record.soilType || record.inputs?.soil_type || record.inputs?.manual_soil_type || record.workflow?.farmer_inputs?.soil_type || 'Loamy'} /></td>
                                             <td className="px-8 py-7 text-brand-text-secondary font-bold text-sm">{new Date(record.createdAt).toLocaleDateString()}</td>
                                             <td className="px-8 py-7 text-right">
                                                 <motion.button

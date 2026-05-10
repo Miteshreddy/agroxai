@@ -1,7 +1,5 @@
 const STORAGE_FIELDS = 'agrokai_fields';
 const STORAGE_CROPS = 'agrokai_past_crops';
-const STORAGE_HISTORY = 'agrokai_recommendation_history';
-
 export const getFields = () => {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_FIELDS)) || [];
@@ -16,18 +14,6 @@ export const getCrops = () => {
 };
 export const saveCrops = (c) => localStorage.setItem(STORAGE_CROPS, JSON.stringify(c || []));
 
-export const getHistory = () => {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_HISTORY)) || [];
-  } catch { return []; }
-};
-export const saveHistory = (h) => localStorage.setItem(STORAGE_HISTORY, JSON.stringify(h || []));
-
-export const addRecommendationToHistory = (rec) => {
-  const history = getHistory();
-  const newHistory = [{ ...rec, id: Date.now(), date: new Date().toISOString() }, ...history].slice(0, 50);
-  saveHistory(newHistory);
-};
 
 export function generateInsights(fields = [], crops = []) {
   const insights = [];

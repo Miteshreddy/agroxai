@@ -32,7 +32,7 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
             const loc = { state: stateParam || '', district: districtParam || '' };
             setManualLocation(loc);
 
-            if (districtParam) {
+            if (districtParam || stateParam) {
                 const autoFetch = async () => {
                     setIsLoading(true);
                     setError('');

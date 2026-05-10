@@ -116,31 +116,6 @@ router.post('/recommend', async (req, res) => {
         // Enrich with crop metadata
         const cropInfo = getCropMetadata(top1.crop);
 
-        const recommendation = new Recommendation({
-            userId: req.user?.id || 'guest',
-            inputs: {
-                ...req.body,
-                ...farmer_inputs
-            },
-            workflow: {
-                location: { lat, lon },
-                weather,
-                soil_info,
-                farmer_inputs,
-                ml_top3: top_crops,
-                filtered_crops: final_recommended
-            },
-            result: {
-                crop: top1.crop,
-                confidence: top1.confidence,
-                recommended_crops: final_recommended,
-                total_duration: cropInfo.total_duration,
-                explanation: mlRes.data.explanation,
-                mapped_values: mlRes.data.mapped_values
-            }
-        });
-        await recommendation.save().catch(e => console.warn('Mongo save skipped:', e.message));
-
         return success(res, {
             crop: top1.crop,
             confidence: top1.confidence,
@@ -156,29 +131,6 @@ router.post('/recommend', async (req, res) => {
         console.error('Error in /recommend:', err.message);
         const statusCode = err.response?.status || 500;
         return errorRes(res, 'Recommendation service temporarily unavailable', statusCode, err.message);
-    }
-});
-
-// GET /api/history
-router.get('/history', async (req, res) => {
-    try {
-        const history = await Recommendation.find().sort({ createdAt: -1 });
-        res.json(history);
-    } catch (err) {
-        console.error('Error fetching history:', err.message);
-        res.status(500).json({ error: 'Failed to fetch recommendation history' });
-    }
-});
-
-// DELETE /api/history/:id
-router.delete('/history/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await Recommendation.findByIdAndDelete(id);
-        res.json({ message: 'Deleted' });
-    } catch (err) {
-        console.error('Error deleting recommendation:', err.message);
-        res.status(500).json({ error: 'Failed to delete record' });
     }
 });
 

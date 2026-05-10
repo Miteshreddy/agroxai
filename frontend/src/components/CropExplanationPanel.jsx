@@ -18,7 +18,7 @@ const getSoilAdviceDetail = (values) => {
     return recs.join(" ");
 };
 
-const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_values, onSave }) => {
+const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_values }) => {
     const chartData = useMemo(() => {
         return Object.entries(explanation)
             .map(([key, value]) => ({
@@ -162,12 +162,6 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                 >
                     <TD value={`Your field is scientifically prepared for this match. The ${inputs.soil_type} soil provides the perfect base for high-yield seeding.`} />
                 </motion.p>
-                <button 
-                    onClick={() => onSave && onSave()}
-                    className="btn-primary group"
-                >
-                    <T>Save Recommendation</T> <Target size={18} className="ml-2 transition-transform group-hover:scale-125" />
-                </button>
             </motion.div>
         </div>
     );

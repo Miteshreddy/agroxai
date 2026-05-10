@@ -26,7 +26,6 @@ import AIProcessingOverlay from '../components/AIProcessingOverlay';
 import T from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
-import { addRecommendationToHistory } from '../utils/farmInsights';
 
 // Demo presets for expo
 const DEMO_PRESETS = [
@@ -76,22 +75,6 @@ const toHumidityLevel  = pct => pct < 35  ? 'Low' : pct < 75  ? 'Medium' : 'High
 
 const Recommend = () => {
     const { t } = useLanguage();
-    
-    const handleSaveRecommendation = () => {
-        if (!result) return;
-        const recData = {
-            crop,
-            confidence,
-            soilType,
-            weather,
-            explanation: result.explanation,
-            mappedValues: result.mapped_values,
-            location: locationData?.weatherData?.location?.city || 'Unknown'
-        };
-        addRecommendationToHistory(recData);
-        toast.success('Recommendation saved to history!');
-    };
-
     const [searchParams] = useSearchParams();
     const resultsRef = useRef(null);
     const locationRef = useRef(null);
@@ -205,6 +188,44 @@ const Recommend = () => {
             setTimeout(() => {
                 resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 300);
+
+            // Auto-save to MongoDB
+            try {
+                const farmId = searchParams.get('farmId') || null;
+                const farmName = searchParams.get('farmName') || null;
+                await axios.post(`${API}/history/save`, {
+                    userId: 'guest',
+                    farmId,
+                    farmName,
+                    location: locationData?.weatherData?.location?.city || 'Unknown',
+                    coordinates: { lat: locationData.lat, lon: locationData.lon },
+                    soilType,
+                    soilMetrics: {
+                        nitrogen: data.mapped_values?.N,
+                        phosphorus: data.mapped_values?.P,
+                        potassium: data.mapped_values?.K,
+                        ph: data.mapped_values?.ph
+                    },
+                    environmentalData: {
+                        temperature: weather.temperature,
+                        humidity: weather.humidity,
+                        rainfall: weather.rainfall,
+                        season: data.season || weather.season || 'Monsoon'
+                    },
+                    predictionResult: {
+                        crop,
+                        confidence,
+                        alternatives: data.recommended_crops || [],
+                        aiReasoning: data.explanation || {},
+                        mappedValues: data.mapped_values || {},
+                    },
+                    metadata: {
+                        source: farmId ? 'farm-analysis' : 'manual'
+                    }
+                });
+            } catch (saveErr) {
+                console.error('Failed to auto-save history:', saveErr);
+            }
 
             await fetchAdditional(crop, confidence, soilType, weather);
         } catch (err) {
@@ -471,7 +492,6 @@ const Recommend = () => {
                                                         explanation={result.explanation}
                                                         inputs={{ soil_type: soilType, season }}
                                                         mapped_values={result.mapped_values}
-                                                        onSave={handleSaveRecommendation}
                                                     />
                                                 </div>
                                             )}
