@@ -236,13 +236,13 @@ const MyFarm = () => {
           {/* Quick Actions */}
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="flex flex-wrap gap-3">
             <button onClick={() => setShowAddField(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
-              <Plus size={14} /> Add Field
+              <Plus size={14} /> {t('addField')}
             </button>
             <button onClick={() => setShowSelectFarm(true)} className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
-              <Zap size={14} /> Run Analysis
+              <Zap size={14} /> {t('runAnalysis')}
             </button>
             <Link to="/history" className="flex items-center gap-2 px-5 py-3 bg-brand-surface-elevated border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-surface-hover transition-all shadow-sm">
-              <BarChart3 size={14} /> View History
+              <BarChart3 size={14} /> {t('viewHistory')}
             </Link>
           </motion.div>
         </div>
@@ -253,11 +253,11 @@ const MyFarm = () => {
             [...Array(5)].map((_, i) => <CardSkeleton key={i} />)
           ) : (
             [
-              { label: 'Total Fields', value: fields.length, icon: MapPin, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
-              { label: 'Total Area', value: totalArea, suffix: ' ac', icon: Layers, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
-              { label: 'Active Crops', value: activeCrops, icon: Sprout, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
-              { label: 'Crop Records', value: crops.length, icon: BarChart3, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
-              { label: 'Risk Level', value: null, icon: Shield, color: risk.color, bg: risk.bg },
+              { labelKey: 'totalFieldsLabel', value: fields.length, icon: MapPin, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { labelKey: 'totalAcresLabel', value: totalArea, suffix: ' ac', icon: Layers, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { labelKey: 'activeCropsLabel', value: activeCrops, icon: Sprout, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { labelKey: 'cropRecordsLabel', value: crops.length, icon: BarChart3, color: 'text-brand-primary', bg: 'bg-brand-surface-inset border-brand-border' },
+              { labelKey: 'riskLevelLabel', value: null, icon: Shield, color: risk.color, bg: risk.bg },
             ].map((card, i) => (
               <motion.div
                 key={i}
@@ -272,9 +272,9 @@ const MyFarm = () => {
                     <CountUp end={card.value} duration={1.5} />{card.suffix || ''}
                   </p>
                 ) : (
-                  <p className={`text-2xl font-black leading-none mb-1 ${risk.color}`}>{risk.level}</p>
+                  <p className={`text-2xl font-black leading-none mb-1 ${risk.color}`}>{t(risk.level === 'Low' ? 'goodYield' : risk.level === 'High' ? 'poorYield' : 'averageYield')}</p>
                 )}
-                <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{card.label}</p>
+                <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{t(card.labelKey)}</p>
               </motion.div>
             ))
           )}
@@ -361,7 +361,7 @@ const MyFarm = () => {
                             {fieldCropCount > 0 && (
                               <div className="mb-5">
                                 <div className="flex justify-between mb-1">
-                                  <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">Success Rate</span>
+                                  <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{t('successRate')}</span>
                                   <span className="text-[9px] font-black text-brand-text-primary">{progressPct}%</span>
                                 </div>
                                 <div className="w-full h-1.5 bg-brand-border rounded-full overflow-hidden">
@@ -391,18 +391,18 @@ const MyFarm = () => {
                 {avgSoil && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="premium-card !p-8">
                     <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest flex items-center gap-3 mb-8">
-                      <Activity size={18} className="text-brand-primary" /> <T>Soil Health Overview</T>
+                      <Activity size={18} className="text-brand-primary" /> {t('soilHealthOverview')}
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[
-                        { label: 'Nitrogen (N)', value: avgSoil.N, max: 140, unit: '' },
-                        { label: 'Phosphorus (P)', value: avgSoil.P, max: 145, unit: '' },
-                        { label: 'Potassium (K)', value: avgSoil.K, max: 205, unit: '' },
-                        { label: 'pH Level', value: avgSoil.ph, max: 10, unit: '', isPH: true },
+                        { labelKey: 'nitrogenAvg', value: avgSoil.N, max: 140, unit: '' },
+                        { labelKey: 'phosphorusAvg', value: avgSoil.P, max: 145, unit: '' },
+                        { labelKey: 'potassiumAvg', value: avgSoil.K, max: 205, unit: '' },
+                        { labelKey: 'phAlkalinityOptimum', value: avgSoil.ph, max: 10, unit: '', isPH: true },
                       ].map((item, i) => (
                         <motion.div key={i} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5 + i * 0.1 }}
                           className="p-5 bg-brand-surface-inset border border-brand-border rounded-2xl text-center">
-                          <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest mb-2">{item.label}</p>
+                          <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest mb-2">{t(item.labelKey)}</p>
                           <p className="text-3xl font-black text-brand-text-primary mb-3">
                             <CountUp end={item.value} decimals={item.isPH ? 1 : 0} duration={1.5} />
                           </p>
@@ -457,7 +457,7 @@ const MyFarm = () => {
                 {((fields || []).length > 0 || (crops || []).length > 0) && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="premium-card !p-8">
                     <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest flex items-center gap-3 mb-6">
-                      <Calendar size={18} className="text-brand-primary" /> <T>Recent Activity</T>
+                      <Calendar size={18} className="text-brand-primary" /> {t('recentActivity')}
                     </h3>
                     <div className="relative pl-6">
                       <div className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-brand-border" />
@@ -499,7 +499,7 @@ const MyFarm = () => {
                 <div className="premium-card !p-8">
                   <div className="flex items-center justify-between mb-8">
                     <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest flex items-center gap-3">
-                      <Zap size={18} className="text-brand-primary" /> <T>Precision Analysis History</T>
+                      <Zap size={18} className="text-brand-primary" /> {t('precisionAnalysisHistory')}
                     </h3>
                     <Link to="/history" className="text-[10px] font-black text-brand-primary uppercase hover:underline">View All</Link>
                   </div>

@@ -26,7 +26,7 @@ const CHART_COLORS = {
 const FarmIntelligence = () => {
   const { user } = useAuth();
   const { get, loading, error } = useApi();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [historyRecords, setHistoryRecords] = useState([]);
   const [selectedCrop, setSelectedCrop] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -177,41 +177,81 @@ const FarmIntelligence = () => {
     const insights = [];
     const { name, avgN, avgPh, dominantSoil, dominantSeason, avgConfidence, count } = activeCropData;
 
-    // Insight 1: Soil types correlation
-    insights.push({
-      id: 'insight-1',
-      text: `${name} has shown a robust performance pattern with ${dominantSoil} type across ${count} distinct predictions.`,
-      type: 'optimal',
-      detail: 'Historical predictions confirm high enzymatic compatibility in soil profile indices.'
-    });
+    const cropTrans = t(name.toLowerCase()) || name;
+    const soilTrans = t((dominantSoil || 'Loamy').toLowerCase() + 'Soil');
+    const seasonTrans = t((dominantSeason || 'Kharif').toLowerCase());
 
-    // Insight 2: Chemical levels thresholds
-    if (avgN > 70) {
+    // Insight 1: Soil types correlation
+    if (language === 'hi') {
       insights.push({
-        id: 'insight-2',
-        text: `Elevated Nitrogen ratios (averaging ${avgN} mg/kg) strongly correlate with premium ${name} recommendations.`,
-        type: 'growth',
-        detail: 'Foliar volume benchmarks show excellent nitrogen absorption coefficients.'
+        id: 'insight-1',
+        text: `${cropTrans} ने ${count} अलग-अलग पूर्वानुमानों में ${soilTrans} के साथ एक मजबूत प्रदर्शन पैटर्न दिखाया है।`,
+        type: 'optimal',
+        detail: t('insight1Detail')
       });
     } else {
       insights.push({
-        id: 'insight-2',
-        text: `Sub-optimal Nitrogen parameters parsed. Consider organic compost additions to stabilize vegetative output.`,
-        type: 'warning',
-        detail: 'Macronutrient deficiencies limits core photosynthetic output velocities.'
+        id: 'insight-1',
+        text: `${name} has shown a robust performance pattern with ${dominantSoil} type across ${count} distinct predictions.`,
+        type: 'optimal',
+        detail: t('insight1Detail')
       });
     }
 
+    // Insight 2: Chemical levels thresholds
+    if (avgN > 70) {
+      if (language === 'hi') {
+        insights.push({
+          id: 'insight-2',
+          text: `उच्च नाइट्रोजन अनुपात (औसत ${avgN} mg/kg) दृढ़ता से प्रीमियम ${cropTrans} सिफारिशों के साथ संबंध रखता है।`,
+          type: 'growth',
+          detail: t('insight2GrowthDetail')
+        });
+      } else {
+        insights.push({
+          id: 'insight-2',
+          text: `Elevated Nitrogen ratios (averaging ${avgN} mg/kg) strongly correlate with premium ${name} recommendations.`,
+          type: 'growth',
+          detail: t('insight2GrowthDetail')
+        });
+      }
+    } else {
+      if (language === 'hi') {
+        insights.push({
+          id: 'insight-2',
+          text: `उप-इष्टतम नाइट्रोजन मापदंडों का विश्लेषण किया गया। वानस्पतिक उत्पादन को स्थिर करने के लिए जैविक खाद जोड़ने पर विचार करें।`,
+          type: 'warning',
+          detail: t('insight2WarningDetail')
+        });
+      } else {
+        insights.push({
+          id: 'insight-2',
+          text: `Sub-optimal Nitrogen parameters parsed. Consider organic compost additions to stabilize vegetative output.`,
+          type: 'warning',
+          detail: t('insight2WarningDetail')
+        });
+      }
+    }
+
     // Insight 3: Seasonal planning suitability
-    insights.push({
-      id: 'insight-3',
-      text: `Historical predictive reliability peaks during the ${dominantSeason} season with ${avgConfidence}% model confidence.`,
-      type: 'reliability',
-      detail: 'Climatic telemetry vectors fit the seasonal humidity range perfectly.'
-    });
+    if (language === 'hi') {
+      insights.push({
+        id: 'insight-3',
+        text: `ऐतिहासिक पूर्वानुमान विश्वसनीयता ${seasonTrans} सीजन के दौरान ${avgConfidence}% मॉडल सटीकता के साथ चरम पर है।`,
+        type: 'reliability',
+        detail: t('insight3Detail')
+      });
+    } else {
+      insights.push({
+        id: 'insight-3',
+        text: `Historical predictive reliability peaks during the ${dominantSeason} season with ${avgConfidence}% model confidence.`,
+        type: 'reliability',
+        detail: t('insight3Detail')
+      });
+    }
 
     return insights;
-  }, [activeCropData]);
+  }, [activeCropData, language, t]);
 
   return (
     <div className="bg-brand-bg min-h-screen text-brand-text-primary pt-32 pb-24 px-6 relative overflow-hidden select-none">
@@ -230,13 +270,13 @@ const FarmIntelligence = () => {
           <div className="space-y-4">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-brand-primary/20">
               <Cpu size={11} />
-              <T>FARM INTELLIGENCE SYSTEM</T>
+              <span>{t('farmIntelligenceSystem')}</span>
             </span>
             <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-brand-text-primary leading-none">
-              <T>CROP INTELLIGENCE</T>
+              <span>{t('cropIntelligence')}</span>
             </h1>
             <p className="text-brand-text-secondary text-sm max-w-2xl font-medium">
-              <T>Transforming your historical prediction logs into predictive analytics. Select any crop below to morph the operating system into a tailored crop diagnostics dashboard.</T>
+              <span>{t('cropIntelligenceSubtitle')}</span>
             </p>
           </div>
 
@@ -247,7 +287,7 @@ const FarmIntelligence = () => {
             className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-brand-surface border border-brand-border text-xs font-black uppercase tracking-wider hover:border-brand-primary/30 text-brand-text-primary transition-all disabled:opacity-50 h-fit"
           >
             <RefreshCw size={12} className={`${loading || isRefreshing ? 'animate-spin' : ''}`} />
-            <T>Sync Atlas Data</T>
+            <span>{t('syncAtlasData')}</span>
           </button>
         </div>
 
@@ -261,13 +301,13 @@ const FarmIntelligence = () => {
             <div className="w-16 h-16 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center mx-auto shadow-glow">
               <Activity size={28} />
             </div>
-            <h3 className="text-xl font-black uppercase text-brand-text-primary">No Analytics Footprint Found</h3>
+            <h3 className="text-xl font-black uppercase text-brand-text-primary">{t('noAnalyticsFootprint')}</h3>
             <p className="text-brand-text-secondary text-sm leading-relaxed font-medium">
-              This analytics center compiles crop statistics dynamically from your recommendation logs. Perform a soil diagnostic recommendation to boot up these neural widgets!
+              {t('noAnalyticsFootprintSubtitle')}
             </p>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-2">
               <a href="/recommend" className="btn-primary inline-flex items-center gap-2 px-6 py-3.5 bg-brand-primary text-slate-950 font-black uppercase text-[10px] tracking-[0.25em] rounded-xl border border-brand-primary/20 shadow-premium">
-                <T>GENERATE FIRST RECOMMENDATION</T>
+                <span>{t('generateFirstRecommendation')}</span>
                 <ArrowUpRight size={14} />
               </a>
             </motion.div>
@@ -279,7 +319,7 @@ const FarmIntelligence = () => {
             {/* 1. PREMIUM HORIZONTAL CROP CAROUSEL / SELECTOR */}
             <div className="space-y-4">
               <span className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.25em] pl-1">
-                SELECT LOGGED CROP PROFILE ({availableCropsList.length})
+                {t('selectLoggedCropProfile')} ({availableCropsList.length})
               </span>
               
               <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin snap-x scroll-smooth">
@@ -313,10 +353,10 @@ const FarmIntelligence = () => {
                         </span>
                       </div>
 
-                      <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight truncate max-w-[180px]">{crop.name}</h3>
+                      <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight truncate max-w-[180px]">{t(crop.name.toLowerCase()) || crop.name}</h3>
                       <div className="mt-4 flex items-center justify-between text-[10px] font-black uppercase text-brand-text-secondary">
-                        <span>RECS: {crop.count}</span>
-                        <span>SOIL: {crop.dominantSoil}</span>
+                        <span>{language === 'hi' ? 'रिकॉर्ड' : 'RECS'}: {crop.count}</span>
+                        <span>{language === 'hi' ? 'मिट्टी' : 'SOIL'}: {t((crop.dominantSoil || 'Loamy').toLowerCase() + 'Soil')}</span>
                       </div>
                     </button>
                   );
@@ -341,15 +381,15 @@ const FarmIntelligence = () => {
                     {/* Environmental Conditions Box */}
                     <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-6 flex-grow flex flex-col justify-between">
                       <div className="space-y-1">
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">METRIC MATRIX</span>
-                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight">CLIMATIC RANGES</h3>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">{t('metricMatrix')}</span>
+                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight">{t('climaticRanges')}</h3>
                       </div>
 
                       <div className="space-y-4">
                         <div className="flex items-center gap-3 bg-brand-surface-inset border border-brand-border p-3 rounded-2xl">
                           <Thermometer className="text-brand-primary" size={16} />
                           <div>
-                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Average Temp</span>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('averageTemp')}</span>
                             <p className="text-sm font-black text-brand-text-primary">{activeCropData.avgTemp}°C</p>
                           </div>
                         </div>
@@ -357,7 +397,7 @@ const FarmIntelligence = () => {
                         <div className="flex items-center gap-3 bg-brand-surface-inset border border-brand-border p-3 rounded-2xl">
                           <Droplets className="text-brand-primary" size={16} />
                           <div>
-                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Moisture Average</span>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('moistureAverage')}</span>
                             <p className="text-sm font-black text-brand-text-primary">{activeCropData.avgHumidity}%</p>
                           </div>
                         </div>
@@ -365,7 +405,7 @@ const FarmIntelligence = () => {
                         <div className="flex items-center gap-3 bg-brand-surface-inset border border-brand-border p-3 rounded-2xl">
                           <CloudRain className="text-brand-primary" size={16} />
                           <div>
-                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Precipitation</span>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('precipitation')}</span>
                             <p className="text-sm font-black text-brand-text-primary">{activeCropData.avgRainfall} mm</p>
                           </div>
                         </div>
@@ -373,15 +413,15 @@ const FarmIntelligence = () => {
 
                       {/* Dom season index */}
                       <div className="pt-4 border-t border-brand-border/60">
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">DOMINANT HARVEST SEASON</span>
-                        <p className="text-lg font-black text-brand-primary uppercase tracking-tight mt-1">{activeCropData.dominantSeason}</p>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">{t('dominantHarvestSeason')}</span>
+                        <p className="text-lg font-black text-brand-primary uppercase tracking-tight mt-1">{t((activeCropData.dominantSeason || 'Kharif').toLowerCase())}</p>
                       </div>
                     </div>
 
                     {/* Confidence gauge card */}
                     <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-4">
                       <div className="flex justify-between items-center text-[9px] font-black uppercase">
-                        <span className="text-brand-text-secondary">AI PREDICTIVE CONSISTENCY</span>
+                        <span className="text-brand-text-secondary">{t('aiPredictiveConsistency')}</span>
                         <span className="text-brand-primary">{activeCropData.avgConfidence}% Avg</span>
                       </div>
                       <div className="h-2 w-full bg-brand-surface-inset border border-brand-border rounded-full overflow-hidden">
@@ -393,7 +433,10 @@ const FarmIntelligence = () => {
                         />
                       </div>
                       <p className="text-[9px] text-brand-text-secondary font-medium leading-relaxed">
-                        Evaluated across {activeCropData.count} historical prediction scenarios in user database.
+                        {language === 'hi'
+                          ? `उपयोगकर्ता डेटाबेस में ${activeCropData.count} ऐतिहासिक पूर्वानुमान परिदृश्यों में मूल्यांकन किया गया।`
+                          : `Evaluated across ${activeCropData.count} historical prediction scenarios in user database.`
+                        }
                       </p>
                     </div>
                   </div>
@@ -402,11 +445,11 @@ const FarmIntelligence = () => {
                   <div className="lg:col-span-6 bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between min-h-[460px]">
                     <div className="flex justify-between items-start mb-6">
                       <div className="space-y-1">
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">CHART PROFILE</span>
-                        <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">PREDICTION HISTORICAL TIMELINE</h3>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">{t('chartProfile')}</span>
+                        <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">{t('predictionHistoricalTimeline')}</h3>
                       </div>
                       <span className="px-3 py-1 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[9px] font-black rounded-lg uppercase">
-                        REAL-TIME CHRONO TIMELINE
+                        {t('realTimeChronoTimeline')}
                       </span>
                     </div>
 
@@ -440,7 +483,7 @@ const FarmIntelligence = () => {
                             strokeWidth={2}
                             fillOpacity={1} 
                             fill="url(#colorConfidence)" 
-                            name="Confidence %"
+                            name={language === 'hi' ? 'सटीकता %' : 'Confidence %'}
                           />
                         </AreaChart>
                       </ResponsiveContainer>
@@ -449,15 +492,15 @@ const FarmIntelligence = () => {
                     {/* Lower matrix mini comparison */}
                     <div className="grid grid-cols-3 gap-4 pt-6 border-t border-brand-border/60">
                       <div>
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">Nitrogen Avg</span>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('nitrogenAvg')}</span>
                         <p className="text-md font-black text-brand-text-primary mt-1">{activeCropData.avgN} mg/kg</p>
                       </div>
                       <div>
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">Phosphorus Avg</span>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('phosphorusAvg')}</span>
                         <p className="text-md font-black text-brand-text-primary mt-1">{activeCropData.avgP} mg/kg</p>
                       </div>
                       <div>
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">Potassium Avg</span>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('potassiumAvg')}</span>
                         <p className="text-md font-black text-brand-text-primary mt-1">{activeCropData.avgK} mg/kg</p>
                       </div>
                     </div>
@@ -468,15 +511,27 @@ const FarmIntelligence = () => {
                     {/* Radar Chart of macronutrients health network */}
                     <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-4 flex-grow flex flex-col justify-between">
                       <div className="space-y-1">
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">SENSOR DIAGNOSTIC</span>
-                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight">MACRONUTRIENT BALANCE</h3>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">{t('sensorDiagnostic')}</span>
+                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight">{t('macronutrientBalance')}</h3>
                       </div>
 
                       <div className="h-44 w-full flex items-center justify-center relative">
                         <ResponsiveContainer width="100%" height="100%">
                           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                             <PolarGrid stroke="rgba(156,163,175,0.1)" />
-                            <PolarAngleAxis dataKey="subject" className="text-[8px] font-black uppercase text-brand-text-secondary" />
+                            <PolarAngleAxis 
+                              dataKey="subject" 
+                              tickFormatter={(tick) => {
+                                if (tick.includes('Nitrogen')) return t('nitrogenAvg');
+                                if (tick.includes('Phosphorus')) return t('phosphorusAvg');
+                                if (tick.includes('Potassium')) return t('potassiumAvg');
+                                if (tick.includes('Humidity')) return language === 'hi' ? 'आर्द्रता (%)' : 'Humidity (%)';
+                                if (tick.includes('Temp')) return language === 'hi' ? 'तापमान (°C)' : 'Temp (°C)';
+                                if (tick.includes('pH')) return language === 'hi' ? 'मिट्टी pH (x10)' : 'Soil pH (x10)';
+                                return tick;
+                              }}
+                              className="text-[8px] font-black uppercase text-brand-text-secondary" 
+                            />
                             <PolarRadiusAxis angle={30} domain={[0, 120]} className="hidden" />
                             <Radar 
                               name="MACRONUTRIENTS" 
@@ -492,8 +547,8 @@ const FarmIntelligence = () => {
                       {/* Optimal soil profile type */}
                       <div className="pt-4 border-t border-brand-border/60 flex justify-between items-center">
                         <div>
-                          <span className="text-[8px] font-black text-brand-text-secondary uppercase">OPTIMAL SOIL TYPE</span>
-                          <p className="text-md font-black text-brand-text-primary uppercase mt-1">{activeCropData.dominantSoil}</p>
+                          <span className="text-[8px] font-black text-brand-text-secondary uppercase">{t('optimalSoilType')}</span>
+                          <p className="text-md font-black text-brand-text-primary uppercase mt-1">{t((activeCropData.dominantSoil || 'Loamy').toLowerCase() + 'Soil')}</p>
                         </div>
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
                           <CheckCircle2 size={16} />
@@ -504,20 +559,20 @@ const FarmIntelligence = () => {
                     {/* Micro alert feedback panel */}
                     <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-4">
                       <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest flex items-center gap-1.5">
-                        <AlertTriangle size={10} className="text-brand-gold" /> DIAGNOSTIC RISK PROFILE
+                        <AlertTriangle size={10} className="text-brand-gold" /> {t('diagnosticRiskProfile')}
                       </span>
                       <div className="space-y-2">
                         {activeCropData.avgPh < 6.0 || activeCropData.avgPh > 7.5 ? (
                           <div className="p-3 bg-red-400/10 rounded-xl border border-red-400/20 text-[10px] text-red-400 font-black uppercase">
-                            Warning: Extreme pH profile detected ({activeCropData.avgPh})
+                            {t('extremePHWarning')} ({activeCropData.avgPh})
                           </div>
                         ) : (
                           <div className="p-3 bg-emerald-500/15 rounded-xl border border-emerald-500/20 text-[10px] text-brand-primary font-black uppercase flex items-center gap-1.5">
-                            <Shield size={12} /> pH alkalinity index optimum
+                            <Shield size={12} /> {t('phAlkalinityOptimum')}
                           </div>
                         )}
                         <p className="text-[9px] text-brand-text-secondary font-medium">
-                          Based on average pH level calculations.
+                          {t('basedOnPHCalculations')}
                         </p>
                       </div>
                     </div>
@@ -534,8 +589,8 @@ const FarmIntelligence = () => {
               <div className="lg:col-span-7 bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between min-h-[360px]">
                 <div className="flex justify-between items-start mb-6">
                   <div className="space-y-1">
-                    <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">NPK HEATMAP INDEX</span>
-                    <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">MACRONUTRIENT ALLOCATION MATRIX</h3>
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">{t('npkHeatmapIndex')}</span>
+                    <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">{t('macronutrientAllocationMatrix')}</h3>
                   </div>
                   <Compass className="text-brand-primary animate-spin" size={18} style={{ animationDuration: '10s' }} />
                 </div>
@@ -556,15 +611,15 @@ const FarmIntelligence = () => {
                           color: 'var(--text-color-primary)'
                         }} 
                       />
-                      <Bar dataKey="n" fill="var(--accent-primary)" name="Nitrogen (N)" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="p" fill="var(--accent-gold)" name="Phosphorus (P)" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="k" fill="#3b82f6" name="Potassium (K)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="n" fill="var(--accent-primary)" name={language === 'hi' ? 'नाइट्रोजन (N)' : 'Nitrogen (N)'} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="p" fill="var(--accent-gold)" name={language === 'hi' ? 'फास्फोरस (P)' : 'Phosphorus (P)'} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="k" fill="#3b82f6" name={language === 'hi' ? 'पोटेशियम (K)' : 'Potassium (K)'} radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
                 <p className="text-[10px] font-medium text-brand-text-secondary mt-4">
-                  *Allocated indices represent relative chemical proportions extracted across sequential prediction cycles.
+                  {t('allocatedIndicesNotice')}
                 </p>
               </div>
 
@@ -572,7 +627,7 @@ const FarmIntelligence = () => {
               <div className="lg:col-span-5 bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 md:p-8 flex flex-col justify-between">
                 <div className="flex items-center gap-2 mb-6">
                   <Sparkles size={18} className="text-brand-primary animate-pulse" />
-                  <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">DYNAMIC AI INSIGHTS</h3>
+                  <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">{t('dynamicAIInsights')}</h3>
                 </div>
 
                 <div className="space-y-4 flex-grow flex flex-col justify-center">
@@ -592,7 +647,7 @@ const FarmIntelligence = () => {
                 </div>
 
                 <p className="text-[9px] font-black uppercase text-brand-primary tracking-widest flex items-center gap-1.5 mt-6 border-t border-brand-border/60 pt-4">
-                  <Shield size={11} /> AgroXAI Cognitive Operations Verified
+                  <Shield size={11} /> {t('aiInsightsVerified')}
                 </p>
               </div>
 
