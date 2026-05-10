@@ -309,6 +309,195 @@ const Home = () => {
               </a>
             </MagneticButton>
           </motion.div>
+
+          {/* Holographic Centerpiece Floating Dashboard */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-4xl mx-auto mt-16 px-4 relative z-10"
+          >
+            {/* Subtle atmospheric glow behind the dashboard */}
+            <div className="absolute inset-x-12 -top-6 bottom-6 bg-brand-primary/5 rounded-full blur-[60px] pointer-events-none" />
+
+            <motion.div
+              whileHover={{ y: -6, rotateX: 1, rotateY: -1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              className="w-full bg-brand-surface/30 border border-brand-border/40 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-8 shadow-premium relative overflow-hidden text-left"
+            >
+              {/* Glossy highlight reflect lines */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-primary/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent" />
+
+              {/* Dashboard grid header bar */}
+              <div className="flex items-center justify-between border-b border-brand-border/40 pb-5 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/40" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-brand-primary/40" />
+                  </div>
+                  <div className="h-4 w-[1px] bg-brand-border/60 mx-1" />
+                  <span className="text-[9px] font-black tracking-[0.25em] text-brand-text-secondary uppercase flex items-center gap-1.5">
+                    <Cpu size={12} className="text-brand-primary animate-pulse" />
+                    AGROXAI_CORE_OS_v3.8
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand-primary animate-ping" />
+                  <span className="text-[9px] font-black tracking-[0.15em] text-brand-primary uppercase">
+                    <T>COGNITIVE_GRID_ACTIVE</T>
+                  </span>
+                </div>
+              </div>
+
+              {/* Content segments */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                
+                {/* Box 1 (4/12): Live Radar Scanning metrics */}
+                <div className="md:col-span-4 bg-brand-surface-inset border border-brand-border/40 rounded-3xl p-5 flex flex-col justify-between space-y-4">
+                  <div className="space-y-1">
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">
+                      <T>DIAGNOSTIC TELEMETRY</T>
+                    </span>
+                    <h4 className="text-xs font-black text-brand-text-primary uppercase tracking-tight">
+                      <T>ENVIRONMENTAL SENSORS</T>
+                    </h4>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between border-b border-brand-border/30 pb-2">
+                      <span className="text-[9px] font-black text-brand-text-secondary uppercase flex items-center gap-1.5">
+                        <Thermometer size={11} className="text-brand-primary" /> <T>TEMP</T>
+                      </span>
+                      <span className="text-[10px] font-black text-brand-text-primary">24.8°C</span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-brand-border/30 pb-2">
+                      <span className="text-[9px] font-black text-brand-text-secondary uppercase flex items-center gap-1.5">
+                        <Droplets size={11} className="text-brand-primary" /> <T>HUMIDITY</T>
+                      </span>
+                      <span className="text-[10px] font-black text-brand-text-primary">78.5%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] font-black text-brand-text-secondary uppercase flex items-center gap-1.5">
+                        <CloudRain size={11} className="text-brand-primary" /> <T>PRECIPITATION</T>
+                      </span>
+                      <span className="text-[10px] font-black text-brand-text-primary">212 mm</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <div className="flex items-center justify-between text-[8px] font-black text-brand-text-secondary mb-1">
+                      <span><T>PREDICTIVE STABILITY</T></span>
+                      <span className="text-brand-primary">98.4%</span>
+                    </div>
+                    <div className="w-full h-1 bg-brand-border/60 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "98.4%" }}
+                        transition={{ duration: 1.5, delay: 0.8 }}
+                        className="h-full bg-gradient-to-r from-brand-primary to-emerald-400" 
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Box 2 (5/12): Crop growth pattern mini-chart */}
+                <div className="md:col-span-5 bg-brand-surface-inset border border-brand-border/40 rounded-3xl p-5 flex flex-col justify-between space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">
+                        <T>ANALYTICS STREAM</T>
+                      </span>
+                      <h4 className="text-xs font-black text-brand-text-primary uppercase tracking-tight">
+                        <T>CROP HEALTH DYNAMICS</T>
+                      </h4>
+                    </div>
+                    <span className="text-[8px] font-black px-2 py-0.5 bg-brand-primary/10 text-brand-primary rounded-md uppercase border border-brand-primary/20">
+                      <T>REAL_TIME</T>
+                    </span>
+                  </div>
+
+                  {/* Minimal dynamic sparkline SVG graph */}
+                  <div className="h-20 w-full flex items-end">
+                    <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="glowGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <motion.path
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 2, delay: 1, ease: "easeOut" }}
+                        d="M 0,35 Q 20,10 40,25 T 80,12 T 100,5"
+                        fill="none"
+                        stroke="var(--accent-primary)"
+                        strokeWidth="1.5"
+                      />
+                      <motion.path
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 2 }}
+                        d="M 0,35 Q 20,10 40,25 T 80,12 T 100,5 L 100,40 L 0,40 Z"
+                        fill="url(#glowGrad)"
+                      />
+                    </svg>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-2 text-[8px] font-black text-brand-text-secondary uppercase tracking-wider">
+                    <span>YIELD COEFF: +14.2%</span>
+                    <span className="text-brand-primary">
+                      <T>OPTIMAL ALIGNMENT</T>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Box 3 (3/12): Decision Confidence Ring */}
+                <div className="md:col-span-3 bg-brand-surface-inset border border-brand-border/40 rounded-3xl p-5 flex flex-col justify-between items-center text-center space-y-4">
+                  <div className="space-y-0.5">
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">
+                      <T>AI MATCH</T>
+                    </span>
+                    <h4 className="text-[10px] font-black text-brand-text-primary uppercase tracking-tight">
+                      <T>CONFIDENCE</T>
+                    </h4>
+                  </div>
+
+                  {/* Circular glowing ring indicator */}
+                  <div className="relative w-20 h-20 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                      <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(156,163,175,0.08)" strokeWidth="1.5" />
+                      <motion.circle
+                        initial={{ strokeDasharray: "0 100" }}
+                        animate={{ strokeDasharray: "94 100" }}
+                        transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        stroke="var(--accent-primary)"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-lg font-black text-brand-text-primary leading-none">94%</span>
+                      <span className="text-[7px] font-black text-brand-primary uppercase tracking-widest mt-0.5">
+                        <T>MATCH</T>
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-[8px] font-black text-brand-primary uppercase tracking-widest animate-pulse">
+                    <T>STABLE_STATE</T>
+                  </span>
+                </div>
+
+              </div>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </section>
 
