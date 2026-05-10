@@ -780,7 +780,7 @@ const Home = () => {
 
                 <MagneticButton>
                   <a href="#sandbox" className="h-14 px-8 bg-brand-surface border border-brand-border hover:border-brand-primary/30 text-brand-text-primary hover:text-brand-primary font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl flex items-center justify-center transition-all">
-                    <T>Try Sandbox Demo</T>
+                    <T>AGROXAI DEMO</T>
                   </a>
                 </MagneticButton>
               </div>
