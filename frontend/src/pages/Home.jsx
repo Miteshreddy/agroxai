@@ -184,12 +184,12 @@ const Home = () => {
         {/* 4. Futuristic AI analytics HUD fragments */}
         <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center p-6">
           <div className="w-full h-full max-w-5xl relative">
-            <div className="absolute -top-1 -left-1 w-5 h-5 border-t border-l border-brand-primary/20" />
-            <div className="absolute -top-1 -right-1 w-5 h-5 border-t border-r border-brand-primary/20" />
+            <div className="absolute top-20 -left-1 w-5 h-5 border-t border-l border-brand-primary/20" />
+            <div className="absolute top-20 -right-1 w-5 h-5 border-t border-r border-brand-primary/20" />
             <div className="absolute -bottom-1 -left-1 w-5 h-5 border-b border-l border-brand-primary/20" />
             <div className="absolute -bottom-1 -right-1 w-5 h-5 border-b border-r border-brand-primary/20" />
             
-            <div className="absolute top-8 left-8 text-[8px] font-black text-brand-primary/20 tracking-[0.25em] uppercase select-none">GRID_INTEL // COORD_ALPHA_9</div>
+            <div className="absolute top-28 left-8 text-[8px] font-black text-brand-primary/20 tracking-[0.25em] uppercase select-none">GRID_INTEL // COORD_ALPHA_9</div>
             <div className="absolute bottom-8 right-8 text-[8px] font-black text-brand-primary/20 tracking-[0.25em] uppercase select-none">LAT_78.48 // LNG_17.38</div>
           </div>
         </div>
