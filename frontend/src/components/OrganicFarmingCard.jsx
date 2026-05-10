@@ -30,7 +30,7 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="mt-8 glass-card border-brand-green/20 bg-gradient-to-br from-green-50/5 dark:from-green-950/10 to-white/5 dark:to-slate-900/40"
+            className="mt-8 glass-card border-brand-green/20 bg-gradient-to-br from-brand-surface-inset to-brand-surface"
         >
             {/* Header section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-6 border-b border-brand-green/10">
@@ -54,7 +54,7 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
 
             {/* Economic Comparison */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div className="bg-white/40 dark:bg-slate-900/40 p-6 rounded-[2rem] border border-brand-green/5 dark:border-white/5 space-y-4">
+                <div className="bg-brand-surface-inset p-6 rounded-[2rem] border border-brand-border space-y-4">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-brand-green/10 rounded-lg text-brand-green">
                             <TrendingUp size={20} />
@@ -68,16 +68,16 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                     </div>
                 </div>
 
-                <div className="bg-slate-950 dark:bg-slate-900/60 p-8 rounded-[2.5rem] relative overflow-hidden group border border-white/5">
+                <div className="bg-brand-surface-elevated border border-brand-border p-8 rounded-[2.5rem] relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-8 opacity-5">
-                        <DollarSign size={150} className="text-white" />
+                        <DollarSign size={150} className="text-brand-text-primary" />
                     </div>
                     <div className="relative z-10">
                         <T as="h4" className="text-brand-green font-black uppercase tracking-[0.3em] mb-4 text-xs">Estimated Profit Delta</T>
-                        <div className="text-5xl font-black text-white italic tracking-tighter">
+                        <div className="text-5xl font-black text-brand-text-primary italic tracking-tighter">
                             +{estimated_organic_profit_increase}%
                         </div>
-                        <T as="p" className="text-white/40 text-[10px] uppercase font-bold tracking-[0.2em] mt-2 italic">Higher margins than conventional over time.</T>
+                        <T as="p" className="text-brand-text-secondary text-[10px] uppercase font-bold tracking-[0.2em] mt-2 italic">Higher margins than conventional over time.</T>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                         <motion.div
                             key={idx}
                             whileHover={{ y: -5 }}
-                            className="bg-white/60 dark:bg-slate-900/40 border border-brand-green/10 dark:border-white/5 p-6 rounded-[2rem] space-y-4 flex flex-col h-full"
+                            className="bg-brand-surface border border-brand-border p-6 rounded-[2rem] space-y-4 flex flex-col h-full"
                         >
                             <div className="flex justify-between items-start">
                                 <TD value={input.input_name} as="h5" className="text-base font-black text-brand-text-primary uppercase" />
@@ -124,15 +124,15 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                     <div className="space-y-4">
                         {certification.map((c, idx) => (
                             <div key={idx} className="flex gap-4 group">
-                                <div className="w-10 h-10 rounded-2xl bg-slate-950 dark:bg-slate-900 text-white flex items-center justify-center font-black text-xs shrink-0 group-hover:bg-brand-green group-hover:text-slate-950 transition-colors border border-white/5">
+                                <div className="w-10 h-10 rounded-2xl bg-brand-surface-elevated text-brand-text-primary flex items-center justify-center font-black text-xs shrink-0 group-hover:bg-brand-green group-hover:text-brand-surface transition-colors border border-brand-border">
                                     {c.step}
                                 </div>
-                                <div className="flex-grow pb-4 border-b border-brand-green/5 dark:border-white/5">
+                                <div className="flex-grow pb-4 border-b border-brand-border">
                                     <TD value={c.name} as="h6" className="text-sm font-black text-brand-text-primary uppercase" />
                                     <TD value={c.desc} as="p" className="text-xs text-brand-text-secondary font-medium mt-1 italic" />
                                     <div className="flex gap-4 mt-2">
-                                        <TD value={c.cost} as="span" className="text-[9px] font-black text-brand-green uppercase tracking-widest bg-brand-green/5 dark:bg-brand-green/10 px-2 py-0.5 rounded-lg" />
-                                        <TD value={c.time} as="span" className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-lg" />
+                                        <TD value={c.cost} as="span" className="text-[9px] font-black text-brand-green uppercase tracking-widest bg-brand-green/5 px-2 py-0.5 rounded-lg" />
+                                        <TD value={c.time} as="span" className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest bg-brand-surface-inset px-2 py-0.5 rounded-lg" />
                                     </div>
                                 </div>
                             </div>
@@ -145,18 +145,18 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                     <T as="h5" className="text-[12px] font-black text-brand-text-primary uppercase tracking-[0.25em] flex items-center gap-2 opacity-60">
                         Bio-Shield Protection
                     </T>
-                    <div className="overflow-hidden rounded-3xl border border-brand-green/10 dark:border-white/5 bg-white/40 dark:bg-slate-900/40">
+                    <div className="overflow-hidden rounded-3xl border border-brand-border bg-brand-surface-inset">
                         <table className="w-full text-left text-sm">
-                            <thead className="bg-brand-green/5 dark:bg-brand-green/10">
+                            <thead className="bg-brand-green/5">
                                 <tr>
                                     <T as="th" className="p-4 font-black uppercase tracking-widest text-[9px] text-brand-text-secondary">Pest</T>
                                     <T as="th" className="p-4 font-black uppercase tracking-widest text-[9px] text-brand-text-secondary">Organic Solution</T>
                                     <T as="th" className="p-4 font-black uppercase tracking-widest text-[9px] text-brand-text-secondary">Application</T>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-brand-green/5 dark:divide-white/5">
+                            <tbody className="divide-y divide-brand-border">
                                 {pest_management.map((pm, i) => (
-                                    <tr key={i} className="hover:bg-brand-green/5 dark:hover:bg-brand-green/10 transition-colors">
+                                    <tr key={i} className="hover:bg-brand-surface transition-colors">
                                         <td className="p-4 font-black text-brand-text-primary italic"><TD value={pm.pest} /></td>
                                         <td className="p-4 font-bold text-brand-green"><TD value={pm.solution} /></td>
                                         <td className="p-4 text-xs font-medium text-brand-text-secondary"><TD value={pm.application} /></td>
@@ -216,7 +216,7 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                             href={m.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-5 bg-white dark:bg-slate-900 border border-brand-green/10 dark:border-white/5 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-brand-green/5 dark:hover:bg-brand-green/10 hover:border-brand-green/30 dark:hover:border-white/10 transition-all group"
+                            className="p-5 bg-brand-surface border border-brand-border rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-brand-surface-hover transition-all group"
                         >
                             <Globe size={24} className="text-brand-green opacity-40 group-hover:opacity-100 transition-opacity" />
                             <TD value={m.name} as="span" className="text-[10px] font-black text-brand-text-primary uppercase tracking-tight text-center" />
@@ -251,7 +251,7 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 max-w-2xl w-full relative z-[201] shadow-2xl border-4 border-brand-green/20 dark:border-white/5"
+                            className="bg-brand-surface rounded-[3rem] p-10 max-w-2xl w-full relative z-[201] shadow-2xl border-4 border-brand-border"
                         >
                             <button
                                 onClick={() => setShowModal(false)}
@@ -270,21 +270,21 @@ const OrganicFarmingCard = ({ organicData, cropName }) => {
 
                             <div className="space-y-6">
                                 <div className="flex gap-6 items-start">
-                                    <div className="w-12 h-12 rounded-2xl bg-slate-950 dark:bg-slate-800 text-white flex items-center justify-center font-black text-xl shrink-0 border border-white/5">1</div>
+                                    <div className="w-12 h-12 rounded-2xl bg-brand-surface-elevated text-brand-text-primary flex items-center justify-center font-black text-xl shrink-0 border border-brand-border">1</div>
                                     <div>
                                         <T as="p" className="text-xs font-black text-brand-green uppercase tracking-widest mb-1">Zero-Inertia Input</T>
                                         <T as="p" className="text-sm font-bold text-brand-text-primary italic leading-relaxed">Immediately stop purchasing synthetic urea and DAP. Start producing 10L of Jeevamrut every week using cattle waste.</T>
                                     </div>
                                 </div>
                                 <div className="flex gap-6 items-start">
-                                    <div className="w-12 h-12 rounded-2xl bg-slate-950 dark:bg-slate-800 text-white flex items-center justify-center font-black text-xl shrink-0 border border-white/5">2</div>
+                                    <div className="w-12 h-12 rounded-2xl bg-brand-surface-elevated text-brand-text-primary flex items-center justify-center font-black text-xl shrink-0 border border-brand-border">2</div>
                                     <div>
                                         <T as="p" className="text-xs font-black text-brand-green uppercase tracking-widest mb-1">Boundary Integrity</T>
                                         <T as="p" className="text-sm font-bold text-brand-text-primary italic leading-relaxed">Plant a 10ft high hedgerow of Sesbania or Napier grass around your perimeter to protect against chemical drift from neighbors.</T>
                                     </div>
                                 </div>
                                 <div className="flex gap-6 items-start">
-                                    <div className="w-12 h-12 rounded-2xl bg-slate-950 dark:bg-slate-800 text-white flex items-center justify-center font-black text-xl shrink-0 border border-white/5">3</div>
+                                    <div className="w-12 h-12 rounded-2xl bg-brand-surface-elevated text-brand-text-primary flex items-center justify-center font-black text-xl shrink-0 border border-brand-border">3</div>
                                     <div>
                                         <T as="p" className="text-xs font-black text-brand-green uppercase tracking-widest mb-1">Digital Enrolment</T>
                                         <T as="p" className="text-sm font-bold text-brand-text-primary italic leading-relaxed">Register on the 'Jaivik Kheti' government portal to join a local PGS-India cluster and unlock community subsidies.</T>

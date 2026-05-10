@@ -19,27 +19,27 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="bg-slate-950 dark:bg-slate-900 rounded-[3rem] p-12 mb-10 relative overflow-hidden shadow-premium-hover border border-slate-200 dark:border-white/5"
+            className="bg-brand-surface-elevated rounded-[3rem] p-12 mb-10 relative overflow-hidden shadow-premium-hover border border-brand-border"
         >
-            <div className="absolute top-8 right-8 flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <div className="absolute top-8 right-8 flex items-center gap-2 bg-brand-surface/50 backdrop-blur-md px-4 py-2 rounded-full border border-brand-border">
                 <CheckCircle size={14} className="text-brand-primary" />
-                <T as="span" className="text-[10px] font-black text-white uppercase tracking-[0.2em]">AGROKAI VERIFIED</T>
+                <T as="span" className="text-[10px] font-black text-brand-text-primary uppercase tracking-[0.2em]">AGROKAI VERIFIED</T>
             </div>
 
             <T as="p" className="text-brand-primary font-black text-[10px] uppercase tracking-[0.4em] mb-4">Recommended Crop</T>
-            <h2 className="text-7xl md:text-9xl font-black text-white tracking-tighter italic leading-none mb-8 capitalize">
+            <h2 className="text-7xl md:text-9xl font-black text-brand-text-primary tracking-tighter italic leading-none mb-8 capitalize">
                 <T>{crop}</T>
             </h2>
 
             {/* Animated Confidence Bar */}
             <div className="mb-10">
                 <div className="flex items-end justify-between mb-3">
-                    <T as="span" className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">AI Confidence Score</T>
-                    <span className="text-3xl font-black text-white tabular-nums">
+                    <T as="span" className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em]">AI Confidence Score</T>
+                    <span className="text-3xl font-black text-brand-text-primary tabular-nums">
                         <CountUp end={parseFloat(confPercent)} decimals={1} duration={1.5} suffix="%" />
                     </span>
                 </div>
-                <div className="w-full h-2.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="w-full h-2.5 bg-brand-surface-inset rounded-full overflow-hidden">
                     <div
                         className="h-full rounded-full confidence-bar-fill"
                         style={{
@@ -55,14 +55,14 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
             </div>
 
             <div className="flex flex-wrap gap-4">
-                <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                <span className="flex items-center gap-2.5 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
                     <span className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" />
                     <T>Confidence</T>: {confPercent}%
                 </span>
-                <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                <span className="flex items-center gap-2.5 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
                     <CheckCircle size={14} className="text-brand-primary" /> <T>Soil Advice Included</T>
                 </span>
-                <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                <span className="flex items-center gap-2.5 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
                     🗓️ <T>{season}</T>
                 </span>
                 {result?.total_duration && (
@@ -71,7 +71,7 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
                     </span>
                 )}
                 {result?.climate_zone && (
-                    <span className="flex items-center gap-2.5 bg-white/10 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
+                    <span className="flex items-center gap-2.5 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-2xl">
                         🌍 <T>{result.climate_zone}</T>
                     </span>
                 )}
@@ -79,8 +79,8 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
 
             {/* Alternative crops with stagger animation */}
             {result?.recommended_crops && result.recommended_crops.length > 1 && (
-                <div className="mt-10 pt-8 border-t border-white/10">
-                    <T as="p" className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-6">Alternative Matches</T>
+                <div className="mt-10 pt-8 border-t border-brand-border">
+                    <T as="p" className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-6">Alternative Matches</T>
                     <div className="flex gap-4 flex-wrap">
                         {result.recommended_crops.slice(1).map((c, i) => (
                             <motion.span
@@ -88,7 +88,7 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 + i * 0.15, duration: 0.4 }}
-                                className="px-5 py-2.5 bg-white/5 border border-white/10 text-white/70 text-xs font-bold rounded-xl capitalize hover:bg-white/10 transition-colors cursor-default"
+                                className="px-5 py-2.5 bg-brand-surface-inset border border-brand-border text-brand-text-secondary text-xs font-bold rounded-xl capitalize hover:bg-brand-surface transition-colors cursor-default"
                             >
                                 <span className="text-brand-primary/60 mr-2">#{i + 2}</span> <T>{c.crop}</T> — {(c.confidence * 100).toFixed(0)}%
                             </motion.span>
@@ -103,14 +103,14 @@ const CropRecommendationCard = ({ crop, confidence, season, result }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
-                    className="mt-10 bg-white/5 border border-white/10 rounded-[2rem] p-8 flex items-start gap-6 group hover:bg-white/[0.08] transition-all"
+                    className="mt-10 bg-brand-surface border border-brand-border rounded-[2rem] p-8 flex items-start gap-6 group hover:bg-brand-surface-hover transition-all"
                 >
                     <div className="w-12 h-12 bg-brand-primary/20 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <span className="text-xl">🗺️</span>
                     </div>
                     <div>
                         <T as="p" className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-2">Soil Treatment Recommendation</T>
-                        <T as="p" className="text-base text-white/70 font-medium leading-relaxed">
+                        <T as="p" className="text-base text-brand-text-secondary font-medium leading-relaxed">
                             {result.mapped_values.N >= 50 && result.mapped_values.P >= 40 && result.mapped_values.K >= 40
                                 ? 'Soil nutrient balance is optimal for high yield. No immediate supplement required.'
                                 : `Supplement soil — N: ${result.mapped_values.N}, P: ${result.mapped_values.P}, K: ${result.mapped_values.K}, pH: ${result.mapped_values.ph?.toFixed(1)}`

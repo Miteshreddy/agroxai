@@ -136,7 +136,7 @@ const ReportExporter = ({ crop, confidence, season, soilType, weather, explanati
     return (
         <button
             onClick={generateReport}
-            className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all duration-300 shadow-sm hover:shadow-premium group"
+            className="flex items-center gap-2 px-5 py-3 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-primary hover:text-brand-surface hover:border-brand-primary transition-all duration-300 shadow-sm hover:shadow-premium group"
         >
             <Download size={14} className="group-hover:animate-bounce" />
             <T>Download Report</T>

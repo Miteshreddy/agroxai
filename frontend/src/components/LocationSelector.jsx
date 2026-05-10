@@ -127,16 +127,16 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                 Step 1 — Select Location
             </h3>
 
-            <div className="flex gap-2 mb-6 p-1 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-white/5 rounded-2xl">
+            <div className="flex gap-2 mb-6 p-1 bg-brand-surface-inset border border-brand-border rounded-2xl">
                 <button
                     onClick={() => { setLocationMode('current'); setWeatherData(null); setError(''); }}
-                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${locationMode === 'current' ? 'bg-white dark:bg-slate-900 text-brand-primary shadow-premium border border-slate-100 dark:border-white/5' : 'text-slate-400 dark:text-slate-500 hover:text-brand-primary'}`}
+                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${locationMode === 'current' ? 'bg-brand-surface-elevated text-brand-primary shadow-premium border border-brand-border' : 'text-brand-text-secondary hover:text-brand-primary'}`}
                 >
                     Auto GPS
                 </button>
                 <button
                     onClick={() => { setLocationMode('manual'); setWeatherData(null); setError(''); }}
-                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${locationMode === 'manual' ? 'bg-white dark:bg-slate-900 text-brand-primary shadow-premium border border-slate-100 dark:border-white/5' : 'text-slate-400 dark:text-slate-500 hover:text-brand-primary'}`}
+                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${locationMode === 'manual' ? 'bg-brand-surface-elevated text-brand-primary shadow-premium border border-brand-border' : 'text-brand-text-secondary hover:text-brand-primary'}`}
                 >
                     Manual Entry
                 </button>
@@ -156,24 +156,24 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                     ) : (
                         <div className="space-y-5">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Smart Search</label>
+                                <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Smart Search</label>
                                 <LocationSearch onSelect={handleAutocompleteSelect} />
                             </div>
 
                             <div className="flex items-center gap-4 py-2">
-                                <div className="h-px bg-slate-100 dark:bg-white/5 flex-1"></div>
-                                <span className="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest">Or edit manually</span>
-                                <div className="h-px bg-slate-100 dark:bg-white/5 flex-1"></div>
+                                <div className="h-px bg-brand-border flex-1"></div>
+                                <span className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest">Or edit manually</span>
+                                <div className="h-px bg-brand-border flex-1"></div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">District</label>
+                                    <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">District</label>
                                     <input
                                         type="text"
                                         placeholder="Enter district"
                                         value={manualLocation.district}
-                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50/30 dark:bg-slate-950/20 outline-none focus:border-brand-primary focus:bg-white dark:focus:bg-slate-900 transition-all text-xs font-bold text-brand-text-primary placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                                        className="w-full px-4 py-3.5 rounded-xl border border-brand-border bg-brand-surface-inset outline-none focus:border-brand-primary focus:bg-brand-surface transition-all text-xs font-bold text-brand-text-primary placeholder:text-brand-text-secondary"
                                         onChange={(e) => {
                                             setManualLocation({ ...manualLocation, district: e.target.value });
                                             setSelectedCoords(null);
@@ -181,12 +181,12 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">State</label>
+                                    <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">State</label>
                                     <input
                                         type="text"
                                         placeholder="Enter state"
                                         value={manualLocation.state}
-                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50/30 dark:bg-slate-950/20 outline-none focus:border-brand-primary focus:bg-white dark:focus:bg-slate-900 transition-all text-xs font-bold text-brand-text-primary placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                                        className="w-full px-4 py-3.5 rounded-xl border border-brand-border bg-brand-surface-inset outline-none focus:border-brand-primary focus:bg-brand-surface transition-all text-xs font-bold text-brand-text-primary placeholder:text-brand-text-secondary"
                                         onChange={(e) => {
                                             setManualLocation({ ...manualLocation, state: e.target.value });
                                             setSelectedCoords(null);
@@ -205,11 +205,11 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                     )}
                 </div>
             ) : (
-                <div className="mt-4 bg-gradient-to-br from-emerald-600 via-emerald-700 to-cyan-700 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950/40 border border-emerald-500/10 dark:border-white/5 rounded-[2rem] p-7 text-white relative overflow-hidden shadow-premium-hover hover:scale-[1.01] transition-transform duration-300">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 dark:bg-emerald-500/10 rounded-full blur-2xl -mr-6 -mt-6 pointer-events-none" />
+                <div className="mt-4 bg-gradient-to-br from-emerald-600 via-emerald-700 to-cyan-700 dark:from-brand-surface dark:via-brand-surface-inset dark:to-brand-surface-elevated border border-brand-border rounded-[2rem] p-7 text-white dark:text-brand-text-primary relative overflow-hidden shadow-premium-hover hover:scale-[1.01] transition-transform duration-300">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 dark:bg-brand-primary/10 rounded-full blur-2xl -mr-6 -mt-6 pointer-events-none" />
                     <button
                         onClick={() => setWeatherData(null)}
-                        className="absolute top-6 right-6 text-[10px] font-black uppercase tracking-widest bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 dark:border-white/5 transition-colors z-10"
+                        className="absolute top-6 right-6 text-[10px] font-black uppercase tracking-widest bg-white/10 dark:bg-brand-surface-inset hover:bg-white/20 dark:hover:bg-brand-surface-hover px-3 py-1.5 rounded-lg border border-white/10 dark:border-brand-border transition-colors z-10 text-white dark:text-brand-text-primary"
                     >
                         Change
                     </button>

@@ -100,7 +100,7 @@ const CropComparisonPanel = ({ crops }) => {
                             className={`relative rounded-3xl p-7 border transition-all duration-300 ${
                                 isBest
                                     ? 'bg-brand-primary text-brand-bg border-brand-primary/30 shadow-premium-hover scale-[1.02]'
-                                    : 'bg-slate-50 dark:bg-slate-950/40 border-slate-100 dark:border-white/5 shadow-premium hover:shadow-premium-hover hover:-translate-y-1'
+                                    : 'bg-brand-surface-inset border-brand-border shadow-premium hover:shadow-premium-hover hover:-translate-y-1'
                             }`}
                         >
                             {isBest && (
@@ -129,7 +129,7 @@ const CropComparisonPanel = ({ crops }) => {
                                         <CountUp end={+(c.confidence * 100).toFixed(1)} decimals={1} duration={1.5} suffix="%" />
                                     </span>
                                 </div>
-                                <div className={`w-full h-2 rounded-full overflow-hidden ${isBest ? 'bg-black/15' : 'bg-slate-200/50 dark:bg-slate-800'}`}>
+                                <div className={`w-full h-2 rounded-full overflow-hidden ${isBest ? 'bg-black/15' : 'bg-brand-border'}`}>
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${c.confidence * 100}%` }}
@@ -143,17 +143,17 @@ const CropComparisonPanel = ({ crops }) => {
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3">
                                     <Droplets size={14} className={isBest ? 'text-brand-bg/70' : getWaterColor(meta.water)} />
-                                    <T className={`text-xs font-bold ${isBest ? 'text-brand-bg/80' : 'text-slate-500'}`}>Water Need:</T>
+                                    <T className={`text-xs font-bold ${isBest ? 'text-brand-bg/80' : 'text-brand-text-secondary'}`}>Water Need:</T>
                                     <TD className={`text-xs font-black ${isBest ? 'text-brand-bg' : 'text-brand-text-primary'}`} value={meta.water} />
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Thermometer size={14} className={isBest ? 'text-brand-bg/70' : 'text-orange-400'} />
-                                    <T className={`text-xs font-bold ${isBest ? 'text-brand-bg/80' : 'text-slate-500'}`}>Climate:</T>
+                                    <T className={`text-xs font-bold ${isBest ? 'text-brand-bg/80' : 'text-brand-text-secondary'}`}>Climate:</T>
                                     <TD className={`text-xs font-black ${isBest ? 'text-brand-bg' : 'text-brand-text-primary'}`} value={meta.climate} />
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <Calendar size={14} className={isBest ? 'text-brand-bg/70' : 'text-emerald-500'} />
-                                    <T className={`text-xs font-bold ${isBest ? 'text-brand-bg/80' : 'text-slate-500'}`}>Duration:</T>
+                                    <T className={`text-xs font-bold ${isBest ? 'text-brand-bg/80' : 'text-brand-text-secondary'}`}>Duration:</T>
                                     <TD className={`text-xs font-black ${isBest ? 'text-brand-bg' : 'text-brand-text-primary'}`} value={meta.duration} />
                                 </div>
                             </div>

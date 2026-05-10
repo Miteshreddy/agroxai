@@ -94,9 +94,9 @@ const GrowingTimeline = ({ crop }) => {
                                 <div className="w-2 h-2 bg-white rounded-full" />
                             </div>
 
-                            <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300 ml-4">
+                            <div className="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300 ml-4">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full text-white ${step.color}`}>
+                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-full text-brand-surface ${step.color}`}>
                                         <Clock size={10} />
                                         <TD value={step.month} />
                                     </span>

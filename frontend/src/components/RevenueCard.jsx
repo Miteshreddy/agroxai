@@ -109,29 +109,29 @@ const RevenueCard = ({ crop, rainfall, season }) => {
                         className="space-y-10"
                     >
                         {/* Main Profit Display */}
-                        <div className="bg-brand-dark p-10 rounded-[2.5rem] relative overflow-hidden group">
+                        <div className="bg-brand-surface-elevated p-10 rounded-[2.5rem] relative overflow-hidden group border border-brand-border">
                             <div className="absolute top-0 right-0 p-10 opacity-5">
-                                <BadgeIndianRupee size={150} className="text-white" />
+                                <BadgeIndianRupee size={150} className="text-brand-text-primary" />
                             </div>
 
                             <div className="relative z-10 text-center">
                                 <T as="h4" className="text-brand-green font-black uppercase tracking-[0.3em] mb-4">Estimated Net Profit</T>
-                                <div className="text-6xl md:text-8xl font-black text-white italic tracking-tighter mb-4">
+                                <div className="text-6xl md:text-8xl font-black text-brand-text-primary italic tracking-tighter mb-4">
                                     ₹<CountUp end={prediction.net_profit} duration={2} separator="," />
                                 </div>
-                                <p className="text-white/40 text-[10px] uppercase font-bold tracking-[0.2em]">
+                                <p className="text-brand-text-secondary text-[10px] uppercase font-bold tracking-[0.2em]">
                                     <T>Based on</T> {prediction.land_area_acres} <T>acres of</T> <TD value={prediction.crop_used} />
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-10 border-t border-white/5 pt-10 relative z-10">
+                            <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-10 border-t border-brand-border pt-10 relative z-10">
                                 <div className="text-center">
-                                    <T as="p" className="text-brand-olive text-[10px] uppercase font-black tracking-widest mb-1">Gross Revenue</T>
-                                    <p className="text-xl font-bold text-white">₹{prediction.gross_revenue.toLocaleString()}</p>
+                                    <T as="p" className="text-brand-text-secondary text-[10px] uppercase font-black tracking-widest mb-1">Gross Revenue</T>
+                                    <p className="text-xl font-bold text-brand-text-primary">₹{prediction.gross_revenue.toLocaleString()}</p>
                                 </div>
                                 <div className="text-center">
-                                    <T as="p" className="text-red-400 text-[10px] uppercase font-black tracking-widest mb-1 italic">Est. Input Costs</T>
-                                    <p className="text-xl font-bold text-white">₹{prediction.input_cost.toLocaleString()}</p>
+                                    <T as="p" className="text-red-500 text-[10px] uppercase font-black tracking-widest mb-1 italic">Est. Input Costs</T>
+                                    <p className="text-xl font-bold text-brand-text-primary">₹{prediction.input_cost.toLocaleString()}</p>
                                 </div>
                             </div>
                         </div>
@@ -159,25 +159,25 @@ const RevenueCard = ({ crop, rainfall, season }) => {
                             </h5>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                 {prediction.yield_breakdown.map((item, idx) => (
-                                    <div key={idx} className="bg-white/40 p-4 rounded-2xl border border-brand-green/5 flex justify-between items-center">
-                                        <TD value={item.factor} as="span" className="text-[10px] font-bold text-brand-olive uppercase" />
+                                    <div key={idx} className="bg-brand-surface-inset p-4 rounded-2xl border border-brand-border flex justify-between items-center">
+                                        <TD value={item.factor} as="span" className="text-[10px] font-bold text-brand-text-secondary uppercase" />
                                         <span className="text-sm font-black text-brand-dark">{item.value}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="bg-white/50 p-6 rounded-3xl border border-brand-green/5 space-y-4">
+                        <div className="bg-brand-surface p-6 rounded-3xl border border-brand-border space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green">
                                         <Wallet size={20} />
                                     </div>
-                                    <T as="p" className="text-xs font-black text-brand-dark uppercase">MSP Rate Used (2024-25)</T>
+                                    <T as="p" className="text-xs font-black text-brand-text-primary uppercase">MSP Rate Used (2024-25)</T>
                                 </div>
                                 <span className="text-sm font-black text-brand-green">₹{prediction.msp_used} / {prediction.crop_used === 'Sugarcane' ? <T>Tonne</T> : <T>Quintal</T>}</span>
                             </div>
-                            <p className="text-[10px] text-brand-olive font-medium italic leading-relaxed pt-4 border-t border-brand-green/5">
+                            <p className="text-[10px] text-brand-text-secondary font-medium italic leading-relaxed pt-4 border-t border-brand-border">
                                 * <TD value={prediction.disclaimer} />
                             </p>
                         </div>

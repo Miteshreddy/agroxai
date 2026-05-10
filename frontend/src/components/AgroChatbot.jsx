@@ -138,7 +138,7 @@ const AgroChatbot = ({ context = {} }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="fixed bottom-24 right-6 z-[100] w-[380px] max-h-[550px] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden"
+            className="fixed bottom-24 right-6 z-[100] w-[380px] max-h-[550px] bg-brand-surface rounded-3xl shadow-2xl border border-brand-border flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-brand-text-primary px-6 py-5 flex items-center gap-3 shrink-0">
@@ -168,14 +168,14 @@ const AgroChatbot = ({ context = {} }) => {
                   className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                 >
                   <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                    msg.role === 'user' ? 'bg-brand-primary/10' : 'bg-slate-100'
+                    msg.role === 'user' ? 'bg-brand-primary/10' : 'bg-brand-surface-inset'
                   }`}>
                     {msg.role === 'user' ? <User size={14} className="text-brand-primary" /> : <Sparkles size={14} className="text-brand-text-primary" />}
                   </div>
                   <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                     msg.role === 'user'
                       ? 'bg-brand-primary text-white rounded-tr-md'
-                      : 'bg-slate-50 text-brand-text-primary border border-slate-100 rounded-tl-md'
+                      : 'bg-brand-surface-inset text-brand-text-primary border border-brand-border rounded-tl-md'
                   }`}>
                     {renderText(msg.text)}
                     {msg.isError && (
@@ -192,12 +192,12 @@ const AgroChatbot = ({ context = {} }) => {
 
               {isTyping && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-brand-surface-inset flex items-center justify-center shrink-0">
                     <Sparkles size={14} className="text-brand-text-primary" />
                   </div>
-                  <div className="bg-slate-50 border border-slate-100 rounded-2xl rounded-tl-md px-4 py-3 flex items-center gap-2">
+                  <div className="bg-brand-surface-inset border border-brand-border rounded-2xl rounded-tl-md px-4 py-3 flex items-center gap-2">
                     <Loader2 size={14} className="animate-spin text-brand-primary" />
-                    <span className="text-xs font-bold text-slate-400">AI is thinking...</span>
+                    <span className="text-xs font-bold text-brand-text-secondary">AI is thinking...</span>
                   </div>
                 </motion.div>
               )}
@@ -211,7 +211,7 @@ const AgroChatbot = ({ context = {} }) => {
                   <button
                     key={i}
                     onClick={() => sendMessage(s.message)}
-                    className="text-[10px] font-bold text-brand-text-secondary bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full hover:bg-brand-primary/5 hover:border-brand-primary/20 hover:text-brand-primary transition-all"
+                    className="text-[10px] font-bold text-brand-text-secondary bg-brand-surface-inset border border-brand-border px-3 py-1.5 rounded-full hover:bg-brand-primary/5 hover:border-brand-primary/20 hover:text-brand-primary transition-all"
                   >
                     {s.label}
                   </button>
@@ -220,15 +220,15 @@ const AgroChatbot = ({ context = {} }) => {
             )}
 
             {/* Input */}
-            <div className="p-3 border-t border-slate-100 shrink-0">
-              <div className="flex items-center gap-2 bg-slate-50 rounded-2xl px-4 py-2 border border-slate-100 focus-within:border-brand-primary/30 transition-colors">
+            <div className="p-3 border-t border-brand-border shrink-0">
+              <div className="flex items-center gap-2 bg-brand-surface-inset rounded-2xl px-4 py-2 border border-brand-border focus-within:border-brand-primary/30 transition-colors">
                 <input
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Ask about farming..."
-                  className="flex-1 bg-transparent outline-none text-sm font-medium text-brand-text-primary placeholder:text-slate-300"
+                  className="flex-1 bg-transparent outline-none text-sm font-medium text-brand-text-primary placeholder:text-brand-text-secondary"
                   disabled={isTyping}
                 />
                 <button

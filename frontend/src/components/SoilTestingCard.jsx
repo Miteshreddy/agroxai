@@ -48,7 +48,7 @@ const SoilTestingCard = ({ soilTestData, soilType }) => {
                         <T as="h4" className="text-sm font-black text-brand-dark uppercase tracking-[0.2em] mb-6 flex items-center gap-2 opacity-60">Required Test Types</T>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {test_types.map((test) => (
-                                <div key={test.id} className="flex items-center gap-3 bg-white/40 p-3 rounded-2xl border border-brand-green/5">
+                                <div key={test.id} className="flex items-center gap-3 bg-brand-surface-inset p-3 rounded-2xl border border-brand-border">
                                     <div className="w-10 h-10 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green shrink-0">
                                         {iconMap[test.icon] || <TestTubes size={18} />}
                                     </div>
@@ -72,10 +72,10 @@ const SoilTestingCard = ({ soilTestData, soilType }) => {
                                         rel={isClickable ? "noopener noreferrer" : ""}
                                         onClick={(e) => { if (!isClickable) e.preventDefault(); }}
                                         whileHover={{ x: 5 }}
-                                        className={`flex items-center justify-between bg-white/50 border border-brand-green/5 p-4 rounded-2xl group transition-all shadow-sm no-underline ${isClickable ? 'cursor-pointer hover:bg-brand-green/5 hover:border-brand-green/20' : 'cursor-default'}`}
+                                        className={`flex items-center justify-between bg-brand-surface-elevated border border-brand-border p-4 rounded-2xl group transition-all shadow-sm no-underline ${isClickable ? 'cursor-pointer hover:bg-brand-surface hover:border-brand-primary/50' : 'cursor-default'}`}
                                     >
                                         <div className="flex items-center gap-4">
-                                            <div className={`w-10 h-10 bg-white shadow-inner rounded-xl flex items-center justify-center text-brand-olive transition-colors ${isClickable ? 'group-hover:text-brand-green' : ''}`}>
+                                            <div className={`w-10 h-10 bg-brand-surface shadow-inner rounded-xl flex items-center justify-center text-brand-text-secondary transition-colors ${isClickable ? 'group-hover:text-brand-green' : ''}`}>
                                                 <MapPin size={20} />
                                             </div>
                                             <div>
@@ -122,7 +122,7 @@ const SoilTestingCard = ({ soilTestData, soilType }) => {
                                 items={collection_steps}
                                 renderItem={(step, idx) => (
                                     <div key={idx} className="flex gap-4 group">
-                                        <div className="w-8 h-8 rounded-full bg-brand-green text-brand-cream border-4 border-white shadow-md flex items-center justify-center font-black text-xs shrink-0 group-hover:scale-110 transition-transform">
+                                        <div className="w-8 h-8 rounded-full bg-brand-green text-brand-surface border-4 border-brand-surface shadow-md flex items-center justify-center font-black text-xs shrink-0 group-hover:scale-110 transition-transform">
                                             {idx + 1}
                                         </div>
                                         <p className="text-sm text-brand-olive font-bold leading-relaxed">{step}</p>
@@ -140,7 +140,7 @@ const SoilTestingCard = ({ soilTestData, soilType }) => {
                                 items={improvement_tips}
                                 renderItem={(tip, idx) => (
                                     <div key={idx} className="bg-brand-green/10 p-5 rounded-2xl flex items-start gap-4 border border-brand-green/10">
-                                        <div className="w-8 h-8 bg-white/60 rounded-lg flex items-center justify-center text-brand-gold shrink-0">
+                                        <div className="w-8 h-8 bg-brand-surface-elevated rounded-lg flex items-center justify-center text-brand-gold shrink-0">
                                             <Lightbulb size={20} />
                                         </div>
                                         <p className="text-sm font-bold text-brand-dark italic leading-relaxed opacity-90">{tip}</p>

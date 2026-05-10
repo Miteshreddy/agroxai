@@ -72,7 +72,7 @@ const LanguageSelect = () => {
           className="glass-card !p-0 overflow-hidden w-full"
         >
           {/* Search bar */}
-          <div className="p-6 border-b border-slate-50">
+          <div className="p-6 border-b border-brand-border">
             <div className="relative">
               <Search size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" />
               <input
@@ -80,7 +80,7 @@ const LanguageSelect = () => {
                 placeholder={t('searchPlaceholder')}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-slate-950/20 border border-white/10 text-brand-text-primary placeholder:text-slate-500 text-sm font-bold focus:outline-none focus:border-brand-primary/40 transition-all"
+                className="w-full pl-12 pr-6 py-4 rounded-2xl bg-brand-surface-inset border border-brand-border text-brand-text-primary placeholder:text-brand-text-secondary text-sm font-bold focus:outline-none focus:border-brand-primary/40 transition-all"
               />
             </div>
           </div>
@@ -108,7 +108,7 @@ const LanguageSelect = () => {
                         className={`relative p-5 rounded-2xl text-left transition-all duration-300 group border ${
                           isSelected 
                             ? 'bg-brand-primary text-brand-bg border-brand-primary shadow-glow' 
-                            : 'bg-white/5 border-white/5 hover:border-brand-primary/30 hover:shadow-premium'
+                            : 'bg-brand-surface-inset border-brand-border hover:border-brand-primary/30 hover:shadow-premium'
                         }`}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
@@ -138,9 +138,9 @@ const LanguageSelect = () => {
           </div>
 
           {/* Footer / Continue Button */}
-          <div className="p-6 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="p-6 bg-brand-surface-inset border-t border-brand-border flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-slate-950/20 border border-white/5 flex items-center justify-center text-xs font-black text-brand-primary shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-brand-surface-elevated border border-brand-border flex items-center justify-center text-xs font-black text-brand-primary shadow-sm">
                 {selectedLang?.code === 'en' ? 'EN' : 'IN'}
               </div>
               <div className="text-left">

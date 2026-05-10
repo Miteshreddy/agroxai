@@ -102,7 +102,7 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                     value={query}
                     onChange={handleInputChange}
                     placeholder={placeholder}
-                    className="w-full pl-11 pr-10 py-3.5 rounded-xl border border-gray-200 outline-none focus:border-brand-green focus:ring-4 focus:ring-brand-green/10 transition-all text-sm font-medium"
+                    className="w-full pl-12 pr-12 py-4 bg-brand-surface text-brand-text-primary rounded-2xl border border-brand-border focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all font-bold text-sm shadow-sm"
                     onFocus={() => query.length >= 3 && suggestions.length > 0 && setIsOpen(true)}
                 />
                 {query && (
@@ -121,12 +121,12 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-50 w-full mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+                        className="absolute z-50 w-full mt-2 bg-brand-surface-elevated rounded-2xl shadow-2xl border border-brand-border overflow-hidden"
                     >
                         {isLoading ? (
                             <div className="p-8 flex flex-col items-center justify-center gap-3">
                                 <Loader2 className="animate-spin text-brand-green" size={24} />
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Searching locations...</p>
+                                <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-wider">Searching locations...</p>
                             </div>
                         ) : suggestions.length > 0 ? (
                             <div className="py-2">
@@ -134,16 +134,16 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                                     <button
                                         key={index}
                                         onClick={() => handleSelect(item)}
-                                        className="w-full px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-50 last:border-0"
+                                        className="w-full px-4 py-3 flex items-start gap-3 hover:bg-brand-surface-hover transition-colors text-left border-b border-brand-border last:border-0"
                                     >
                                         <div className="mt-1 bg-brand-green/10 p-2 rounded-lg text-brand-green shrink-0">
                                             <MapPin size={14} />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-sm font-bold text-gray-800 line-clamp-1">
+                                            <span className="text-sm font-bold text-brand-text-primary line-clamp-1">
                                                 {highlightMatch(item.display_name, query)}
                                             </span>
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">
+                                            <span className="text-[10px] font-bold text-brand-text-secondary uppercase tracking-tight">
                                                 {item.address.state || 'India'}
                                             </span>
                                         </div>
@@ -152,11 +152,11 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                             </div>
                         ) : (
                             <div className="p-8 text-center">
-                                <div className="bg-red-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div className="bg-red-500/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                                     <Search size={20} className="text-red-400" />
                                 </div>
-                                <p className="text-sm font-bold text-gray-800">No results found</p>
-                                <p className="text-xs text-gray-500 mt-1">Try a different spelling or city name</p>
+                                <p className="text-sm font-bold text-brand-text-primary">No results found</p>
+                                <p className="text-xs text-brand-text-secondary mt-1">Try a different spelling or city name</p>
                             </div>
                         )}
                     </motion.div>

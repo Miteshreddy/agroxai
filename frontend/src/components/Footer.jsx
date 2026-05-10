@@ -5,7 +5,7 @@ import T from './T';
 
 const Footer = () => {
   return (
-    <footer className="bg-white/40 dark:bg-slate-950/40 border-t border-slate-100 dark:border-white/5 pt-24 pb-12 px-6 backdrop-blur-md transition-colors duration-500">
+    <footer className="bg-brand-surface-inset border-t border-brand-border pt-24 pb-12 px-6 transition-colors duration-500">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 mb-24">
         <div className="space-y-8">
           <div className="flex items-center space-x-3">
@@ -56,7 +56,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto pt-12 border-t border-slate-100 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-brand-text-secondary/60 text-[10px] font-black uppercase tracking-[0.2em]">
+      <div className="max-w-7xl mx-auto pt-12 border-t border-brand-border flex flex-col md:flex-row items-center justify-between gap-6 text-brand-text-secondary/60 text-[10px] font-black uppercase tracking-[0.2em]">
         <T as="p">© 2026 AgroXAI. Precision Farming Systems.</T>
         <T as="p">Built with ❤️ for sustainable agriculture</T>
       </div>
@@ -65,13 +65,13 @@ const Footer = () => {
 };
 
 const SocialLink = ({ icon, href }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-white/5 rounded-xl flex items-center justify-center text-brand-text-primary hover:bg-brand-primary hover:text-brand-bg hover:border-brand-primary transition-all duration-300">
+  <a href={href} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-brand-surface-elevated border border-brand-border rounded-xl flex items-center justify-center text-brand-text-primary hover:bg-brand-primary hover:text-brand-surface hover:border-brand-primary transition-all duration-300">
     {icon}
   </a>
 );
 
 const TechBadge = ({ icon, label }) => (
-  <div className="flex items-center gap-2 px-4 py-2.5 bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-white/5 rounded-xl text-brand-text-primary font-black text-[10px] uppercase tracking-wider shadow-sm hover:shadow-premium hover:border-brand-primary/20 transition-all cursor-default">
+  <div className="flex items-center gap-2 px-4 py-2.5 bg-brand-surface-elevated border border-brand-border rounded-xl text-brand-text-primary font-black text-[10px] uppercase tracking-wider shadow-sm hover:shadow-premium hover:border-brand-primary/20 transition-all cursor-default">
     <span className="text-brand-primary">{icon}</span>
     {label}
   </div>

@@ -105,7 +105,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                             key={idx}
                             className={`rounded-[2.5rem] border transition-all duration-300 ${isCompleted
                                 ? 'bg-brand-green/5 border-brand-green/20'
-                                : isExpanded ? 'bg-white border-brand-green/20 shadow-xl' : 'bg-white/40 border-brand-green/10'
+                                : isExpanded ? 'bg-brand-surface-elevated border-brand-border shadow-xl' : 'bg-brand-surface border-brand-border'
                                 }`}
                         >
                             {/* Collapsed View / Header */}
@@ -119,7 +119,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                                             animate={{ scale: [1, 1.08, 1] }}
                                             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: idx * 0.4 }}
                                         >
-                                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-black shadow-lg z-10 relative transition-all duration-500 ${isCompleted ? 'bg-brand-green text-white rotate-[360deg]' : 'bg-white text-brand-dark border-4 border-brand-green/5'
+                                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-black shadow-lg z-10 relative transition-all duration-500 ${isCompleted ? 'bg-brand-green text-white rotate-[360deg]' : 'bg-brand-surface text-brand-text-primary border-4 border-brand-green/5'
                                                 }`}>
                                                 {isCompleted ? <CheckCircle2 size={32} /> : stage.emoji}
                                             </div>
@@ -143,7 +143,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={(e) => toggleComplete(idx, e)}
-                                        className={`p-3 rounded-2xl border transition-all flex items-center gap-2 group ${isCompleted ? 'bg-brand-green border-brand-green text-white' : 'bg-white border-brand-green/10 text-brand-olive hover:border-brand-green/40'
+                                        className={`p-3 rounded-2xl border transition-all flex items-center gap-2 group ${isCompleted ? 'bg-brand-green border-brand-green text-white' : 'bg-brand-surface border-brand-border text-brand-text-secondary hover:border-brand-green/40'
                                             }`}
                                     >
                                         <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">
@@ -177,7 +177,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                                                         items={stage.steps}
                                                         renderItem={(step, i) => (
                                                             <div key={i} className="flex gap-4 p-4 rounded-2xl bg-brand-green/5 border border-brand-green/5 hover:border-brand-green/20 transition-all">
-                                                                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-xs font-black text-brand-green shadow-sm shrink-0">
+                                                                <div className="w-8 h-8 rounded-full bg-brand-surface-elevated flex items-center justify-center text-xs font-black text-brand-green shadow-sm shrink-0">
                                                                     {i + 1}
                                                                 </div>
                                                                 <p className="text-sm font-bold text-brand-dark leading-relaxed italic">
@@ -194,7 +194,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                                                 {/* Left Column: Pro Tip & Tools */}
                                                 <div className="space-y-6">
                                                     <div className="bg-brand-green/10 p-6 rounded-[2rem] border border-brand-green/10 flex items-start gap-4">
-                                                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                                                        <div className="w-10 h-10 bg-brand-surface-elevated rounded-xl flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
                                                             <Lightbulb size={24} />
                                                         </div>
                                                         <div>
@@ -211,7 +211,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                                                             <TList
                                                                 items={stage.tools}
                                                                 renderItem={(tool, i) => (
-                                                                    <span key={i} className="px-4 py-2 bg-white rounded-xl border border-brand-green/10 text-xs font-black text-brand-dark flex items-center gap-2">
+                                                                    <span key={i} className="px-4 py-2 bg-brand-surface rounded-xl border border-brand-border text-xs font-black text-brand-text-primary flex items-center gap-2">
                                                                         <div className="w-2 h-2 rounded-full bg-brand-green/30" /> {tool}
                                                                     </span>
                                                                 )}
@@ -227,7 +227,7 @@ const GrowingGuideCard = ({ guideData, cropName }) => {
                                                             <AlertTriangle size={20} className="text-red-500 animate-bounce" />
                                                             <T as="span" className="text-[10px] font-black text-red-500 uppercase tracking-widest">Crucial Warning</T>
                                                         </div>
-                                                        <TD value={stage.warning} as="p" className="text-sm font-black text-brand-dark italic leading-relaxed opacity-80 border-l-2 border-red-500 pl-4 bg-white/40 p-3 rounded-lg" prefix='"' suffix='"' />
+                                                        <TD value={stage.warning} as="p" className="text-sm font-black text-brand-text-primary italic leading-relaxed opacity-80 border-l-2 border-red-500 pl-4 bg-brand-surface p-3 rounded-lg" prefix='"' suffix='"' />
                                                     </div>
                                                 )}
                                             </div>

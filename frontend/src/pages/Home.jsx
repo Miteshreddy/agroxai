@@ -99,7 +99,7 @@ const Home = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
                 onClick={scrollToHowItWorks}
-                className="px-8 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-slate-800 dark:text-slate-200 rounded-3xl font-bold shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300"
+                className="px-8 py-3.5 bg-brand-surface-elevated border border-brand-border text-brand-text-primary rounded-3xl font-bold shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-300"
               >
                 <T>How it Works</T>
               </motion.button>

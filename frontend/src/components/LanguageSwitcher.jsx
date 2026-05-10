@@ -65,25 +65,25 @@ const LanguageSwitcher = ({ compact = false }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="absolute right-0 mt-2 w-72 rounded-2xl overflow-hidden z-[200] shadow-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/5 backdrop-blur-md"
+            className="absolute right-0 mt-2 w-72 rounded-2xl overflow-hidden z-[200] shadow-2xl bg-brand-surface border border-brand-border backdrop-blur-md"
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-slate-100 dark:border-white/5 flex items-center gap-2">
+            <div className="px-4 py-3 border-b border-brand-border flex items-center gap-2">
               <Globe size={16} className="text-brand-primary" />
               <span className="text-xs font-black text-brand-text-secondary uppercase tracking-widest">{t('changeLanguage')}</span>
             </div>
 
             {/* Search */}
-            <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5">
+            <div className="px-3 py-2 border-b border-brand-border">
               <div className="relative">
-                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-secondary" />
                 <input
                   type="text"
                   autoFocus
                   placeholder={t('searchPlaceholder')}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-white/5 focus:outline-none focus:border-brand-primary font-medium text-brand-text-primary placeholder-slate-400"
+                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-brand-surface-inset border border-brand-border focus:outline-none focus:border-brand-primary font-medium text-brand-text-primary placeholder:text-brand-text-secondary"
                 />
               </div>
             </div>
@@ -99,7 +99,7 @@ const LanguageSwitcher = ({ compact = false }) => {
                     <button
                       key={lang.code}
                       onClick={() => handleSelect(lang.code)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors text-left group"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-brand-surface-hover transition-colors text-left group"
                     >
                       <span className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center text-[10px] font-black text-white" style={{ background: 'linear-gradient(135deg,#10B981,#14B8A6)' }}>
                         {lang.code === 'en' ? 'EN' : 'IN'}
@@ -118,7 +118,7 @@ const LanguageSwitcher = ({ compact = false }) => {
             </div>
 
             {/* Footer link to full language page */}
-            <div className="border-t border-slate-100 dark:border-white/5 px-4 py-2.5 bg-slate-50/50 dark:bg-slate-950/20">
+            <div className="border-t border-brand-border px-4 py-2.5 bg-brand-surface-inset">
               <button
                 onClick={() => { setIsOpen(false); navigate('/language'); }}
                 className="w-full text-center text-xs text-brand-primary font-black hover:opacity-80 transition-colors uppercase tracking-wider"

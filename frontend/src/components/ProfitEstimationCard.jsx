@@ -78,7 +78,7 @@ const ProfitEstimationCard = ({ crop, confidence }) => {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="bg-white border border-slate-100 rounded-2xl p-5 shadow-premium text-center"
+                    className="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-premium text-center"
                 >
                     <Package size={18} className="text-blue-500 mx-auto mb-2" />
                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Est. Yield</p>
@@ -93,7 +93,7 @@ const ProfitEstimationCard = ({ crop, confidence }) => {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-white border border-slate-100 rounded-2xl p-5 shadow-premium text-center"
+                    className="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-premium text-center"
                 >
                     <Coins size={18} className="text-amber-500 mx-auto mb-2" />
                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Avg Price</p>
@@ -108,7 +108,7 @@ const ProfitEstimationCard = ({ crop, confidence }) => {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.6 }}
-                    className="bg-white border border-slate-100 rounded-2xl p-5 shadow-premium text-center"
+                    className="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-premium text-center"
                 >
                     <BarChart3 size={18} className="text-purple-500 mx-auto mb-2" />
                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Revenue</p>
@@ -125,8 +125,8 @@ const ProfitEstimationCard = ({ crop, confidence }) => {
                     transition={{ delay: 0.7 }}
                     className={`rounded-2xl p-5 shadow-premium text-center border ${
                         estimatedProfit > 0
-                            ? 'bg-emerald-50 border-emerald-200'
-                            : 'bg-red-50 border-red-200'
+                            ? 'bg-emerald-500/10 border-emerald-500/20'
+                            : 'bg-red-500/10 border-red-500/20'
                     }`}
                 >
                     <TrendingUp size={18} className={estimatedProfit > 0 ? 'text-emerald-600 mx-auto mb-2' : 'text-red-500 mx-auto mb-2'} />
@@ -143,7 +143,7 @@ const ProfitEstimationCard = ({ crop, confidence }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 }}
-                className="bg-white border border-slate-100 rounded-2xl p-6 shadow-premium"
+                className="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-premium"
             >
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">

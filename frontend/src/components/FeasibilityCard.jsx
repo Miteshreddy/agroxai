@@ -122,7 +122,7 @@ const FeasibilityCard = ({ reportData, cropName }) => {
                             <motion.div
                                 key={idx}
                                 whileHover={{ x: 5 }}
-                                className="bg-white/50 border border-brand-green/5 p-5 rounded-3xl flex items-center gap-6 group hover:bg-brand-green/5 transition-all"
+                                className="bg-brand-surface-inset border border-brand-border p-5 rounded-3xl flex items-center gap-6 group hover:bg-brand-surface transition-all"
                             >
                                 <div className={`w-12 h-12 flex flex-col items-center justify-center rounded-2xl shrink-0 ${rankConfig[idx].badge}`}>
                                     <Medal className={rankConfig[idx].color} size={20} />

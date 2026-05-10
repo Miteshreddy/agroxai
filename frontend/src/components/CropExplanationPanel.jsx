@@ -39,7 +39,7 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="glass-card bg-white border-brand-green/10"
+                className="glass-card border-brand-green/10"
             >
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-brand-green/10 rounded-xl flex items-center justify-center text-brand-green">
@@ -94,7 +94,7 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="glass-card bg-white border-brand-green/5"
+                className="glass-card border-brand-green/5"
             >
                 <div className="flex items-center justify-between mb-8">
                     <h3 className="text-xl font-black text-brand-dark flex items-center gap-3 uppercase tracking-tight">
@@ -116,11 +116,11 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                                 width={120}
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: '#1A1A1A', fontSize: '11px', fontWeight: 800 }}
+                                tick={{ fill: 'var(--text-primary)', fontSize: '11px', fontWeight: 800 }}
                             />
                             <Tooltip
-                                cursor={{ fill: '#F5F5F0' }}
-                                contentStyle={{ background: '#FFFFFF', border: '1px solid #1A1A1A', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
+                                cursor={{ fill: 'var(--surface-inset)' }}
+                                contentStyle={{ background: 'var(--surface-solid)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', borderRadius: '12px', boxShadow: 'var(--card-shadow)' }}
                             />
                             <Bar
                                 dataKey="impact"
@@ -179,7 +179,7 @@ const NutrientTile = ({ label, value, delay, isPH }) => (
         whileInView={{ scale: 1, opacity: 1 }}
         transition={{ delay }}
         viewport={{ once: true }}
-        className="p-6 bg-white border border-brand-green/5 rounded-3xl shadow-lg text-center"
+        className="p-6 bg-brand-surface border border-brand-border rounded-3xl shadow-lg text-center"
     >
         <p className="text-[10px] font-black uppercase text-brand-olive tracking-widest mb-2"><T>{label}</T></p>
         <p className="text-3xl font-black text-brand-dark">

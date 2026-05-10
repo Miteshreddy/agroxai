@@ -14,7 +14,7 @@ const QuickActions = ({ onRetry, onScrollToLocation, onScrollToSoil, crop, confi
         >
             <button
                 onClick={onScrollToLocation}
-                className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all duration-300 shadow-sm"
+                className="flex items-center gap-2 px-5 py-3 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500/10 hover:border-blue-500/30 hover:text-blue-500 transition-all duration-300 shadow-sm"
             >
                 <MapPin size={14} />
                 <T>Try Another Location</T>
@@ -22,7 +22,7 @@ const QuickActions = ({ onRetry, onScrollToLocation, onScrollToSoil, crop, confi
 
             <button
                 onClick={onScrollToSoil}
-                className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-amber-50 hover:border-amber-200 hover:text-amber-600 transition-all duration-300 shadow-sm"
+                className="flex items-center gap-2 px-5 py-3 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-amber-500/10 hover:border-amber-500/30 hover:text-amber-500 transition-all duration-300 shadow-sm"
             >
                 <Layers size={14} />
                 <T>Change Soil Type</T>
@@ -30,7 +30,7 @@ const QuickActions = ({ onRetry, onScrollToLocation, onScrollToSoil, crop, confi
 
             <button
                 onClick={onRetry}
-                className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-primary/5 hover:border-brand-primary/20 hover:text-brand-primary transition-all duration-300 shadow-sm"
+                className="flex items-center gap-2 px-5 py-3 bg-brand-surface border border-brand-border text-brand-text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-primary/10 hover:border-brand-primary/30 hover:text-brand-primary transition-all duration-300 shadow-sm"
             >
                 <RefreshCw size={14} />
                 <T>Run Again</T>
@@ -48,7 +48,7 @@ const QuickActions = ({ onRetry, onScrollToLocation, onScrollToSoil, crop, confi
 
             <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="flex items-center gap-2 px-4 py-3 bg-slate-50 border border-slate-200 text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-100 transition-all duration-300"
+                className="flex items-center gap-2 px-4 py-3 bg-brand-surface-inset border border-brand-border text-brand-text-muted text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-surface-elevated transition-all duration-300"
             >
                 <ArrowUp size={14} />
             </button>

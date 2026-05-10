@@ -41,7 +41,7 @@ const Navbar = () => {
         >
             <div className="max-w-7xl mx-auto px-6">
                 <div className={`flex items-center justify-between transition-all duration-500 px-6 py-3 rounded-[2rem] ${isScrolled
-                    ? 'bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-premium border border-white/40 dark:border-white/5'
+                    ? 'glass-panel'
                     : 'bg-transparent border border-transparent'
                     }`}>
                     <Link to="/" className="flex items-center space-x-3 px-2 group">

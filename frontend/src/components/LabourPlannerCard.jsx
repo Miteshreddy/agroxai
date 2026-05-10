@@ -16,11 +16,11 @@ const LabourPhaseCard = ({ phase, idx, area }) => {
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-brand-green/10 group-last:bottom-auto group-last:h-6" />
 
             {/* Phase Node */}
-            <div className="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-white border-4 border-brand-green/5 flex items-center justify-center text-xl shadow-lg z-10 group-hover:scale-110 transition-transform">
+            <div className="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-brand-surface border-4 border-brand-green/5 flex items-center justify-center text-xl shadow-lg z-10 group-hover:scale-110 transition-transform">
                 {phase.emoji}
             </div>
 
-            <div className="bg-white/40 border border-brand-green/5 p-6 rounded-[2rem] hover:bg-white/60 transition-all shadow-sm">
+            <div className="bg-brand-surface-inset border border-brand-border p-6 rounded-[2rem] hover:bg-brand-surface transition-all shadow-sm">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <div>
                         <h4 className="text-lg font-black text-brand-dark uppercase tracking-tight flex items-center gap-2">
@@ -91,8 +91,8 @@ const LabourPlannerCard = ({ labourData }) => {
                 </div>
 
                 <div className="flex gap-4">
-                    <div className="bg-brand-dark p-6 rounded-[2rem] text-center shadow-lg transform -rotate-1">
-                        <T as="p" className="text-[10px] font-black uppercase text-white/50 tracking-widest mb-1">Total Labour Days</T>
+                    <div className="bg-brand-surface-elevated border border-brand-border p-6 rounded-[2rem] text-center shadow-lg transform -rotate-1">
+                        <T as="p" className="text-[10px] font-black uppercase text-brand-text-secondary tracking-widest mb-1">Total Labour Days</T>
                         <div className="text-3xl font-black text-brand-green italic tracking-tighter">
                             <CountUp end={total_labour_days} duration={2} />
                         </div>
@@ -119,7 +119,7 @@ const LabourPlannerCard = ({ labourData }) => {
                                 key={month}
                                 className={`text-center py-4 rounded-2xl border transition-all ${isPeak
                                         ? 'bg-brand-green border-brand-green text-white font-black shadow-lg shadow-brand-green/20'
-                                        : 'bg-white/50 border-brand-green/5 text-brand-olive font-bold opacity-40'
+                                        : 'bg-brand-surface-inset border-brand-border text-brand-text-secondary font-bold opacity-40'
                                     }`}
                             >
                                 <TD value={month} as="span" className="text-xs uppercase tracking-widest" />
@@ -144,24 +144,24 @@ const LabourPlannerCard = ({ labourData }) => {
 
             {/* Machinery Section */}
             {machinery_options.length > 0 && (
-                <div className="bg-brand-dark rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden mb-10">
+                <div className="bg-brand-surface-elevated border border-brand-border rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden mb-10">
                     <div className="absolute top-0 right-0 p-10 opacity-5">
-                        <Tractor size={150} className="text-white" />
+                        <Tractor size={150} className="text-brand-text-primary" />
                     </div>
 
-                    <h4 className="text-xl font-black text-white uppercase tracking-tight mb-8 relative z-10 flex items-center gap-3">
+                    <h4 className="text-xl font-black text-brand-text-primary uppercase tracking-tight mb-8 relative z-10 flex items-center gap-3">
                         <Zap className="text-brand-green fill-brand-green" size={24} />
                         <T>Machinery & Automation Alternatives</T>
                     </h4>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
                         {machinery_options.map((option, idx) => (
-                            <div key={idx} className="bg-white/5 border border-white/10 p-6 rounded-[2rem] flex flex-col items-center text-center group hover:bg-white/10 transition-all">
+                            <div key={idx} className="bg-brand-surface border border-brand-border p-6 rounded-[2rem] flex flex-col items-center text-center group hover:bg-brand-surface-hover transition-all">
                                 <Tractor className="text-brand-green mb-4 opacity-50 group-hover:opacity-100 transition-opacity" size={40} />
-                                <TD value={option.name} as="h5" className="text-base font-black text-white uppercase tracking-tight mb-2" />
+                                <TD value={option.name} as="h5" className="text-base font-black text-brand-text-primary uppercase tracking-tight mb-2" />
                                 <p className="text-[10px] font-black text-brand-green uppercase tracking-widest mb-4"><T>Rental</T>: <TD value={option.rental} /></p>
-                                <div className="bg-brand-green/20 px-4 py-2 rounded-xl border border-brand-green/20 w-full">
-                                    <p className="text-[10px] font-black text-white uppercase tracking-widest"><T>Saves</T> <TD value={option.saving} /> <T>Labour Time</T></p>
+                                <div className="bg-brand-green/10 px-4 py-2 rounded-xl border border-brand-green/20 w-full">
+                                    <p className="text-[10px] font-black text-brand-text-primary uppercase tracking-widest"><T>Saves</T> <TD value={option.saving} /> <T>Labour Time</T></p>
                                 </div>
                             </div>
                         ))}
@@ -170,7 +170,7 @@ const LabourPlannerCard = ({ labourData }) => {
             )}
 
             {/* Booking Tip */}
-            <div className="bg-white/50 p-6 rounded-[2rem] border-2 border-dashed border-brand-green/20 flex flex-col md:flex-row items-center gap-6">
+            <div className="bg-brand-surface-inset p-6 rounded-[2rem] border-2 border-dashed border-brand-green/20 flex flex-col md:flex-row items-center gap-6">
                 <div className="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center text-brand-green shrink-0">
                     <HelpCircle size={30} />
                 </div>

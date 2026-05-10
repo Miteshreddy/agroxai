@@ -8,17 +8,36 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Semantic background colors
+        'brand-bg': 'var(--bg-primary)',
+        'brand-bg-secondary': 'var(--bg-secondary)',
+        'brand-bg-tertiary': 'var(--bg-tertiary)',
+
+        // Surface colors (cards, panels)
+        'brand-surface': 'var(--surface-solid)',
+        'brand-surface-inset': 'var(--surface-inset)',
+        'brand-surface-elevated': 'var(--surface-elevated)',
+
+        // Text colors
+        'brand-text-primary': 'var(--text-primary)',
+        'brand-text-secondary': 'var(--text-secondary)',
+        'brand-text-tertiary': 'var(--text-tertiary)',
+        'brand-text-muted': 'var(--text-muted)',
+
+        // Accent colors
         'brand-primary': 'var(--accent-primary)',
         'brand-dark': 'var(--accent-hover)',
         'brand-soft': 'var(--accent-soft)',
-        'brand-bg': 'var(--bg-primary)',
-        'brand-text-primary': 'var(--text-primary)',
-        'brand-text-secondary': 'var(--text-secondary)',
-        'brand-cream': 'var(--card-bg)',
         'brand-green': 'var(--accent-primary)',
         'brand-gold': 'var(--accent-cyan)',
-        'brand-olive': 'var(--bg-secondary)',
+
+        // Borders
         'brand-border': 'var(--border-color)',
+        'brand-border-strong': 'var(--border-strong)',
+
+        // Legacy aliases (backward compatibility)
+        'brand-cream': 'var(--surface-solid)',
+        'brand-olive': 'var(--text-secondary)',
       },
       borderRadius: {
         '2xl': '16px',
@@ -26,12 +45,15 @@ export default {
         '4xl': '32px',
       },
       boxShadow: {
-        'premium': '0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px rgba(255, 255, 255, 0.05)',
-        'premium-hover': '0 12px 40px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(34, 211, 238, 0.15)',
+        'premium': 'var(--shadow-premium)',
+        'premium-hover': 'var(--shadow-premium-hover)',
         'glow': '0 0 20px rgba(16, 185, 129, 0.25)',
       },
       fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'sans': ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      transitionDuration: {
+        '400': '400ms',
       },
     },
   },

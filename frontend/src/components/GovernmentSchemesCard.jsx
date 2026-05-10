@@ -17,8 +17,8 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
 
     return (
         <div className={`overflow-hidden rounded-3xl border transition-all duration-300 mb-4 ${isSpecific
-                ? 'bg-brand-green/5 dark:bg-brand-green/10 border-brand-green/20 dark:border-brand-green/30'
-                : 'bg-white dark:bg-slate-900 border-brand-green/10 dark:border-white/5'
+                ? 'bg-brand-green/5 border-brand-green/20'
+                : 'bg-brand-surface border-brand-border'
             }`}>
             <div
                 className="p-6 cursor-pointer flex items-center justify-between gap-4"
@@ -88,7 +88,7 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
                                         </h5>
                                         <div className="flex flex-wrap gap-2">
                                             {scheme.documents.map((doc, idx) => (
-                                                <span key={idx} className="bg-white dark:bg-slate-950/40 px-3 py-1.5 rounded-xl border border-brand-green/10 dark:border-white/5 text-[10px] font-bold text-brand-text-primary flex items-center gap-1">
+                                                <span key={idx} className="bg-brand-surface-inset px-3 py-1.5 rounded-xl border border-brand-border text-[10px] font-bold text-brand-text-primary flex items-center gap-1">
                                                     <CheckCircle2 size={10} className="text-brand-green" /> <TD value={doc} />
                                                 </span>
                                             ))}
@@ -99,7 +99,7 @@ const SchemeAccordion = ({ scheme, isSpecific, cropName }) => {
                                             href={scheme.website}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 bg-brand-dark text-white px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-brand-green transition-all group"
+                                            className="inline-flex items-center gap-2 bg-brand-surface-elevated border border-brand-border text-brand-text-primary px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-brand-green hover:text-brand-surface hover:border-brand-green transition-all group"
                                         >
                                             <T>Visit Official Website</T> <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                         </a>
@@ -133,8 +133,8 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
                     </h3>
                     <T as="p" className="text-brand-text-secondary font-medium text-sm mt-1">Official subsidies, income support, and insurance schemes for your crop.</T>
                 </div>
-                <div className="bg-brand-green text-slate-950 px-6 py-4 rounded-[2rem] border-4 border-slate-950 dark:border-white/5 shadow-xl flex items-center gap-4 justify-center">
-                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="bg-brand-green text-brand-surface px-6 py-4 rounded-[2rem] border-4 border-brand-surface shadow-xl flex items-center gap-4 justify-center">
+                    <div className="w-10 h-10 bg-brand-surface/20 rounded-full flex items-center justify-center">
                         <PhoneCall size={20} />
                     </div>
                     <div>
@@ -171,7 +171,7 @@ const GovernmentSchemesCard = ({ schemesData, cropName }) => {
             </div>
 
             {/* Context Note */}
-            <div className="mt-10 p-5 bg-brand-green/5 dark:bg-brand-green/10 border border-brand-green/10 dark:border-brand-green/20 rounded-2xl flex items-center gap-4">
+            <div className="mt-10 p-5 bg-brand-green/5 border border-brand-green/10 rounded-2xl flex items-center gap-4">
                 <Info className="text-brand-green shrink-0" size={20} />
                 <p className="text-xs text-brand-text-secondary font-bold italic leading-relaxed">
                     <T>Note:</T> <TD value={state_schemes_note} />

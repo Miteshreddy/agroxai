@@ -82,7 +82,7 @@ const RiskAnalysisCard = ({ riskData, cropName }) => {
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.3 + index * 0.1 }}
-                                    className="bg-white/40 border border-brand-green/5 rounded-2xl p-5 group hover:bg-white/60 transition-colors"
+                                    className="bg-brand-surface-inset border border-brand-border rounded-2xl p-5 group hover:bg-brand-surface transition-colors"
                                 >
                                     <div className="flex items-start gap-4">
                                         <div className="w-10 h-10 bg-brand-gold/10 rounded-xl flex items-center justify-center text-brand-gold group-hover:scale-110 transition-transform">
@@ -111,7 +111,7 @@ const RiskAnalysisCard = ({ riskData, cropName }) => {
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-blue-50 border border-blue-200 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4"
+                            className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4"
                         >
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">

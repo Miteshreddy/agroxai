@@ -55,7 +55,7 @@ const Login = () => {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="space-y-2">
-                        <T as="label" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Username</T>
+                        <T as="label" className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Username</T>
                         <input
                             type="text"
                             className="input-field"
@@ -66,7 +66,7 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <T as="label" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Password</T>
+                        <T as="label" className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Password</T>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
