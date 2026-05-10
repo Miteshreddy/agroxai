@@ -43,7 +43,8 @@ const History = () => {
     const fetchHistory = async () => {
         try {
             const response = await apiClient.get(`/history/user/${user.id}`);
-            setHistory(response.data);
+            const data = response.data.data || response.data;
+            setHistory(Array.isArray(data) ? data : []);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching history:', error);
