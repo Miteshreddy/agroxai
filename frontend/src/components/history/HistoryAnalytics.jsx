@@ -83,8 +83,8 @@ const HistoryAnalytics = ({ analytics, insights }) => {
                                         ))}
                                     </Pie>
                                     <Tooltip 
-                                        contentStyle={{ backgroundColor: 'var(--brand-surface)', borderRadius: '12px', border: '1px solid var(--brand-border)', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}
-                                        itemStyle={{ color: 'var(--brand-text-primary)', fontWeight: 800, fontSize: '12px' }}
+                                        contentStyle={{ backgroundColor: 'var(--surface-solid)', borderRadius: '12px', border: '1px solid var(--border-color)', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}
+                                        itemStyle={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: '12px' }}
                                     />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -112,14 +112,14 @@ const HistoryAnalytics = ({ analytics, insights }) => {
                         {analytics.seasonalTrends.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={analytics.seasonalTrends}>
-                                    <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--brand-text-secondary)', fontWeight: 700 }} tickLine={false} axisLine={false} />
+                                    <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 700 }} tickLine={false} axisLine={false} />
                                     <YAxis hide />
                                     <Tooltip 
-                                        cursor={{ fill: 'var(--brand-surface-inset)' }}
-                                        contentStyle={{ backgroundColor: 'var(--brand-surface)', borderRadius: '12px', border: '1px solid var(--brand-border)', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}
-                                        itemStyle={{ color: 'var(--brand-text-primary)', fontWeight: 800, fontSize: '12px' }}
+                                        cursor={{ fill: 'var(--surface-inset)' }}
+                                        contentStyle={{ backgroundColor: 'var(--surface-solid)', borderRadius: '12px', border: '1px solid var(--border-color)', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}
+                                        itemStyle={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: '12px' }}
                                     />
-                                    <Bar dataKey="Analyses" fill="var(--brand-primary)" radius={[4, 4, 0, 0]} />
+                                    <Bar dataKey="Analyses" fill="var(--accent-primary)" radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : (
