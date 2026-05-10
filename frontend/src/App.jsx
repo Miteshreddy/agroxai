@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Recommend from './pages/Recommend';
 import MyFarm from './pages/MyFarm';
 import History from './pages/History';
+import FarmIntelligence from './pages/FarmIntelligence';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import LanguageSelect from './pages/LanguageSelect';
@@ -65,6 +66,12 @@ const AppContent = () => {
           <Route path="/history" element={
             <ProtectedRoute>
               <History />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/intelligence" element={
+            <ProtectedRoute>
+              <FarmIntelligence />
             </ProtectedRoute>
           } />
 

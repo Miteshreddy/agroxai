@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, History, Home as HomeIcon, Sprout, LogOut, User, Wheat, Sun, Moon } from 'lucide-react';
+import { Leaf, History, Home as HomeIcon, Sprout, LogOut, User, Wheat, Sun, Moon, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -34,6 +34,7 @@ const Navbar = () => {
         { path: '/recommend', labelKey: 'navRecommend', icon: <Sprout size={18} /> },
         { path: '/my-farm', labelKey: 'navMyFarm', icon: <Wheat size={18} /> },
         { path: '/history', labelKey: 'navHistory', icon: <History size={18} /> },
+        { path: '/intelligence', labelKey: 'navIntelligence', icon: <Cpu size={18} /> },
     ];
 
     return (

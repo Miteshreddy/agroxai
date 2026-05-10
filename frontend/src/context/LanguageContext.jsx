@@ -39,6 +39,7 @@ export const TRANSLATIONS = {
     navRecommend: 'Recommend',
     navMyFarm: 'My Farm',
     navHistory: 'History',
+    navIntelligence: 'Intelligence',
     myFarmTitle: 'MY FARM',
     myFarmSubtitle: 'Manage your fields, track your soil, and plan smarter every season.',
     claySoil: 'Clay Soil',
