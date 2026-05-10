@@ -23,6 +23,13 @@ const ADVISORS = [
   { name: 'Marcus Sterling', role: 'Partner & Chief Investment Officer', institute: 'Sovereign Green Ventures', quote: 'AgroXAI presents a world-class combination of clean, high-fidelity developer aesthetics with direct, tangible economic impact metrics for growers globally.' }
 ];
 
+const SHAP_FEATURES = [
+  { name: 'Nitrogen Ratio (N)', weight: 35, impact: 'Positive', detail: 'Primary driver for vegetative volume and dense foliage growth parameters.' },
+  { name: 'Soil alkalinity (pH)', weight: -28, impact: 'Negative', detail: 'High local values limit micronutrient uptake thresholds.' },
+  { name: 'Rainfall volume', weight: 22, impact: 'Positive', detail: 'Critical moisture triggers in Kharif matching algorithms.' },
+  { name: 'Regional temperature', weight: 15, impact: 'Positive', detail: 'Supports optimal enzymatic activity and transpiration speeds.' }
+];
+
 const Home = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -30,9 +37,14 @@ const Home = () => {
     offset: ["start start", "end end"]
   });
 
-  // Smooth scroll transformations for parallax
-  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -50]);
-  const scaleY = useTransform(scrollYProgress, [0, 0.4], [1, 0.95]);
+  // Smooth scroll transformations for immersive cinematic storytelling
+  const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -100]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.25], [1, 0.9]);
+  
+  const consoleScale = useTransform(scrollYProgress, [0.05, 0.35], [0.85, 1.05]);
+  const consoleRotate = useTransform(scrollYProgress, [0.05, 0.35], [5, 0]);
+  const consoleY = useTransform(scrollYProgress, [0.05, 0.35], [100, 0]);
 
   // Dynamic Hover coordinates for cursor-ambient mesh light
   const mouseX = useMotionValue(0);
@@ -71,6 +83,9 @@ const Home = () => {
   const [soilNitrogen, setSoilNitrogen] = useState(70);
   const [soilPotassium, setSoilPotassium] = useState(40);
   const [isSandboxRunning, setIsSandboxRunning] = useState(false);
+
+  // SHAP visualization active node index hover
+  const [activeSHAPIndex, setActiveSHAPIndex] = useState(0);
 
   // Trigger brief simulation state
   const selectClimate = (climate) => {
@@ -113,440 +128,467 @@ const Home = () => {
         <div className="absolute bottom-[10%] left-[-10%] w-[45%] h-[45%] bg-brand-gold/5 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '15s' }} />
       </div>
 
-      {/* 1. CINEMATIC HERO SECTION */}
-      <motion.section 
-        style={{ y: heroY, scale: scaleY }}
-        className="relative min-h-screen flex items-center pt-36 pb-20 overflow-hidden z-10"
-      >
-        <div className="max-w-7xl mx-auto w-full px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          
-          {/* Hero Left: Large editorial content */}
-          <div className="lg:col-span-6 flex flex-col justify-center space-y-8 text-left">
-            <motion.div
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex items-center space-x-2 text-brand-primary font-black text-[10px] uppercase tracking-[0.25em] bg-brand-primary/5 w-fit px-4 py-2 rounded-full border border-brand-primary/15"
-            >
-              <Sparkles size={11} className="animate-pulse text-brand-primary" />
-              <T>Next-Gen Agricultural Intelligence</T>
-            </motion.div>
+      {/* 1. THE VOLUMETRIC CENTER-STAGE HERO (The Opening Frame) */}
+      <section className="min-h-screen flex flex-col justify-center items-center relative z-10 px-6 pt-32 pb-16">
+        <motion.div 
+          style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
+          className="text-center max-w-5xl mx-auto space-y-8 flex flex-col items-center"
+        >
+          {/* Futuristic Micro-badge */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.3em] rounded-full border border-brand-primary/20"
+          >
+            <Sparkles size={11} className="animate-spin" style={{ animationDuration: '4s' }} />
+            <T>PRECISION AGRICULTURAL INTELLIGENCE ENGINE</T>
+          </motion.div>
 
-            <div className="space-y-4">
-              <motion.h1
-                initial={{ opacity: 0, filter: 'blur(10px)', y: 40 }}
-                animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                className="text-5xl md:text-8xl font-black text-brand-text-primary leading-[1.0] tracking-tight uppercase"
-              >
-                <T>Cultivate with</T>
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-emerald-400 to-brand-gold animate-gradient-x">
-                  <T>Absolute Certainty</T>
-                </span>
-              </motion.h1>
+          {/* Editorial Revealing Title */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-brand-text-primary tracking-tighter leading-[0.85] uppercase max-w-4xl"
+          >
+            <T>CULTIVATE WITH</T> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary via-emerald-400 to-brand-gold italic">REASON</span>
+          </motion.h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.15 }}
-                className="text-lg text-brand-text-secondary font-medium max-w-xl leading-relaxed"
+          {/* Handcrafted, Art-Directed Subtitle */}
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="text-brand-text-secondary font-medium text-base md:text-lg max-w-2xl leading-relaxed"
+          >
+            <T>Translating soil parameters, local climatic patterns, and coordinate indices into reliable, crop-yield predictions via explainable machine learning pipelines.</T>
+          </motion.p>
+
+          {/* Cinematic Interactive Call-To-Actions */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-wrap items-center justify-center gap-4 pt-4"
+          >
+            <MagneticButton>
+              <Link 
+                to="/recommend" 
+                className="btn-primary px-8 py-4 bg-brand-primary text-slate-950 font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-premium hover:shadow-premium-hover hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
-                <T>Translate multi-spectral soil datasets, climatic histories, and target coordinate vectors into high-yield predictions backed by explainable SHAP neural maps.</T>
-              </motion.p>
+                <T>GET BEST CROP MATCH</T>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </MagneticButton>
+
+            <MagneticButton>
+              <a 
+                href="#sandbox" 
+                className="px-8 py-4 bg-brand-surface border border-brand-border hover:border-brand-primary/30 text-brand-text-primary hover:text-brand-primary font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl transition-all shadow-sm hover:shadow-md flex items-center gap-2"
+              >
+                <Play size={10} className="fill-current" />
+                <T>TRY SANDBOX DEMO</T>
+              </a>
+            </MagneticButton>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* 2. CINEMATIC SCROLL-TRANSFORM CONSOLE WRAPPER */}
+      <section className="relative z-20 px-6 -mt-32 pb-32 max-w-7xl mx-auto">
+        <motion.div 
+          style={{ scale: consoleScale, rotateX: consoleRotate, y: consoleY }}
+          onMouseMove={handleHeroMouseMove}
+          onMouseLeave={handleHeroMouseLeave}
+          className="w-full bg-brand-surface/40 backdrop-blur-xl border border-brand-border/80 rounded-4xl p-6 md:p-8 shadow-premium relative overflow-hidden group"
+        >
+          {/* Simulated scanning lights */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary/5 via-transparent to-brand-gold/5 pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-primary/25 to-transparent" />
+
+          {/* Window Header */}
+          <div className="flex items-center justify-between pb-6 border-b border-brand-border/60">
+            <div className="flex items-center space-x-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+              <span className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest pl-4">AGROXAI_CONSOLE_LIVE.SH</span>
+            </div>
+            <div className="flex items-center gap-2 bg-brand-primary/5 px-3 py-1 rounded-full border border-brand-primary/10">
+              <Activity size={10} className="text-brand-primary animate-pulse" />
+              <span className="text-[8px] font-black text-brand-primary tracking-widest uppercase">ACTIVE STREAMING</span>
+            </div>
+          </div>
+
+          {/* Console Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 items-stretch">
+            {/* Left Console Content: High-End Live Chart feeds */}
+            <div className="lg:col-span-4 flex flex-col justify-between space-y-8">
+              <div className="space-y-2">
+                <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">TELEMETRY FEED 01</span>
+                <h3 className="text-2xl font-black text-brand-text-primary uppercase tracking-tight leading-none"><T>GEOSPATIAL COORDINATES</T></h3>
+                <p className="text-brand-text-secondary text-xs leading-relaxed"><T>Real-time telemetry inputs parsed dynamically through multi-spectral coordinate arrays.</T></p>
+              </div>
+
+              {/* Telemetry data matrix list */}
+              <div className="space-y-3 bg-brand-surface-inset border border-brand-border/60 p-4 rounded-2xl">
+                <div className="flex justify-between items-center text-[10px] font-black uppercase">
+                  <span className="text-brand-text-secondary">COORDINATE SECTOR</span>
+                  <span className="text-brand-text-primary tracking-widest">17.3850° N, 78.4867° E</span>
+                </div>
+                <div className="h-[1px] bg-brand-border/60" />
+                <div className="flex justify-between items-center text-[10px] font-black uppercase">
+                  <span className="text-brand-text-secondary">ELEVATION INDEX</span>
+                  <span className="text-brand-text-primary">542 Meters AGL</span>
+                </div>
+                <div className="h-[1px] bg-brand-border/60" />
+                <div className="flex justify-between items-center text-[10px] font-black uppercase">
+                  <span className="text-brand-text-secondary">NITROGEN (N) FEED</span>
+                  <span className="text-brand-primary">72 kg/ha (Optimum)</span>
+                </div>
+              </div>
+
+              {/* Trust Index Bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-[9px] font-black uppercase">
+                  <span className="text-brand-text-secondary">PREDICTIVE STABILITY</span>
+                  <span className="text-brand-primary">98.4% Confidence</span>
+                </div>
+                <div className="h-1.5 w-full bg-brand-surface-inset border border-brand-border rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '98.4%' }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className="h-full bg-gradient-to-r from-brand-primary to-emerald-400"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Premium CTA Mechanics */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.3 }}
-              className="flex flex-wrap items-center gap-6"
-            >
-              <MagneticButton>
-                <Link to="/recommend" className="btn-primary group h-14 px-8 flex items-center justify-center rounded-2xl relative overflow-hidden shadow-premium hover:shadow-premium-hover">
-                  <span className="relative z-10 flex items-center gap-2">
-                    <T>Run Advanced Analysis</T>
-                    <ArrowRight className="inline transition-transform group-hover:translate-x-1" size={16} />
-                  </span>
-                </Link>
-              </MagneticButton>
-
-              <MagneticButton>
-                <Link to="/my-farm" className="h-14 px-8 bg-brand-surface border border-brand-border hover:border-brand-primary/30 text-brand-text-primary hover:text-brand-primary font-bold rounded-2xl flex items-center justify-center transition-all shadow-sm">
-                  <T>Configure Farm</T>
-                </Link>
-              </MagneticButton>
-            </motion.div>
-
-            {/* Live stats feed */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="grid grid-cols-3 gap-6 pt-8 border-t border-brand-border/60 max-w-md"
-            >
-              <div>
-                <p className="text-2xl font-black text-brand-text-primary">94.8%</p>
-                <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-wider">Model Accuracy</p>
-              </div>
-              <div>
-                <p className="text-2xl font-black text-brand-text-primary">0.02s</p>
-                <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-wider">Inference Speed</p>
-              </div>
-              <div>
-                <p className="text-2xl font-black text-brand-text-primary">100%</p>
-                <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-wider">SHAP Transparency</p>
-              </div>
-            </motion.div>
+            {/* Right: Embedded High-Resolution GUI mockup */}
+            <div className="lg:col-span-8 bg-brand-surface-inset/80 border border-brand-border/80 rounded-3xl overflow-hidden relative group/mockup flex items-center justify-center p-2 min-h-[350px]">
+              <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
+              <img 
+                src="/images/agri_analytics_ui.png" 
+                alt="AgroXAI Dashboard UI Preview" 
+                className="w-full h-full object-cover rounded-2xl border border-brand-border/80 shadow-premium transition-transform duration-[1.5s] group-hover/mockup:scale-102"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-surface-inset/90 via-transparent to-transparent pointer-events-none" />
+            </div>
           </div>
+        </motion.div>
+      </section>
 
-          {/* Hero Right: Layered Cinematic composition with Generated Asset */}
-          <div className="lg:col-span-6 relative w-full h-[620px] flex items-center justify-center">
-            
-            {/* Ambient Background Aura specifically behind the card */}
-            <div className="absolute w-80 h-80 bg-brand-primary/20 rounded-full blur-[80px] pointer-events-none z-0" />
-
-            <motion.div
-              style={{ x: springTiltX, y: springTiltY }}
-              onMouseMove={handleHeroMouseMove}
-              onMouseLeave={handleHeroMouseLeave}
-              className="relative w-full max-w-[480px] h-[550px] rounded-[2.5rem] bg-brand-surface border border-brand-border/80 shadow-premium p-6 overflow-hidden z-10 hover:border-brand-primary/30 transition-colors duration-500 group"
-            >
-              {/* Luxury Cinematic Agriculture Image (Generated Asset) */}
-              <div className="relative w-full h-[240px] rounded-2xl overflow-hidden border border-brand-border mb-6">
-                <img 
-                  src="/images/smart_drone_farming.png" 
-                  alt="Cinematic Smart Farming"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-bg/90 to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center space-x-2 bg-brand-bg/60 backdrop-blur-md border border-brand-border px-3 py-1.5 rounded-xl">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-ping" />
-                  <p className="text-[9px] font-black text-brand-text-primary uppercase tracking-wider">Drone telemetry map active</p>
-                </div>
-              </div>
-
-              {/* Data Overlay Cards row */}
-              <div className="space-y-4 relative z-20">
-                <div className="p-4 bg-brand-surface-inset border border-brand-border rounded-2xl flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-primary">
-                      <Cpu size={18} />
-                    </div>
-                    <div>
-                      <p className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">Active Predictive Model</p>
-                      <p className="text-xs font-black text-brand-text-primary uppercase">XGBoost Multiclass classifier</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="px-2 py-1 bg-brand-primary/10 text-brand-primary text-[8px] font-black uppercase rounded-md tracking-wider">V2.4</span>
-                  </div>
-                </div>
-
-                {/* Simulated weather indicators */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-brand-surface-inset border border-brand-border rounded-xl flex flex-col justify-between">
-                    <p className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest mb-1">Soil Temperature</p>
-                    <div className="flex items-center gap-2">
-                      <Thermometer size={14} className="text-brand-primary" />
-                      <p className="text-sm font-black text-brand-text-primary">27.4 °C</p>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-brand-surface-inset border border-brand-border rounded-xl flex flex-col justify-between">
-                    <p className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest mb-1">Air Humidity</p>
-                    <div className="flex items-center gap-2">
-                      <Droplets size={14} className="text-blue-400" />
-                      <p className="text-sm font-black text-brand-text-primary">82%</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Instructions to Hover */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-[8px] font-black text-brand-primary uppercase tracking-widest flex items-center gap-1.5">
-                  <MousePointer2 size={10} /> Tilt to Inspect Parameters
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
-        </div>
-      </motion.section>
-
-      {/* 2. EXPLAINABLE AI MODEL PIPELINE SHOWCASE */}
-      <section className="py-24 relative z-10 border-t border-brand-border/60">
+      {/* 3. DYNAMIC EXPLAINABLE AI — XGBOOST SHAP FLOW (Asymmetric Layout) */}
+      <section className="py-24 relative z-10 border-t border-brand-border/60 bg-gradient-to-b from-transparent via-brand-primary/2 to-transparent">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-20">
-            <span className="badge-ai mb-4"><Cpu size={10} /><T>TRANSPARENCY CORE</T></span>
-            <h2 className="text-4xl md:text-5xl font-black text-brand-text-primary uppercase tracking-tight mb-4">
-              <T>OUR MODEL IS A OPEN BOOK</T>
-            </h2>
-            <p className="text-brand-text-secondary font-medium">
-              <T>We utilize SHAP (SHapley Additive exPlanations) values to break down exactly how much every feature shifts the predictive vector.</T>
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            {/* Visual Schematic flow */}
-            <div className="lg:col-span-6 bg-brand-surface-inset border border-brand-border rounded-[2.5rem] p-8 relative overflow-hidden flex flex-col justify-between h-[500px]">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl -mr-20 -mt-20" />
-              
-              <div>
-                <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <Activity size={18} className="text-brand-primary animate-pulse" /> Neural Pipeline Sequence
-                </h3>
-                <p className="text-brand-text-secondary text-xs font-medium max-w-md">
-                  Observe how input elements flow through our trained tree structure to arrive at the final recommendation result.
-                </p>
-              </div>
+            {/* Left side: Editorial SHAP Explanation */}
+            <div className="lg:col-span-5 space-y-8">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-brand-primary/20">
+                <Cpu size={11} />
+                <T>MODEL REASONING DIAGNOSTICS</T>
+              </span>
+              <h2 className="text-4xl md:text-5xl font-black text-brand-text-primary uppercase tracking-tight leading-none">
+                <T>EXPLAINABLE FORECAST PIPELINES</T>
+              </h2>
+              <p className="text-brand-text-secondary font-medium leading-relaxed">
+                <T>We refuse to supply "black box" prediction tables. AgroXAI parses feature logic in real-time, mapping exact SHAP (SHapley Additive exPlanations) variables visually so you can track how each environmental factor pushes prediction models forward or backward.</T>
+              </p>
 
-              {/* Pipeline schematic vector nodes */}
-              <div className="space-y-6 relative z-10 my-8">
-                {[
-                  { label: 'Variables (N-P-K + pH + Climate)', status: 'Captured', color: 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary' },
-                  { label: 'XGBoost Multi-classification Node', status: 'Processing', color: 'bg-brand-gold/10 border-brand-gold/30 text-brand-gold' },
-                  { label: 'SHAP Value Weights Analysis', status: 'Generating', color: 'bg-blue-400/10 border-blue-400/30 text-blue-400' }
-                ].map((node, i) => (
-                  <motion.div 
+              {/* Custom micro-interactive feature list */}
+              <div className="space-y-2">
+                {SHAP_FEATURES.map((feat, i) => (
+                  <button
                     key={i}
-                    initial={{ x: -20, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.15 }}
-                    className="flex items-center justify-between p-4 bg-brand-surface border border-brand-border rounded-xl"
+                    onClick={() => setActiveSHAPIndex(i)}
+                    className={`w-full text-left p-4 rounded-2xl border transition-all flex justify-between items-center ${
+                      activeSHAPIndex === i 
+                        ? 'bg-brand-surface border-brand-primary/40 shadow-sm' 
+                        : 'bg-transparent border-brand-border hover:bg-brand-surface/10'
+                    }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full bg-brand-border flex items-center justify-center text-[10px] font-black text-brand-text-primary">
-                        {i + 1}
-                      </div>
-                      <p className="text-xs font-black text-brand-text-primary uppercase">{node.label}</p>
+                    <div>
+                      <span className="text-xs font-black text-brand-text-primary uppercase">{feat.name}</span>
+                      <p className="text-[10px] text-brand-text-secondary mt-1 font-medium">{feat.impact} Impact Factor</p>
                     </div>
-                    <span className={`px-2.5 py-1 text-[8px] font-black uppercase rounded-lg border ${node.color}`}>
-                      {node.status}
+                    <span className={`text-xs font-black uppercase tracking-wider ${feat.impact === 'Positive' ? 'text-brand-primary' : 'text-red-400'}`}>
+                      {feat.impact === 'Positive' ? `+${feat.weight}%` : `${feat.weight}%`}
                     </span>
-                  </motion.div>
+                  </button>
                 ))}
               </div>
-
-              <div className="p-4 bg-brand-surface rounded-2xl border border-brand-border">
-                <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest text-center">
-                  Predictive parameters synchronized securely to local system databases.
-                </p>
-              </div>
             </div>
 
-            {/* Explanation readout and charts mockup */}
-            <div className="lg:col-span-6 space-y-6">
-              <div className="premium-card !p-8">
-                <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest mb-6 flex items-center gap-2">
-                  <TrendingUp size={16} className="text-brand-primary" /> Core Feature Importance Ratings
-                </h3>
+            {/* Right side: Interactive SHAP Visual Node Pipe Graphic */}
+            <div className="lg:col-span-7 bg-brand-surface border border-brand-border/80 rounded-4xl p-6 md:p-8 relative min-h-[460px] flex flex-col justify-between">
+              <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none" />
+              
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">SHAP_FLOW_SCHEMATIC.SYS</span>
+                <span className="px-2.5 py-0.5 bg-brand-primary/10 border border-brand-primary/20 rounded text-[9px] font-black text-brand-primary uppercase">MODEL RESOLUTION HIGH</span>
+              </div>
 
-                <div className="space-y-5">
-                  {[
-                    { label: 'Rainfall Density Estimation', pct: 88, color: 'bg-brand-primary' },
-                    { label: 'Potassium Soil Composition', pct: 74, color: 'bg-brand-primary/80' },
-                    { label: 'Ambient Regional Temperature', pct: 62, color: 'bg-brand-gold' },
-                    { label: 'Soil Acid Parameters (pH)', pct: 45, color: 'bg-blue-400' }
-                  ].map((feat, i) => (
-                    <div key={i}>
-                      <div className="flex justify-between text-[10px] font-black uppercase tracking-wider mb-2">
-                        <span className="text-brand-text-primary">{feat.label}</span>
-                        <span className="text-brand-text-secondary">{feat.pct}% weight</span>
-                      </div>
-                      <div className="w-full h-2 bg-brand-border rounded-full overflow-hidden">
-                        <motion.div 
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${feat.pct}%` }}
-                          transition={{ duration: 1.2, delay: i * 0.1 }}
-                          className={`h-full rounded-full ${feat.color}`}
-                        />
-                      </div>
-                    </div>
-                  ))}
+              {/* Node pipeline trace graphic */}
+              <div className="my-8 relative flex flex-col justify-center items-center h-48">
+                {/* Simulated center hub node */}
+                <div className="w-16 h-16 bg-brand-bg border border-brand-primary/30 rounded-2xl flex items-center justify-center text-brand-primary shadow-glow relative z-10">
+                  <Cpu size={26} className="animate-spin" style={{ animationDuration: '8s' }} />
+                  <div className="absolute inset-[-1px] rounded-2xl bg-gradient-to-tr from-brand-primary to-transparent opacity-50 animate-pulse" />
+                </div>
+
+                {/* Animated connectors */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                  {/* Positive flow paths (emerald) */}
+                  <path d="M 50,50 L 150,100" stroke="var(--accent-primary)" strokeWidth="1.5" strokeDasharray="4 4" className="animate-flow" style={{ opacity: 0.3 }} />
+                  <path d="M 50,150 L 150,100" stroke="var(--accent-primary)" strokeWidth="1.5" strokeDasharray="4 4" className="animate-flow" style={{ opacity: 0.3 }} />
+                  {/* Negative flow paths (red) */}
+                  <path d="M 350,50 L 150,100" stroke="#F87171" strokeWidth="1.5" strokeDasharray="4 4" className="animate-flow" style={{ opacity: 0.3 }} />
+                  <path d="M 350,150 L 150,100" stroke="#F87171" strokeWidth="1.5" strokeDasharray="4 4" className="animate-flow" style={{ opacity: 0.3 }} />
+                </svg>
+
+                {/* External floating nodes representing features */}
+                <div className="absolute top-4 left-4 bg-brand-surface-inset border border-brand-border px-3 py-1.5 rounded-xl flex items-center gap-2">
+                  <Thermometer size={12} className="text-brand-primary" />
+                  <span className="text-[9px] font-black text-brand-text-primary uppercase">TEMP IN</span>
+                </div>
+                <div className="absolute bottom-4 left-4 bg-brand-surface-inset border border-brand-border px-3 py-1.5 rounded-xl flex items-center gap-2">
+                  <CloudRain size={12} className="text-brand-primary" />
+                  <span className="text-[9px] font-black text-brand-text-primary uppercase">RAIN IN</span>
+                </div>
+                <div className="absolute top-4 right-4 bg-brand-surface-inset border border-brand-border px-3 py-1.5 rounded-xl flex items-center gap-2">
+                  <Activity size={12} className="text-red-400" />
+                  <span className="text-[9px] font-black text-brand-text-primary uppercase">PH ALK</span>
+                </div>
+                <div className="absolute bottom-4 right-4 bg-brand-surface-inset border border-brand-border px-3 py-1.5 rounded-xl flex items-center gap-2">
+                  <Compass size={12} className="text-brand-gold" />
+                  <span className="text-[9px] font-black text-brand-text-primary uppercase">POTAS OUT</span>
                 </div>
               </div>
 
-              <div className="p-6 bg-brand-surface-inset border border-brand-border rounded-[2rem] flex items-center gap-4">
-                <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center shrink-0 text-brand-primary">
-                  <Shield size={22} />
-                </div>
-                <div>
-                  <p className="text-xs font-black text-brand-text-primary uppercase">Risk Analysis Warnings</p>
-                  <p className="text-brand-text-secondary text-xs font-medium leading-relaxed mt-1">
-                    Automatic predictions analyze climatic patterns to warn users of high risk levels (Poor Yield probability) during extreme precipitation variables.
-                  </p>
-                </div>
-              </div>
+              {/* Explanation of hovered feature */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSHAPIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25 }}
+                  className="bg-brand-surface-inset border border-brand-border p-4 rounded-2xl"
+                >
+                  <span className="text-[9px] font-black text-brand-primary uppercase tracking-widest">ACTIVE DIAGNOSTIC EXPLANATION</span>
+                  <h4 className="text-sm font-black text-brand-text-primary uppercase mt-1 mb-1">{SHAP_FEATURES[activeSHAPIndex].name}</h4>
+                  <p className="text-brand-text-secondary text-xs font-medium leading-relaxed">{SHAP_FEATURES[activeSHAPIndex].detail}</p>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* 3. INTERACTIVE GEOSPATIAL MAP & WEATHER SIMULATOR */}
-      <section className="py-24 relative z-10 border-t border-brand-border/60">
+      {/* 4. ACTIVE WEATHER SIMULATOR & COORDINATE TRACKER (The Playable Simulator) */}
+      <section id="sandbox" className="py-24 relative z-10 border-t border-brand-border/60">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="badge-ai mb-4"><Compass size={10} /><T>ENVIRONMENTAL TELEMETRY</T></span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-brand-primary/20 mb-4">
+              <Globe size={11} />
+              <T>ENVIRONMENTAL MATRIX SANDBOX</T>
+            </span>
             <h2 className="text-4xl md:text-5xl font-black text-brand-text-primary uppercase tracking-tight mb-4">
-              <T>GEOSPATIAL SANDBOX SIMULATOR</T>
+              <T>SIMULATE LOCAL MICRO-CLIMATES</T>
             </h2>
-            <p className="text-brand-text-secondary font-medium">
-              <T>Select simulated climates below to observe how coordinate models adjust prediction variables instantly to target regions.</T>
+            <p className="text-brand-text-secondary font-medium text-sm">
+              <T>Manually adjust precipitation metrics or toggle season presets to see the XGBoost predictive outcome adapt in real-time.</T>
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            
-            {/* Left: Simulated satellite image map with generated asset */}
-            <div className="lg:col-span-7 bg-brand-surface-inset border border-brand-border rounded-[2.5rem] p-6 relative overflow-hidden flex flex-col justify-between min-h-[500px]">
+            {/* Left Column (60%): Immersive map scan overlaying generated assets */}
+            <div className="lg:col-span-7 bg-brand-surface border border-brand-border rounded-4xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden min-h-[480px]">
+              {/* Image asset with scanning horizontal laser beam */}
               <div className="absolute inset-0 z-0">
                 <img 
                   src="/images/agri_satellite_intel.png" 
-                  alt="Geospatial Map Analytics"
-                  className="w-full h-full object-cover opacity-60"
+                  alt="Geospatial satellite scanning frame" 
+                  className="w-full h-full object-cover opacity-30"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-surface via-brand-surface/40 to-transparent" />
+                {/* Active Laser Line Sweep */}
+                <div className="absolute left-0 right-0 h-[2px] bg-brand-primary shadow-glow animate-scanner pointer-events-none" />
               </div>
 
+              {/* Floating coordinates and status widgets */}
               <div className="relative z-10 flex justify-between items-start">
-                <div className="p-3 bg-brand-bg/80 backdrop-blur-md border border-brand-border rounded-xl">
-                  <p className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest">Active Coordinate</p>
-                  <p className="text-xs font-black text-brand-text-primary uppercase">LAT: 26.9124 · LON: 70.9120</p>
+                <div className="bg-brand-bg/90 backdrop-blur-md border border-brand-border p-3.5 rounded-2xl">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-brand-primary animate-ping" />
+                    <span className="text-[10px] font-black uppercase text-brand-text-primary">SECTOR_SCAN_903</span>
+                  </div>
+                  <p className="text-[8px] font-black uppercase text-brand-text-secondary mt-1">LAT: 17.3850 | LON: 78.4867</p>
                 </div>
-                <div className="flex items-center gap-1 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-2.5 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider">
-                  <Globe size={11} className="animate-spin" style={{ animationDuration: '20s' }} /> Multi-Spectral Active
+
+                <div className="bg-brand-bg/90 backdrop-blur-md border border-brand-border/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+                  <Sprout size={12} className="text-brand-primary" />
+                  <span className="text-[9px] font-black text-brand-text-primary uppercase">CLIMATEPres: {activeClimate}</span>
                 </div>
               </div>
 
-              {/* Dynamic simulated values readout based on active climate */}
-              <div className="relative z-10 grid grid-cols-3 gap-3">
-                <div className="p-3 bg-brand-bg/80 backdrop-blur-md border border-brand-border rounded-xl">
-                  <p className="text-[8px] font-black text-brand-text-secondary uppercase mb-1">Temperature</p>
-                  <p className="text-sm font-black text-brand-text-primary">{activeData.temp} °C</p>
+              {/* Pulsing target map reticle */}
+              <div className="absolute left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="relative flex items-center justify-center">
+                  <div className="w-12 h-12 border-2 border-brand-primary border-dashed rounded-full animate-spin" style={{ animationDuration: '10s' }} />
+                  <div className="absolute w-2 h-2 bg-brand-primary rounded-full shadow-glow" />
                 </div>
-                <div className="p-3 bg-brand-bg/80 backdrop-blur-md border border-brand-border rounded-xl">
-                  <p className="text-[8px] font-black text-brand-text-secondary uppercase mb-1">Air Humidity</p>
-                  <p className="text-sm font-black text-brand-text-primary">{activeData.humidity}%</p>
+              </div>
+
+              {/* Dynamic simulated metrics display based on presets */}
+              <div className="relative z-10 flex flex-wrap gap-3">
+                <div className="bg-brand-bg/95 backdrop-blur-md border border-brand-border p-4 rounded-2xl flex items-center gap-3 shrink-0">
+                  <Thermometer size={18} className="text-brand-primary" />
+                  <div>
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase">Temperature</span>
+                    <p className="text-sm font-black text-brand-text-primary uppercase">{activeData.temp}°C</p>
+                  </div>
                 </div>
-                <div className="p-3 bg-brand-bg/80 backdrop-blur-md border border-brand-border rounded-xl">
-                  <p className="text-[8px] font-black text-brand-text-secondary uppercase mb-1">Est. Rainfall</p>
-                  <p className="text-sm font-black text-brand-text-primary">{activeData.rain} mm</p>
+
+                <div className="bg-brand-bg/95 backdrop-blur-md border border-brand-border p-4 rounded-2xl flex items-center gap-3 shrink-0">
+                  <Droplets size={18} className="text-brand-primary" />
+                  <div>
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase">Moisture Ratio</span>
+                    <p className="text-sm font-black text-brand-text-primary uppercase">{activeData.humidity}%</p>
+                  </div>
+                </div>
+
+                <div className="bg-brand-bg/95 backdrop-blur-md border border-brand-border p-4 rounded-2xl flex items-center gap-3 shrink-0">
+                  <CloudRain size={18} className="text-brand-primary" />
+                  <div>
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase">Precipitation</span>
+                    <p className="text-sm font-black text-brand-text-primary uppercase">{activeData.rain} mm</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Sandbox Controls & Output */}
-            <div className="lg:col-span-5 bg-brand-surface-inset border border-brand-border rounded-[2.5rem] p-8 flex flex-col justify-between">
-              <div>
-                <h3 className="text-base font-black text-brand-text-primary uppercase tracking-widest mb-6 flex items-center gap-2">
-                  <Zap size={18} className="text-brand-primary" /> Climate Matrix controls
-                </h3>
-
-                {/* Climatic selection buttons */}
-                <div className="grid grid-cols-3 gap-2 mb-8">
-                  {[
-                    { key: 'Monsoon', icon: CloudRain, label: 'Monsoon' },
-                    { key: 'Arid', icon: Sun, label: 'Arid' },
-                    { key: 'Winter', icon: Snowflake, label: 'Winter' }
-                  ].map(climate => (
-                    <button
-                      key={climate.key}
-                      onClick={() => selectClimate(climate.key)}
-                      className={`p-3 rounded-xl border font-black uppercase text-[10px] tracking-wider flex flex-col items-center gap-2 transition-all ${
-                        activeClimate === climate.key 
-                          ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-sm' 
-                          : 'bg-brand-surface border-brand-border text-brand-text-secondary hover:text-brand-primary hover:border-brand-primary/15'
-                      }`}
-                    >
-                      <climate.icon size={16} />
-                      {climate.label}
-                    </button>
-                  ))}
+            {/* Right Column (40%): Sandbox preset selector & match modules */}
+            <div className="lg:col-span-5 bg-brand-surface border border-brand-border rounded-4xl p-6 md:p-8 flex flex-col justify-between">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-brand-border">
+                  <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">Environmental Matrices</h3>
+                  <HelpCircle size={16} className="text-brand-text-secondary cursor-pointer" />
                 </div>
 
-                {/* Soil Nitrogen & Potassium display */}
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <div className="flex justify-between text-[10px] font-black uppercase tracking-wider mb-2">
-                      <span className="text-brand-text-primary">Simulated Nitrogen (N)</span>
+                {/* Preset selectors */}
+                <div className="space-y-2">
+                  <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">Preset Profiles</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {Object.keys(SIMULATED_PRESETS).map((p) => {
+                      const isActive = activeClimate === p;
+                      return (
+                        <button
+                          key={p}
+                          onClick={() => selectClimate(p)}
+                          className={`py-3.5 px-3 rounded-2xl border text-[10px] font-black uppercase tracking-wider transition-all ${
+                            isActive 
+                              ? 'bg-brand-primary text-slate-950 border-brand-primary shadow-glow' 
+                              : 'bg-brand-surface-inset border-brand-border text-brand-text-primary hover:bg-brand-surface'
+                          }`}
+                        >
+                          {p === 'Monsoon' && <CloudRain size={12} className="inline mr-1" />}
+                          {p === 'Arid' && <Sun size={12} className="inline mr-1" />}
+                          {p === 'Winter' && <Snowflake size={12} className="inline mr-1" />}
+                          {p}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Interactive sliders for soil chemicals */}
+                <div className="space-y-4 pt-4 border-t border-brand-border/60">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[9px] font-black uppercase">
+                      <span className="text-brand-text-secondary">Soil Nitrogen (N) Ratio</span>
                       <span className="text-brand-primary">{soilNitrogen} mg/kg</span>
                     </div>
-                    <div className="w-full h-1 bg-brand-border rounded-full overflow-hidden">
-                      <motion.div animate={{ width: `${(soilNitrogen / 120) * 100}%` }} className="h-full bg-brand-primary" />
-                    </div>
+                    <input 
+                      type="range" min="10" max="140" 
+                      value={soilNitrogen} 
+                      onChange={(e) => setSoilNitrogen(parseInt(e.target.value))}
+                      className="w-full accent-brand-primary cursor-pointer bg-brand-surface-inset h-1.5 rounded-full outline-none border border-brand-border"
+                    />
                   </div>
-                  <div>
-                    <div className="flex justify-between text-[10px] font-black uppercase tracking-wider mb-2">
-                      <span className="text-brand-text-primary">Simulated Potassium (K)</span>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[9px] font-black uppercase">
+                      <span className="text-brand-text-secondary">Soil Potassium (K) Ratio</span>
                       <span className="text-brand-primary">{soilPotassium} mg/kg</span>
                     </div>
-                    <div className="w-full h-1 bg-brand-border rounded-full overflow-hidden">
-                      <motion.div animate={{ width: `${(soilPotassium / 120) * 100}%` }} className="h-full bg-brand-primary" />
-                    </div>
+                    <input 
+                      type="range" min="5" max="120" 
+                      value={soilPotassium} 
+                      onChange={(e) => setSoilPotassium(parseInt(e.target.value))}
+                      className="w-full accent-brand-primary cursor-pointer bg-brand-surface-inset h-1.5 rounded-full outline-none border border-brand-border"
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Simulation Result container */}
-              <div className="p-6 bg-brand-surface border border-brand-border rounded-2xl relative overflow-hidden">
-                <p className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest mb-1">Target Crop Match</p>
-                <AnimatePresence mode="wait">
+              {/* Dynamic Sandbox predictions outcome box */}
+              <div className="mt-8 relative overflow-hidden">
+                <div className="absolute inset-0 bg-brand-surface-inset border border-brand-border rounded-3xl" />
+                <div className="p-5 relative z-10 flex flex-col justify-between min-h-[140px]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.2em]">SANDBOX TARGET OUTCOME</span>
+                    <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded text-[8px] font-black text-brand-primary uppercase">Calculated</span>
+                  </div>
+
                   {isSandboxRunning ? (
-                    <motion.div 
-                      key="loading"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="h-10 flex items-center"
-                    >
-                      <span className="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" />
-                    </motion.div>
+                    <div className="py-4 flex items-center gap-3">
+                      <Activity className="animate-spin text-brand-primary" size={18} />
+                      <span className="text-xs font-black text-brand-text-secondary uppercase tracking-widest">Re-evaluating parameters...</span>
+                    </div>
                   ) : (
-                    <motion.div
-                      key={activeData.name}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      <h4 className="text-2xl font-black text-brand-text-primary uppercase tracking-tight mb-2">
-                        {activeData.name}
-                      </h4>
-                      <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-wider pt-2 border-t border-brand-border/60">
-                        <span className="text-brand-text-secondary">Accuracy Score</span>
-                        <span className="text-brand-primary">{activeData.confidence}% Confidence</span>
+                    <div className="flex items-center justify-between gap-4 pt-4">
+                      <div>
+                        <h4 className="text-xl font-black text-brand-text-primary uppercase tracking-tight">{activeData.name}</h4>
+                        <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest mt-1">Recommended Season: {activeData.season}</p>
                       </div>
-                    </motion.div>
+                      <div className="text-right">
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">CONFIDENCE</span>
+                        <p className="text-2xl font-black text-brand-primary">{activeData.confidence}%</p>
+                      </div>
+                    </div>
                   )}
-                </AnimatePresence>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* 4. ELITE ASYMMETRIC BENTO GRID */}
-      <section className="py-24 relative z-10 border-t border-brand-border/60 bg-brand-surface-inset/10">
+      {/* 5. THE MASTERPIECE BENTO CAPABILITY GRID (Asymmetric Layouts) */}
+      <section className="py-24 relative z-10 border-t border-brand-border/60">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-20">
-            <span className="badge-ai mb-4"><Database size={10} /><T>CAPABILITIES OVERVIEW</T></span>
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-brand-primary/20 mb-4">
+              <Sprout size={11} />
+              <T>ENGINE FEATURES & CAPABILITIES</T>
+            </span>
             <h2 className="text-4xl md:text-5xl font-black text-brand-text-primary uppercase tracking-tight mb-4">
-              <T>ENGINEERED BENTO GRID CAPABILITIES</T>
+              <T>PRECISION AGRICULTURAL POWERHOUSE</T>
             </h2>
             <p className="text-brand-text-secondary font-medium">
-              <T>Explore custom modules mapped dynamically to deliver state-of-the-art agricultural decisions.</T>
+              <T>Explore how our architectural features optimize every single step of your growth planning cycles.</T>
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* Bento 1: Smart drone targets (using generated image) */}
+            {/* Card 1: Large landscape image crop targeting */}
             <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 col-span-1 md:col-span-2 min-h-[380px] flex flex-col justify-between relative overflow-hidden group">
               <div className="absolute inset-0 z-0">
                 <img 
@@ -573,7 +615,7 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Bento 2: Regional pH indexer */}
+            {/* Card 2: Minimal pH indices */}
             <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-8 flex flex-col justify-between min-h-[380px] group">
               <div className="w-12 h-12 bg-brand-gold/10 rounded-2xl flex items-center justify-center text-brand-gold group-hover:rotate-12 transition-transform">
                 <Compass size={22} />
@@ -591,7 +633,7 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Bento 3: Data Analytics mock */}
+            {/* Card 3: Encrypted History logs */}
             <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-8 flex flex-col justify-between min-h-[380px] group">
               <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                 <BarChart3 size={22} />
@@ -605,7 +647,7 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Bento 4: Financial projections layout with asset */}
+            {/* Card 4: Financial projections layout with asset */}
             <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 col-span-1 md:col-span-2 min-h-[380px] flex flex-col justify-between relative overflow-hidden group">
               <div className="absolute inset-0 z-0">
                 <img 
@@ -630,83 +672,23 @@ const Home = () => {
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* 5. LIVE ANALYTICS PREVIEW SECTION */}
-      <section className="py-24 relative z-10 border-t border-brand-border/60">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            
-            {/* Left Column: Glass Browser Frame with Generated UI screenshot */}
-            <div className="lg:col-span-7 relative flex items-center justify-center">
-              <div className="absolute w-72 h-72 bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none z-0" />
-              
-              <div className="relative w-full rounded-2xl border border-brand-border bg-brand-surface shadow-premium overflow-hidden z-10">
-                {/* Simulated window header bar */}
-                <div className="flex items-center justify-between px-6 py-4 bg-brand-surface-inset border-b border-brand-border">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                  </div>
-                  <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-[0.2em]">agro_analytics_dashboard_v2_mock</span>
-                  <div className="w-6" />
-                </div>
-
-                <div className="p-4 bg-brand-surface-inset">
-                  <img 
-                    src="/images/agri_analytics_ui.png" 
-                    alt="Analytics Dashboard UI" 
-                    className="w-full rounded-xl border border-brand-border"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Explanatory SaaS analytics text */}
-            <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
-              <span className="badge-ai w-fit"><Activity size={10} /><T>DEVELOPER COCKPIT</T></span>
-              <h2 className="text-4xl md:text-5xl font-black text-brand-text-primary uppercase tracking-tight leading-none">
-                <T>DECISION TELEMETRY CONSOLE</T>
-              </h2>
-              <p className="text-brand-text-secondary font-medium leading-relaxed">
-                <T>Our real-time analytics interface bridges advanced soil telemetry datasets directly to actionable growth planners. Export full matching guides, timeline parameters, and nitrogen status tables in one click.</T>
-              </p>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 size={16} className="text-brand-primary shrink-0" />
-                  <p className="text-xs font-black text-brand-text-primary uppercase">PDF Crop Intelligence Exporter</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 size={16} className="text-brand-primary shrink-0" />
-                  <p className="text-xs font-black text-brand-text-primary uppercase">Government Scheme matching algorithms</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 size={16} className="text-brand-primary shrink-0" />
-                  <p className="text-xs font-black text-brand-text-primary uppercase">Comprehensive Labour scheduling guides</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 6. IMMERSIVE ADVISORS REVIEWS */}
+      {/* 6. IMMERSIVE EDITORIAL ADVISORS REVIEWS */}
       <section className="py-24 relative z-10 border-t border-brand-border/60">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="badge-ai mb-4"><Shield size={10} /><T>PARTNER CREDIBILITY</T></span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-brand-primary/20 mb-4">
+              <Shield size={11} />
+              <T>PARTNER CREDIBILITY</T>
+            </span>
             <h2 className="text-4xl md:text-5xl font-black text-brand-text-primary uppercase tracking-tight mb-4">
               <T>TRUSTED BY PRESTIGIOUS AGENTS</T>
             </h2>
-            <p className="text-brand-text-secondary font-medium">
-              <T>Validated by leading agricultural research boards and specialized VC panels.</T>
+            <p className="text-brand-text-secondary font-medium text-sm">
+              <T>Validated by leading agricultural research boards and specialized venture capitals globally.</T>
             </p>
           </div>
 
@@ -735,16 +717,19 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 7. LAUNCH CALL TO ACTION CARD */}
+      {/* 7. ATMOSPHERIC CALL TO ACTION GATE */}
       <section className="py-24 relative z-10 border-t border-brand-border/60 bg-gradient-to-b from-transparent to-brand-primary/5">
         <div className="max-w-5xl mx-auto px-6">
           <div className="relative p-12 md:p-16 rounded-[3.5rem] bg-brand-surface border border-brand-border/80 shadow-premium overflow-hidden text-center">
-            <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none" />
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none" />
             <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-80 h-80 bg-brand-primary/15 rounded-full blur-[80px] pointer-events-none" />
 
             <div className="relative z-10 space-y-8 max-w-2xl mx-auto">
-              <span className="badge-ai mx-auto"><Activity size={10} /><T>INITIALIZE FARM MAPS</T></span>
-              <h2 className="text-4xl md:text-6xl font-black text-brand-text-primary uppercase tracking-tight leading-none">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-brand-primary/20 mx-auto">
+                <Activity size={10} />
+                <T>INITIALIZE FARM MAPS</T>
+              </span>
+              <h2 className="text-4xl md:text-6xl font-black text-brand-text-primary uppercase tracking-tight leading-none animate-pulse">
                 <T>READY TO OPTIMIZE YOUR FIELD?</T>
               </h2>
               <p className="text-brand-text-secondary font-medium text-base">
@@ -753,7 +738,7 @@ const Home = () => {
 
               <div className="flex flex-wrap justify-center items-center gap-4">
                 <MagneticButton>
-                  <Link to="/recommend" className="btn-primary group h-14 px-8 flex items-center justify-center rounded-2xl relative overflow-hidden">
+                  <Link to="/recommend" className="btn-primary group h-14 px-8 flex items-center justify-center rounded-2xl relative overflow-hidden bg-brand-primary text-slate-950 font-black uppercase text-[11px] tracking-[0.2em]">
                     <span className="relative z-10 flex items-center gap-2">
                       <T>Get Best Crop Match</T>
                       <ArrowRight className="inline transition-transform group-hover:translate-x-1" size={16} />
@@ -762,9 +747,9 @@ const Home = () => {
                 </MagneticButton>
 
                 <MagneticButton>
-                  <Link to="/recommend?demo=true" className="h-14 px-8 bg-brand-surface border border-brand-border hover:border-brand-primary/30 text-brand-text-primary hover:text-brand-primary font-bold rounded-2xl flex items-center justify-center transition-all">
+                  <a href="#sandbox" className="h-14 px-8 bg-brand-surface border border-brand-border hover:border-brand-primary/30 text-brand-text-primary hover:text-brand-primary font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl flex items-center justify-center transition-all">
                     <T>Try Sandbox Demo</T>
-                  </Link>
+                  </a>
                 </MagneticButton>
               </div>
             </div>
@@ -772,7 +757,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 8. COMPLETE PREMIUM FOOTER REDESIGN */}
+      {/* 8. COMPLETE SECURE STACK FOOTER */}
       <footer className="relative border-t border-brand-border bg-brand-surface z-10 py-16">
         <div className="max-w-7xl mx-auto px-6">
           
@@ -782,7 +767,7 @@ const Home = () => {
             <div className="space-y-4">
               <Link to="/" className="flex items-center space-x-3 group">
                 <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-premium">
-                  <Leaf className="text-white" size={20} />
+                  <Leaf className="text-slate-950" size={20} />
                 </div>
                 <span className="text-xl font-black tracking-tighter text-brand-text-primary uppercase">
                   Agro<span className="text-brand-primary italic">XAI</span>
