@@ -326,7 +326,7 @@ const Home = () => {
                 className="px-8 py-4 bg-brand-surface border border-brand-border hover:border-brand-primary/30 text-brand-text-primary hover:text-brand-primary font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl transition-all shadow-sm hover:shadow-md flex items-center gap-2"
               >
                 <Play size={10} className="fill-current" />
-                <T>TRY SANDBOX DEMO</T>
+                <T>AGROXAI DEMO</T>
               </a>
             </MagneticButton>
           </motion.div>
