@@ -38,9 +38,9 @@ const Footer = () => {
           <div className="space-y-6">
             <T as="h4" className="text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em] opacity-50">Company</T>
             <ul className="space-y-4">
-              <li><a href="#" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Privacy</T></a></li>
-              <li><a href="#" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Contact</T></a></li>
-              <li><a href="#" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Science</T></a></li>
+              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Privacy</T></a></li>
+              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Contact</T></a></li>
+              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Science</T></a></li>
             </ul>
           </div>
         </div>
