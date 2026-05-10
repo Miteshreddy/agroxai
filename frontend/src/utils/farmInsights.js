@@ -1,18 +1,26 @@
 const STORAGE_FIELDS = 'agrokai_fields';
 const STORAGE_CROPS = 'agrokai_past_crops';
-export const getFields = () => {
+export const getFields = (userId) => {
+  if (!userId) return [];
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_FIELDS)) || [];
+    return JSON.parse(localStorage.getItem(`${STORAGE_FIELDS}_${userId}`)) || [];
   } catch { return []; }
 };
-export const saveFields = (f) => localStorage.setItem(STORAGE_FIELDS, JSON.stringify(f || []));
+export const saveFields = (userId, f) => {
+  if (!userId) return;
+  localStorage.setItem(`${STORAGE_FIELDS}_${userId}`, JSON.stringify(f || []));
+};
 
-export const getCrops = () => {
+export const getCrops = (userId) => {
+  if (!userId) return [];
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_CROPS)) || [];
+    return JSON.parse(localStorage.getItem(`${STORAGE_CROPS}_${userId}`)) || [];
   } catch { return []; }
 };
-export const saveCrops = (c) => localStorage.setItem(STORAGE_CROPS, JSON.stringify(c || []));
+export const saveCrops = (userId, c) => {
+  if (!userId) return;
+  localStorage.setItem(`${STORAGE_CROPS}_${userId}`, JSON.stringify(c || []));
+};
 
 
 export function generateInsights(fields = [], crops = []) {

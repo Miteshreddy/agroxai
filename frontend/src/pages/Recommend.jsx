@@ -26,6 +26,7 @@ import AIProcessingOverlay from '../components/AIProcessingOverlay';
 import T from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 // Demo presets for expo
 const DEMO_PRESETS = [
@@ -75,6 +76,7 @@ const toHumidityLevel  = pct => pct < 35  ? 'Low' : pct < 75  ? 'Medium' : 'High
 
 const Recommend = () => {
     const { t } = useLanguage();
+    const { user } = useAuth();
     const [searchParams] = useSearchParams();
     const resultsRef = useRef(null);
     const locationRef = useRef(null);
@@ -194,7 +196,7 @@ const Recommend = () => {
                 const farmId = searchParams.get('farmId') || null;
                 const farmName = searchParams.get('farmName') || null;
                 await axios.post(`${API}/history/save`, {
-                    userId: 'guest',
+                    userId: user?.id || 'guest',
                     farmId,
                     farmName,
                     location: locationData?.weatherData?.location?.city || 'Unknown',

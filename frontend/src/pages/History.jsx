@@ -3,8 +3,9 @@ import axios from 'axios';
 import { History as HistoryIcon, Trash2, ShieldCheck, Sprout } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import CountUp from 'react-countup';
+import { useAuth } from '../context/AuthContext';
 import T, { TD } from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
 
@@ -29,16 +30,19 @@ const getSoilAdvice = (values) => {
 };
 
 const History = () => {
+    const { user } = useAuth();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchHistory();
-    }, []);
+        if (user) {
+            fetchHistory();
+        }
+    }, [user]);
 
     const fetchHistory = async () => {
         try {
-            const response = await apiClient.get('/history');
+            const response = await apiClient.get(`/history/user/${user.id}`);
             setHistory(response.data);
             setLoading(false);
         } catch (error) {

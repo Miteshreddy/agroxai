@@ -9,6 +9,7 @@ import { NoFieldsSVG, NoCropsSVG, HealthyFarmBanner } from '../components/FarmIl
 import { AddFieldModal, LogCropModal, SelectFarmModal } from '../components/FarmModals';
 import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import T from '../components/T';
 
 const OUTCOME_COLORS = { 'Good Yield': 'bg-emerald-100 text-emerald-700 border-emerald-200', 'Average': 'bg-amber-100 text-amber-700 border-amber-200', 'Poor': 'bg-red-100 text-red-700 border-red-200' };
@@ -70,6 +71,7 @@ const AI_SUMMARIES = [
 
 const MyFarm = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
   const [crops, setCrops] = useState([]);
@@ -80,21 +82,23 @@ const MyFarm = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setFields(getFields());
-    setCrops(getCrops());
-    
-    // Fetch real history from backend
-    apiClient.get('/history')
-      .then(res => setHistory(res.data))
-      .catch(err => console.error('Failed to fetch history:', err));
+    if (user?.id) {
+      setFields(getFields(user.id));
+      setCrops(getCrops(user.id));
+      
+      // Fetch real history from backend
+      apiClient.get(`/history/user/${user.id}`)
+        .then(res => setHistory(res.data.data || res.data))
+        .catch(err => console.error('Failed to fetch history:', err));
+    }
     
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
-  }, []);
+  }, [user]);
 
-  const addField = (f) => { const nf = [...fields, f]; setFields(nf); saveFields(nf); };
-  const deleteField = (id) => { const nf = fields.filter(f => f.id !== id); setFields(nf); saveFields(nf); };
-  const addCrop = (c) => { const nc = [...crops, c]; setCrops(nc); saveCrops(nc); };
+  const addField = (f) => { if (!user?.id) return; const nf = [...fields, f]; setFields(nf); saveFields(user.id, nf); };
+  const deleteField = (id) => { if (!user?.id) return; const nf = fields.filter(f => f.id !== id); setFields(nf); saveFields(user.id, nf); };
+  const addCrop = (c) => { if (!user?.id) return; const nc = [...crops, c]; setCrops(nc); saveCrops(user.id, nc); };
 
   const insights = generateInsights(fields, crops);
   const totalArea = (fields || []).reduce((s, f) => s + (parseFloat(f?.area) || 0), 0);
