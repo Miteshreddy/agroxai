@@ -93,4 +93,24 @@ router.delete('/history/:id', async (req, res) => {
     }
 });
 
+// PATCH /api/history/:id - Update history entry (favorites, notes, tags)
+router.patch('/history/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { bookmarked, notes, tags } = req.body;
+        
+        const updateData = {};
+        if (bookmarked !== undefined) updateData.bookmarked = bookmarked;
+        if (notes !== undefined) updateData.notes = notes;
+        if (tags !== undefined) updateData.tags = tags;
+        
+        const updated = await Recommendation.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+        if (!updated) return errorRes(res, 'History record not found', 404);
+        return success(res, updated, 'History updated successfully');
+    } catch (err) {
+        console.error('Error updating history:', err.message);
+        return errorRes(res, 'Failed to update record', 500, err.message);
+    }
+});
+
 module.exports = router;
