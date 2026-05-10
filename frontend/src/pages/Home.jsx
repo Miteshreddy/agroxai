@@ -129,10 +129,148 @@ const Home = () => {
       </div>
 
       {/* 1. THE VOLUMETRIC CENTER-STAGE HERO (The Opening Frame) */}
-      <section className="min-h-screen flex flex-col justify-center items-center relative z-10 px-6 pt-32 pb-16">
+      <section className="min-h-screen flex flex-col justify-center items-center relative z-10 px-6 pt-32 pb-16 overflow-hidden">
+        
+        {/* ========================================================
+            CINEMATIC LAYERED BACKGROUND SYSTEM (ATMOSPHERIC DEPTH)
+            ======================================================== */}
+        
+        {/* 1. Large blurred emerald/cyan AI glow / aurora orb */}
+        <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-gradient-to-tr from-brand-primary/15 via-emerald-400/8 to-cyan-400/4 rounded-full blur-[110px] pointer-events-none z-0 mix-blend-screen animate-pulse" style={{ animationDuration: '10s' }} />
+
+        {/* 2. Subtle animated particle system */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={`hero-p-${i}`}
+              initial={{ 
+                x: `${Math.random() * 100}%`, 
+                y: `${Math.random() * 100}%`, 
+                opacity: Math.random() * 0.25 + 0.05, 
+                scale: Math.random() * 0.4 + 0.4 
+              }}
+              animate={{
+                y: ['105%', '-5%'],
+                opacity: [0, 0.35, 0]
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              className="absolute w-1.5 h-1.5 bg-brand-primary rounded-full blur-[0.5px]"
+            />
+          ))}
+        </div>
+
+        {/* 3. Environmental/topographic contour lines */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 180, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 opacity-[0.035] pointer-events-none z-0 flex items-center justify-center mix-blend-overlay"
+        >
+          <svg viewBox="0 0 1000 1000" className="w-[140%] h-[140%] opacity-80 select-none pointer-events-none">
+            <circle cx="500" cy="500" r="100" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+            <circle cx="500" cy="500" r="200" fill="none" stroke="currentColor" strokeWidth="1" />
+            <circle cx="500" cy="500" r="300" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="5 5" />
+            <circle cx="500" cy="500" r="400" fill="none" stroke="currentColor" strokeWidth="1" />
+            <circle cx="500" cy="500" r="500" fill="none" stroke="currentColor" strokeWidth="1.2" strokeDasharray="2 6" />
+            <path d="M100,500 C 200,450 300,550 500,500 C 700,450 800,550 900,500" fill="none" stroke="currentColor" strokeWidth="1" />
+            <path d="M100,300 C 300,220 400,380 500,300 C 650,220 700,380 900,300" fill="none" stroke="currentColor" strokeWidth="0.8" />
+            <path d="M100,700 C 250,620 350,780 500,700 C 600,620 750,780 900,700" fill="none" stroke="currentColor" strokeWidth="0.8" />
+          </svg>
+        </motion.div>
+
+        {/* 4. Futuristic AI analytics HUD fragments */}
+        <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center p-6">
+          <div className="w-full h-full max-w-5xl border border-brand-primary/5 rounded-[3rem] relative">
+            <div className="absolute -top-1 -left-1 w-5 h-5 border-t border-l border-brand-primary/20" />
+            <div className="absolute -top-1 -right-1 w-5 h-5 border-t border-r border-brand-primary/20" />
+            <div className="absolute -bottom-1 -left-1 w-5 h-5 border-b border-l border-brand-primary/20" />
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 border-b border-r border-brand-primary/20" />
+            
+            <div className="absolute top-8 left-8 text-[8px] font-black text-brand-primary/20 tracking-[0.25em] uppercase select-none">GRID_INTEL // COORD_ALPHA_9</div>
+            <div className="absolute bottom-8 right-8 text-[8px] font-black text-brand-primary/20 tracking-[0.25em] uppercase select-none">LAT_78.48 // LNG_17.38</div>
+          </div>
+        </div>
+
+        {/* 5. Very low-opacity farming aerial imagery */}
+        <div className="absolute inset-0 pointer-events-none z-0 mix-blend-overlay opacity-[0.025]">
+          <div className="w-full h-full bg-[url('/images/agri_satellite_intel.png')] bg-cover bg-center" />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-bg via-transparent to-brand-bg" />
+        </div>
+
+        {/* 6. Cinematic volumetric lighting/fog */}
+        <motion.div 
+          animate={{
+            x: [-15, 15, -15],
+            y: [-8, 8, -8],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute inset-0 w-[115%] h-[115%] bg-gradient-to-tr from-brand-primary/0 via-brand-primary/[0.02] to-cyan-400/0 blur-[90px] pointer-events-none z-0"
+        />
+
+        {/* 7. Mouse-reactive gradient mesh movement */}
+        <motion.div 
+          style={{ 
+            x: springX, 
+            y: springY,
+            transform: 'translate(-50%, -50%)'
+          }}
+          className="absolute w-[450px] h-[450px] bg-gradient-to-tr from-brand-primary/4 to-cyan-500/3 rounded-full blur-[140px] pointer-events-none z-0 mix-blend-screen hidden md:block"
+        />
+
+        {/* 8. Thin animated neural-network connection lines */}
+        <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-[0.12]">
+          <svg className="w-full h-full" viewBox="0 0 1200 800" fill="none">
+            <motion.path 
+              d="M 150,250 Q 350,150 600,450 T 1050,550" 
+              stroke="var(--accent-primary)" 
+              strokeWidth="0.5" 
+              strokeDasharray="4 12" 
+              className="animate-flow"
+              style={{ animationDuration: '40s' }}
+            />
+            <motion.path 
+              d="M 200,550 Q 550,350 850,250 T 1000,200" 
+              stroke="var(--accent-primary)" 
+              strokeWidth="0.5" 
+              strokeDasharray="3 15" 
+              className="animate-flow"
+              style={{ animationDuration: '30s' }}
+            />
+          </svg>
+        </div>
+
+        {/* 9. Soft floating data indicators */}
+        <div className="absolute inset-0 pointer-events-none z-0 hidden lg:block select-none">
+          <motion.div 
+            animate={{ y: [-8, 8, -8] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[28%] left-[8%] bg-brand-surface/20 border border-brand-border/40 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-[8px] font-black text-brand-text-secondary tracking-[0.2em] uppercase flex items-center gap-1.5"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-ping" />
+            SATELLITE_LINK_STABLE
+          </motion.div>
+
+          <motion.div 
+            animate={{ y: [8, -8, 8] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[28%] right-[8%] bg-brand-surface/20 border border-brand-border/40 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-[8px] font-black text-brand-text-secondary tracking-[0.2em] uppercase flex items-center gap-1.5"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+            XGB_REASON_CORE
+          </motion.div>
+        </div>
+
+        {/* 10. Ambient motion depth (Framer Motion container wrapper) */}
         <motion.div 
           style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
-          className="text-center max-w-5xl mx-auto space-y-8 flex flex-col items-center"
+          className="text-center max-w-5xl mx-auto space-y-8 flex flex-col items-center relative z-10"
         >
           {/* Futuristic Micro-badge */}
           <motion.div 
