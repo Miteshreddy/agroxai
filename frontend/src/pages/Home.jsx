@@ -41,10 +41,6 @@ const Home = () => {
   const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -100]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.25], [1, 0.9]);
-  
-  const consoleScale = useTransform(scrollYProgress, [0.05, 0.35], [0.85, 1.05]);
-  const consoleRotate = useTransform(scrollYProgress, [0.05, 0.35], [5, 0]);
-  const consoleY = useTransform(scrollYProgress, [0.05, 0.35], [100, 0]);
 
   // Dynamic Hover coordinates for cursor-ambient mesh light
   const mouseX = useMotionValue(0);
@@ -59,24 +55,7 @@ const Home = () => {
     mouseY.set(clientY - 150);
   };
 
-  // Hero Image Tilt States
-  const tiltX = useMotionValue(0);
-  const tiltY = useMotionValue(0);
-  const springTiltX = useSpring(tiltX, { stiffness: 100, damping: 25 });
-  const springTiltY = useSpring(tiltY, { stiffness: 100, damping: 25 });
 
-  const handleHeroMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    tiltX.set(x * 0.04);
-    tiltY.set(y * 0.04);
-  };
-
-  const handleHeroMouseLeave = () => {
-    tiltX.set(0);
-    tiltY.set(0);
-  };
 
   // Environmental Config sandbox state
   const [activeClimate, setActiveClimate] = useState('Monsoon');
@@ -333,91 +312,6 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* 2. CINEMATIC SCROLL-TRANSFORM CONSOLE WRAPPER */}
-      <section className="relative z-20 px-6 -mt-32 pb-32 max-w-7xl mx-auto">
-        <motion.div 
-          style={{ scale: consoleScale, rotateX: consoleRotate, y: consoleY }}
-          onMouseMove={handleHeroMouseMove}
-          onMouseLeave={handleHeroMouseLeave}
-          className="w-full bg-brand-surface/40 backdrop-blur-xl border border-brand-border/80 rounded-4xl p-6 md:p-8 shadow-premium relative overflow-hidden group"
-        >
-          {/* Simulated scanning lights */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary/5 via-transparent to-brand-gold/5 pointer-events-none" />
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-primary/25 to-transparent" />
-
-          {/* Window Header */}
-          <div className="flex items-center justify-between pb-6 border-b border-brand-border/60">
-            <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-              <span className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest pl-4">AGROXAI_CONSOLE_LIVE.SH</span>
-            </div>
-            <div className="flex items-center gap-2 bg-brand-primary/5 px-3 py-1 rounded-full border border-brand-primary/10">
-              <Activity size={10} className="text-brand-primary animate-pulse" />
-              <span className="text-[8px] font-black text-brand-primary tracking-widest uppercase">ACTIVE STREAMING</span>
-            </div>
-          </div>
-
-          {/* Console Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 items-stretch">
-            {/* Left Console Content: High-End Live Chart feeds */}
-            <div className="lg:col-span-4 flex flex-col justify-between space-y-8">
-              <div className="space-y-2">
-                <span className="text-[9px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">TELEMETRY FEED 01</span>
-                <h3 className="text-2xl font-black text-brand-text-primary uppercase tracking-tight leading-none"><T>GEOSPATIAL COORDINATES</T></h3>
-                <p className="text-brand-text-secondary text-xs leading-relaxed"><T>Real-time telemetry inputs parsed dynamically through multi-spectral coordinate arrays.</T></p>
-              </div>
-
-              {/* Telemetry data matrix list */}
-              <div className="space-y-3 bg-brand-surface-inset border border-brand-border/60 p-4 rounded-2xl">
-                <div className="flex justify-between items-center text-[10px] font-black uppercase">
-                  <span className="text-brand-text-secondary">COORDINATE SECTOR</span>
-                  <span className="text-brand-text-primary tracking-widest">17.3850° N, 78.4867° E</span>
-                </div>
-                <div className="h-[1px] bg-brand-border/60" />
-                <div className="flex justify-between items-center text-[10px] font-black uppercase">
-                  <span className="text-brand-text-secondary">ELEVATION INDEX</span>
-                  <span className="text-brand-text-primary">542 Meters AGL</span>
-                </div>
-                <div className="h-[1px] bg-brand-border/60" />
-                <div className="flex justify-between items-center text-[10px] font-black uppercase">
-                  <span className="text-brand-text-secondary">NITROGEN (N) FEED</span>
-                  <span className="text-brand-primary">72 kg/ha (Optimum)</span>
-                </div>
-              </div>
-
-              {/* Trust Index Bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-[9px] font-black uppercase">
-                  <span className="text-brand-text-secondary">PREDICTIVE STABILITY</span>
-                  <span className="text-brand-primary">98.4% Confidence</span>
-                </div>
-                <div className="h-1.5 w-full bg-brand-surface-inset border border-brand-border rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    whileInView={{ width: '98.4%' }}
-                    transition={{ duration: 1.5, ease: "easeOut" }}
-                    className="h-full bg-gradient-to-r from-brand-primary to-emerald-400"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Embedded High-Resolution GUI mockup */}
-            <div className="lg:col-span-8 bg-brand-surface-inset/80 border border-brand-border/80 rounded-3xl overflow-hidden relative group/mockup flex items-center justify-center p-2 min-h-[350px]">
-              <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
-              <img 
-                src="/images/agri_recommendations_ui.png" 
-                alt="AgroXAI Dashboard UI Preview" 
-                className="w-full h-full object-cover rounded-2xl border border-brand-border/80 shadow-premium transition-transform duration-[1.5s] group-hover/mockup:scale-102"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-surface-inset/90 via-transparent to-transparent pointer-events-none" />
-            </div>
-          </div>
-        </motion.div>
-      </section>
 
       {/* 3. DYNAMIC EXPLAINABLE AI — XGBOOST SHAP FLOW (Asymmetric Layout) */}
       <section className="py-24 relative z-10 border-t border-brand-border/60 bg-gradient-to-b from-transparent via-brand-primary/2 to-transparent">
