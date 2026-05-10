@@ -1,4 +1,5 @@
 import os
+import logging
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -7,13 +8,13 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 import joblib
 import pandas as pd
-# import shap
-
-# Set explainer to None globally to completely bypass memory-heavy TreeExplainer on Render free tier
-explainer = None
+import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from soil_mapper import map_farmer_inputs
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)
@@ -21,28 +22,84 @@ CORS(app)
 # Get the directory where this script is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Paths to model and encoders (using absolute paths)
+# Paths to model, encoders, and profiles (using absolute paths)
 MODEL_PATH = os.path.join(BASE_DIR, 'crop_model.pkl')
 LABEL_ENCODER_PATH = os.path.join(BASE_DIR, 'label_encoder.pkl')
 SEASON_ENCODER_PATH = os.path.join(BASE_DIR, 'season_encoder.pkl')
+CROP_PROFILES_PATH = os.path.join(BASE_DIR, 'crop_profiles.pkl')
 
-# Load model and encoders (if they exist)
+# Load models, encoders, and agricultural profiles
 model = joblib.load(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
 label_encoder = joblib.load(LABEL_ENCODER_PATH) if os.path.exists(LABEL_ENCODER_PATH) else None
 season_encoder = joblib.load(SEASON_ENCODER_PATH) if os.path.exists(SEASON_ENCODER_PATH) else None
+crop_profiles = joblib.load(CROP_PROFILES_PATH) if os.path.exists(CROP_PROFILES_PATH) else None
 
 print(f"Model loaded: {model is not None}")
 print(f"Label encoder loaded: {label_encoder is not None}")
 print(f"Season encoder loaded: {season_encoder is not None}")
-
-# explainer = shap.TreeExplainer(model) if model else None
+print(f"Crop profiles loaded: {crop_profiles is not None}")
 
 # Determine the feature order expected by the model
 if model and hasattr(model, 'feature_names_in_'):
     EXPECTED_FEATURES = list(model.feature_names_in_)
+elif model and hasattr(model, 'estimator') and hasattr(model.estimator, 'feature_names_in_'):
+    EXPECTED_FEATURES = list(model.estimator.feature_names_in_)
 else:
-    # Default order used during training (without season)
-    EXPECTED_FEATURES = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
+    # Default order used during training (including engineered features)
+    EXPECTED_FEATURES = [
+        'N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall',
+        'np_ratio', 'kp_ratio', 'nk_ratio', 'fertility_index', 'nutrient_balance_score',
+        'temp_humidity_index', 'temp_rainfall_interaction', 'ph_suitability',
+        'environmental_stress_score', 'soil_health_index', 'yield_potential_estimate'
+    ]
+
+def engineer_features_single(input_dict):
+    """
+    Engineers advanced agricultural features for a single sample input.
+    Returns a dict containing both original and engineered features.
+    """
+    out = input_dict.copy()
+    
+    # Extract raw base values
+    n = float(out.get('N', 0))
+    p = float(out.get('P', 0))
+    k = float(out.get('K', 0))
+    temp = float(out.get('temperature', 0))
+    humid = float(out.get('humidity', 0))
+    ph = float(out.get('ph', 0))
+    rain = float(out.get('rainfall', 0))
+    
+    # --- NUTRIENT FEATURES ---
+    out['np_ratio'] = n / (p + 1e-5)
+    out['kp_ratio'] = k / (p + 1e-5)
+    out['nk_ratio'] = n / (k + 1e-5)
+    out['fertility_index'] = (n + p + k) / 3.0
+    
+    # Scale-invariant nutrient balance score
+    total_nutrients = n + p + k + 1e-5
+    n_pct = n / total_nutrients
+    p_pct = p / total_nutrients
+    k_pct = k / total_nutrients
+    prop_std = np.std([n_pct, p_pct, k_pct])
+    out['nutrient_balance_score'] = 1.0 / (prop_std + 0.1)
+    
+    # --- ENVIRONMENTAL FEATURES ---
+    out['temp_humidity_index'] = 0.8 * temp + (humid / 100.0) * (temp - 14.4) + 46.4
+    out['temp_rainfall_interaction'] = temp * rain / 100.0
+    out['ph_suitability'] = np.exp(-0.5 * ((ph - 6.5) / 1.0)**2)
+    
+    # Environmental Stress Index
+    temp_stress = np.maximum(0, np.maximum(18.0 - temp, temp - 32.0))
+    humid_stress = np.maximum(0, np.maximum(40.0 - humid, humid - 85.0)) / 10.0
+    ph_stress = np.maximum(0, np.maximum(5.5 - ph, ph - 7.5)) * 2.0
+    rain_stress = np.maximum(0, np.maximum(50.0 - rain, rain - 400.0)) / 100.0
+    out['environmental_stress_score'] = temp_stress + humid_stress + ph_stress + rain_stress
+    
+    # --- COMPOSITE FEATURES ---
+    out['soil_health_index'] = out['fertility_index'] * out['ph_suitability']
+    out['yield_potential_estimate'] = (out['fertility_index'] * out['ph_suitability']) / (1.0 + out['environmental_stress_score'])
+    
+    return out
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -64,110 +121,132 @@ def predict():
         else:
             data = raw_data
 
-        # Validate required fields for the ML model
+        # Validate required base fields
         required_fields = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
-        if 'season' in EXPECTED_FEATURES:
-            required_fields.append('season')
-            
         missing_fields = [f for f in required_fields if f not in data or data[f] is None]
         if missing_fields:
             return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
 
-        # Build input dict respecting the expected feature order
-        numerical_features = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
-        input_dict = {}
+        # Construct basic numerical input dictionary
+        input_dict = {f: float(data[f]) for f in required_fields}
+        
+        # Perform inference-time feature engineering to match trained features
+        engineered_dict = engineer_features_single(input_dict)
+        
+        # Format DataFrame with exactly the expected feature columns and order
+        ordered_input = {}
         for feat in EXPECTED_FEATURES:
-            if feat in numerical_features:
-                input_dict[feat] = float(data.get(feat, 0))
-            elif feat == 'season':
-                continue # handled below
+            if feat in engineered_dict:
+                ordered_input[feat] = float(engineered_dict[feat])
             else:
-                input_dict[feat] = data.get(feat)
+                ordered_input[feat] = 0.0 # safety fallback for unexpected features
+                
+        df = pd.DataFrame([ordered_input])[EXPECTED_FEATURES]
         
-        # Handle optional season feature
-        if 'season' in EXPECTED_FEATURES:
-            season_val = data.get('season', '')
-            if season_encoder and season_val:
-                if season_val in list(season_encoder.classes_):
-                    input_dict['season'] = season_encoder.transform([season_val])[0]
-                else:
-                    input_dict['season'] = 0
-            else:
-                input_dict['season'] = 0
+        # 1. Get Calibrated probabilities for all classes
+        probs = model.predict_proba(df)[0]
         
-        # Create DataFrame with correct column order
-        df = pd.DataFrame([input_dict], columns=EXPECTED_FEATURES)
+        # 2. Compute Crop Agricultural Compatibility Indices (ACI) (Phase 9)
+        hybrid_scores = []
+        weights = {'N': 1.0, 'P': 1.0, 'K': 1.0, 'temperature': 2.0, 'humidity': 1.5, 'ph': 2.0, 'rainfall': 2.0}
+        total_weight = sum(weights.values())
         
-        # Prediction
-        pred_class = model.predict(df)[0]
-        
-        # Get probabilities for all classes
-        try:
-            probs = model.predict_proba(df)[0]
-            confidence = float(max(probs))
+        for idx, prob in enumerate(probs):
+            crop_name = label_encoder.inverse_transform([idx])[0]
             
-            # Get top 3 crop recommendations
-            top_3_indices = sorted(range(len(probs)), key=lambda i: probs[i], reverse=True)[:3]
-            top_3_crops = []
-            for idx in top_3_indices:
-                try:
-                    if hasattr(label_encoder, 'classes_') and idx < len(label_encoder.classes_):
-                        crop = label_encoder.inverse_transform([idx])[0]
+            # Compute physical suitability from dataset profiles
+            aci_score = 0.0
+            profile = crop_profiles.get(crop_name) if crop_profiles else None
+            
+            if profile:
+                for feat, weight in weights.items():
+                    val = float(input_dict[feat])
+                    mean = profile[feat]['mean']
+                    std = profile[feat]['std']
+                    p10 = profile[feat]['p10']
+                    p90 = profile[feat]['p90']
+                    
+                    if p10 <= val <= p90:
+                        f_score = 1.0
                     else:
-                        crop = f"Unknown Crop {idx}"
-                    prob = round(float(probs[idx]), 4)
-                    top_3_crops.append({"crop": str(crop), "confidence": prob})
-                except Exception as inner_e:
-                    print(f"[ML Model] Failed to decode index {idx}: {inner_e}")
-                    top_3_crops.append({"crop": f"Unknown Crop {idx}", "confidence": round(float(probs[idx]), 4)})
-            
-            if not top_3_crops:
-                raise ValueError("No crops could be decoded")
-        except Exception as e:
-            import traceback
-            print("[ML Model] Probability decoding failed, using fallback:", str(e))
-            traceback.print_exc()
-            confidence = 1.0
-            try:
-                crop_decoded = label_encoder.inverse_transform([pred_class])[0]
-            except Exception:
-                crop_decoded = "Unknown Crop"
-            top_3_crops = [{"crop": str(crop_decoded), "confidence": 1.0}]
-            
-        # Decode label
-        crop_name = label_encoder.inverse_transform([pred_class])[0]
-        
-        # SHAP explanation with high-fidelity fallback to prevent crashes / OOM
-        try:
-            if explainer is not None:
-                shap_vals = explainer.shap_values(df)
-                if len(shap_vals.shape) == 3:
-                    shap_row = shap_vals[0, :, int(pred_class)]
-                else:
-                    shap_row = shap_vals[0]
-                shap_dict = dict(zip(EXPECTED_FEATURES, shap_row))
+                        dist = min(abs(val - p10), abs(val - p90))
+                        f_score = np.exp(-0.5 * (dist / (std + 1e-5))**2)
+                    aci_score += weight * f_score
+                aci_score = aci_score / total_weight
             else:
-                try:
-                    importances = model.feature_importances_
-                    shap_dict = {}
-                    for feat, imp in zip(EXPECTED_FEATURES, importances):
-                        val = float(df[feat].iloc[0]) if feat in df else 50.0
-                        # Dynamic sample contribution: scale global importance by input thresholds
-                        modifier = 1.5 if val > 60 else -1.2 if val < 25 else 1.0
-                        shap_dict[feat] = float(imp * modifier)
-                except Exception:
-                    shap_dict = {"N": 0.2, "P": 0.1, "K": 0.15, "temperature": 0.1, "humidity": 0.25, "ph": 0.05, "rainfall": 0.15}
-        except Exception as shap_err:
-            print(f"SHAP calculation failed, using fallback importances: {shap_err}")
-            try:
+                aci_score = 0.5 # flat fallback if profile doesn't exist
+            
+            # Combine Calibrated ML probability and Agricultural Compatibility Index (HS_c = 0.6 * P_c + 0.4 * ACI_c)
+            # This balances ML predictive patterns with actual physical agronomic feasibility
+            hybrid_score = 0.6 * float(prob) + 0.4 * aci_score
+            hybrid_scores.append({
+                "class_idx": idx,
+                "crop": str(crop_name),
+                "ml_prob": float(prob),
+                "aci": float(aci_score),
+                "hybrid_score": float(hybrid_score)
+            })
+            
+        # Sort recommendations based on the Hybrid Suitability Score (Phase 5 & 6)
+        ranked_recommendations = sorted(hybrid_scores, key=lambda x: x['hybrid_score'], reverse=True)
+        
+        # Get Top-3 recommendation outputs
+        top_3_crops = []
+        for rec in ranked_recommendations[:3]:
+            top_3_crops.append({
+                "crop": rec["crop"],
+                "confidence": round(rec["hybrid_score"], 4)
+            })
+            
+        # Main recommended crop (highest hybrid score)
+        best_rec = ranked_recommendations[0]
+        crop_name = best_rec["crop"]
+        confidence = best_rec["hybrid_score"]
+        
+        # 3. Generate dynamic Agricultural Explanations (Phase 8)
+        # Compute dynamic feature contribution scores for explainability using the best crop profile
+        try:
+            # Load base feature importances as scaling factor
+            if hasattr(model, 'estimator') and hasattr(model.estimator, 'feature_importances_'):
+                importances = model.estimator.feature_importances_
+            elif hasattr(model, 'feature_importances_'):
                 importances = model.feature_importances_
-                shap_dict = dict(zip(EXPECTED_FEATURES, importances))
-            except Exception:
-                shap_dict = {"N": 0.2, "P": 0.1, "K": 0.15, "temperature": 0.1, "humidity": 0.25, "ph": 0.05, "rainfall": 0.15}
-        
-        top_features = sorted(shap_dict.items(), key=lambda kv: abs(kv[1]), reverse=True)[:3]
-        explanation = {feat: round(float(val), 4) for feat, val in top_features}
-        
+            else:
+                importances = [0.14] * len(EXPECTED_FEATURES)
+                
+            feat_importance = dict(zip(EXPECTED_FEATURES, importances))
+            explanation = {}
+            profile = crop_profiles.get(crop_name) if crop_profiles else None
+            
+            if profile:
+                for feat in ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']:
+                    val = float(input_dict[feat])
+                    mean = profile[feat]['mean']
+                    std = profile[feat]['std']
+                    p10 = profile[feat]['p10']
+                    p90 = profile[feat]['p90']
+                    
+                    if p10 <= val <= p90:
+                        suit = 1.0
+                    else:
+                        dist = min(abs(val - p10), abs(val - p90))
+                        suit = np.exp(-0.5 * (dist / (std + 1e-5))**2)
+                        
+                    imp = feat_importance.get(feat, 0.1)
+                    
+                    # Positive contribution if environmental feature is highly suitable
+                    # Negative contribution if feature represents a constraint or stress
+                    if suit >= 0.8:
+                        explanation[feat] = round(float(imp * suit), 4)
+                    else:
+                        explanation[feat] = round(float(-imp * (1.0 - suit)), 4)
+            else:
+                # Balanced standard explanation fallback
+                explanation = {"N": 0.15, "P": 0.1, "K": 0.1, "temperature": 0.15, "humidity": 0.2, "ph": 0.1, "rainfall": 0.2}
+        except Exception as expl_err:
+            print(f"Explanation generator fallback due to error: {expl_err}")
+            explanation = {"N": 0.15, "P": 0.1, "K": 0.1, "temperature": 0.15, "humidity": 0.2, "ph": 0.1, "rainfall": 0.2}
+
         return jsonify({
             "crop": str(crop_name),
             "confidence": round(float(confidence), 4),
