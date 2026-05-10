@@ -270,7 +270,7 @@ const Home = () => {
             <div className="lg:col-span-8 bg-brand-surface-inset/80 border border-brand-border/80 rounded-3xl overflow-hidden relative group/mockup flex items-center justify-center p-2 min-h-[350px]">
               <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
               <img 
-                src="/images/agri_analytics_ui.png" 
+                src="/images/agri_recommendations_ui.png" 
                 alt="AgroXAI Dashboard UI Preview" 
                 className="w-full h-full object-cover rounded-2xl border border-brand-border/80 shadow-premium transition-transform duration-[1.5s] group-hover/mockup:scale-102"
                 loading="lazy"
@@ -651,7 +651,7 @@ const Home = () => {
             <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 col-span-1 md:col-span-2 min-h-[380px] flex flex-col justify-between relative overflow-hidden group">
               <div className="absolute inset-0 z-0">
                 <img 
-                  src="/images/agri_analytics_ui.png" 
+                  src="/images/agri_recommendations_ui.png" 
                   alt="Analytics Dashboard preview"
                   className="w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-[1.5s]"
                   loading="lazy"
