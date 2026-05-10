@@ -12,7 +12,7 @@ const OUTCOMES = ['Good Yield', 'Average', 'Poor'];
 const Backdrop = ({ children, onClose }) => (
   <motion.div
     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-    className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+    className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
     onClick={onClose}
   >
     <motion.div
@@ -20,7 +20,7 @@ const Backdrop = ({ children, onClose }) => (
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 20 }}
       transition={{ duration: 0.25 }}
-      className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+      className="bg-brand-surface-elevated border border-brand-border/60 rounded-3xl shadow-premium w-full max-w-md overflow-hidden text-brand-text-primary"
       onClick={e => e.stopPropagation()}
     >
       {children}
@@ -59,47 +59,54 @@ export const AddFieldModal = ({ open, onClose, onSave }) => {
         <Backdrop onClose={onClose}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-black text-brand-dark uppercase">{t('addNewField').replace('+ ', '')}</h3>
-              <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg"><X size={18} /></button>
+              <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">{t('addNewField').replace('+ ', '')}</h3>
+              <button onClick={onClose} className="p-1.5 text-brand-text-secondary hover:text-brand-text-primary hover:bg-brand-surface-inset rounded-lg transition-colors"><X size={18} /></button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Field Name</label>
+                <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Field Name</label>
                 <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. North Field"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green transition-all text-sm font-medium" />
+                  className="w-full px-4 py-3 mt-1.5 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary placeholder:text-brand-text-muted transition-all text-sm font-medium" />
               </div>
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Location Search</label>
-                <LocationSearch onSelect={handleLocationSelect} placeholder="Search district..." />
+                <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Location Search</label>
+                <div className="mt-1.5">
+                  <LocationSearch onSelect={handleLocationSelect} placeholder="Search district..." />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase ml-1">District</label>
+                  <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">District</label>
                   <input value={district} onChange={e => setDistrict(e.target.value)} placeholder="District"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-medium" />
+                    className="w-full px-4 py-3 mt-1.5 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary placeholder:text-brand-text-muted transition-all text-sm font-medium" />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase ml-1">State</label>
+                  <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">State</label>
                   <input value={state} onChange={e => setState(e.target.value)} placeholder="State"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-medium" />
+                    className="w-full px-4 py-3 mt-1.5 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary placeholder:text-brand-text-muted transition-all text-sm font-medium" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Soil Type</label>
-                  <select value={soilType} onChange={e => setSoilType(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-bold appearance-none bg-white">
-                    {SOIL_TYPES.map(s => <option key={s} value={s}>{t(s.toLowerCase() + 'Soil')}</option>)}
-                  </select>
+                  <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Soil Type</label>
+                  <div className="relative mt-1.5">
+                    <select value={soilType} onChange={e => setSoilType(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary text-sm font-bold appearance-none cursor-pointer">
+                      {SOIL_TYPES.map(s => <option key={s} value={s}>{t(s.toLowerCase() + 'Soil')}</option>)}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-text-secondary">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Area (Acres)</label>
+                  <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Area (Acres)</label>
                   <input type="number" value={area} onChange={e => setArea(e.target.value)} placeholder="0"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-medium" />
+                    className="w-full px-4 py-3 mt-1.5 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary placeholder:text-brand-text-muted transition-all text-sm font-medium" />
                 </div>
               </div>
               <button onClick={handleSave}
-                className="w-full py-3.5 bg-[#2d5a27] text-white rounded-xl font-bold uppercase text-sm hover:bg-[#234a1f] transition-colors">
+                className="w-full mt-4 py-4 bg-brand-primary text-slate-950 rounded-xl font-black uppercase text-xs tracking-widest hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
                 {t('saveFieldBtn')}
               </button>
             </div>
@@ -152,48 +159,63 @@ export const LogCropModal = ({ open, onClose, onSave, fields }) => {
         <Backdrop onClose={onClose}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-black text-brand-dark uppercase">{t('logPastCrop')}</h3>
-              <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg"><X size={18} /></button>
+              <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">{t('logPastCrop')}</h3>
+              <button onClick={onClose} className="p-1.5 text-brand-text-secondary hover:text-brand-text-primary hover:bg-brand-surface-inset rounded-lg transition-colors"><X size={18} /></button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Crop Name</label>
+                <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Crop Name</label>
                 <input value={cropName} onChange={e => setCropName(e.target.value)} placeholder="e.g. Wheat"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-medium" />
+                  className="w-full px-4 py-3 mt-1.5 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary placeholder:text-brand-text-muted transition-all text-sm font-medium" />
               </div>
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Field</label>
-                <select value={fieldName} onChange={e => setFieldName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-bold appearance-none bg-white">
-                  {fields.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
-                </select>
+                <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Field</label>
+                <div className="relative mt-1.5">
+                  <select value={fieldName} onChange={e => setFieldName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary text-sm font-bold appearance-none cursor-pointer">
+                    {fields.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-text-secondary">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Season</label>
-                  <select value={season} onChange={e => setSeason(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-bold appearance-none bg-white">
-                    {SEASONS.map(s => <option key={s} value={s}>{t(s.toLowerCase())}</option>)}
-                  </select>
+                  <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Season</label>
+                  <div className="relative mt-1.5">
+                    <select value={season} onChange={e => setSeason(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary text-sm font-bold appearance-none cursor-pointer">
+                      {SEASONS.map(s => <option key={s} value={s}>{t(s.toLowerCase())}</option>)}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-text-secondary">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Year</label>
+                  <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Year</label>
                   <input type="number" value={year} onChange={e => setYear(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-medium" />
+                    className="w-full px-4 py-3 mt-1.5 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary placeholder:text-brand-text-muted transition-all text-sm font-medium" />
                 </div>
               </div>
               <div>
-                <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Outcome</label>
-                <select value={outcome} onChange={e => setOutcome(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-brand-green text-sm font-bold appearance-none bg-white">
-                  {OUTCOMES.map(o => {
-                    const key = o === 'Good Yield' ? 'goodYield' : o === 'Average' ? 'averageYield' : 'poorYield';
-                    return <option key={o} value={o}>{t(key)}</option>;
-                  })}
-                </select>
+                <label className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Outcome</label>
+                <div className="relative mt-1.5">
+                  <select value={outcome} onChange={e => setOutcome(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-brand-surface-inset border border-brand-border outline-none focus:border-brand-primary text-brand-text-primary text-sm font-bold appearance-none cursor-pointer">
+                    {OUTCOMES.map(o => {
+                      const key = o === 'Good Yield' ? 'goodYield' : o === 'Average' ? 'averageYield' : 'poorYield';
+                      return <option key={o} value={o}>{t(key)}</option>;
+                    })}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-text-secondary">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+                </div>
               </div>
               <button onClick={handleSave}
-                className="w-full py-3.5 bg-[#2d5a27] text-white rounded-xl font-bold uppercase text-sm hover:bg-[#234a1f] transition-colors">
+                className="w-full mt-4 py-4 bg-brand-primary text-slate-950 rounded-xl font-black uppercase text-xs tracking-widest hover:opacity-90 transition-all shadow-premium hover:shadow-premium-hover">
                 {t('logCropBtn')}
               </button>
             </div>
@@ -213,8 +235,8 @@ export const SelectFarmModal = ({ open, onClose, fields, onSelect }) => {
         <Backdrop onClose={onClose}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-black text-brand-text-primary uppercase">Select Farm to Analyze</h3>
-              <button onClick={onClose} className="p-1 hover:bg-brand-surface-hover rounded-lg text-brand-text-secondary"><X size={18} /></button>
+              <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight">Select Farm to Analyze</h3>
+              <button onClick={onClose} className="p-1.5 text-brand-text-secondary hover:text-brand-text-primary hover:bg-brand-surface-inset rounded-lg transition-colors"><X size={18} /></button>
             </div>
             
             {fields.length === 0 ? (
@@ -228,7 +250,7 @@ export const SelectFarmModal = ({ open, onClose, fields, onSelect }) => {
               <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
                 {fields.map(f => (
                   <button
-                    key={f.id}
+                    key={f.id || f._id}
                     onClick={() => {
                       onSelect(f);
                       onClose();
