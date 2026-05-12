@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, History, Home as HomeIcon, Sprout, LogOut, User, Wheat, Sun, Moon, Cpu } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Leaf, History, Home as HomeIcon, Sprout, LogOut, User, Wheat, Sun, Moon, Cpu, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -15,116 +15,144 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isScrolled, setIsScrolled] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const isHome = location.pathname === '/';
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 80);
-        };
-        window.addEventListener('scroll', handleScroll);
+        const handleScroll = () => setIsScrolled(window.scrollY > 40);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
+    useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+
+    const handleLogout = () => { logout(); navigate('/login'); };
 
     const navLinks = [
-        { path: '/', labelKey: 'navHome', icon: <HomeIcon size={18} /> },
-        { path: '/recommend', labelKey: 'navRecommend', icon: <Sprout size={18} /> },
-        { path: '/my-farm', labelKey: 'navMyFarm', icon: <Wheat size={18} /> },
-        { path: '/history', labelKey: 'navHistory', icon: <History size={18} /> },
-        { path: '/intelligence', labelKey: 'navIntelligence', icon: <Cpu size={18} /> },
+        { path: '/', labelKey: 'navHome', icon: <HomeIcon size={14} /> },
+        { path: '/recommend', labelKey: 'navRecommend', icon: <Sprout size={14} /> },
+        { path: '/my-farm', labelKey: 'navMyFarm', icon: <Wheat size={14} /> },
+        { path: '/history', labelKey: 'navHistory', icon: <History size={14} /> },
+        { path: '/intelligence', labelKey: 'navIntelligence', icon: <Cpu size={14} /> },
     ];
 
+    const navBg = isScrolled ? 'glass-panel shadow-premium' : 'bg-transparent border-transparent';
+
+    const textPrimary = 'text-brand-text-primary';
+    const textSecondary = 'text-brand-text-secondary';
+    const textTertiary = 'text-brand-text-tertiary';
+    const hoverText = 'hover:text-brand-primary';
+    const activeBg = 'bg-brand-primary/8 text-brand-primary';
+    const btnBg = 'bg-brand-primary/5 border-brand-border hover:bg-brand-primary/10';
+    const btnText = 'text-brand-text-secondary hover:text-brand-primary';
+
     return (
-        <nav
-            className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${isScrolled ? 'py-4' : 'py-8'}`}
-        >
-            <div className="max-w-7xl mx-auto px-6">
-                <div className={`flex items-center justify-between transition-all duration-500 px-6 py-3 rounded-[2rem] ${isScrolled
-                    ? 'glass-panel'
-                    : 'bg-transparent border border-transparent'
-                    }`}>
-                    <Link to="/" className="flex items-center space-x-3 px-2 group">
-                        <div
-                            className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-premium transition-all group-hover:rotate-12 group-hover:scale-110"
-                        >
-                            <Leaf className="text-white" size={20} />
-                        </div>
-                        <span className="text-xl font-black tracking-tighter text-brand-text-primary hidden md:block uppercase">
-                            Agro<span className="text-brand-primary italic">XAI</span>
-                        </span>
-                    </Link>
-
-                    <div className="flex items-center space-x-2 md:space-x-6">
-                        {user && navLinks.map((link) => {
-                            const isActive = location.pathname === link.path;
-                            return (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    className={`text-xs font-black uppercase tracking-widest flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-300 group ${
-                                        isActive 
-                                            ? 'text-brand-primary bg-brand-primary/5' 
-                                            : 'text-brand-text-secondary hover:text-brand-primary hover:bg-brand-primary/5'
-                                    }`}
-                                >
-                                    <span className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
-                                        {link.icon}
-                                    </span>
-                                    <span className="hidden sm:block">{t(link.labelKey)}</span>
-                                </Link>
-                            );
-                        })}
-
-                        {/* Language Switcher */}
-                        <div className="pl-2 border-l border-brand-border ml-2">
-                            <LanguageSwitcher />
-                        </div>
-
-                        {/* Theme Switcher */}
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2.5 bg-brand-primary/5 hover:bg-brand-primary/10 text-brand-primary rounded-xl border border-brand-primary/15 transition-all flex items-center justify-center cursor-pointer ml-2 relative overflow-hidden"
-                            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                        >
-                            <motion.div
-                                key={theme}
-                                initial={{ y: -20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: 20, opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                {theme === 'dark' ? (
-                                    <Sun size={15} />
-                                ) : (
-                                    <Moon size={15} />
-                                )}
-                            </motion.div>
-                        </button>
-
-                        {user && (
-                            <div className="flex items-center gap-4 pl-4 border-l border-brand-border ml-2">
-                                <div className="hidden lg:flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary">
-                                        <User size={16} />
-                                    </div>
-                                    <span className="text-[10px] font-black text-brand-text-primary uppercase tracking-wider">Hi, {user.username}</span>
-                                </div>
-                                <button
-                                    onClick={handleLogout}
-                                    className="p-2.5 hover:bg-red-500/10 text-brand-text-secondary hover:text-red-500 rounded-xl transition-all group"
-                                    title="Logout"
-                                >
-                                    <LogOut size={18} className="group-hover:translate-x-0.5 transition-transform" />
-                                </button>
+        <>
+            <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${isScrolled ? 'py-3' : 'py-4'}`}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className={`flex items-center justify-between transition-all duration-500 px-4 sm:px-5 py-2 rounded-2xl border ${navBg}`}>
+                        {/* Logo */}
+                        <Link to="/" className="flex items-center gap-2 group">
+                            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center shadow-glow-sm transition-all group-hover:shadow-glow group-hover:scale-105 duration-300">
+                                <Leaf className="text-white" size={15} />
                             </div>
-                        )}
+                            <span className={`text-base font-bold tracking-tight hidden sm:block font-display ${isHome ? 'text-white/80' : 'text-brand-text-primary'}`}>
+                                Agro<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">XAI</span>
+                            </span>
+                        </Link>
+
+                        {/* Desktop Links */}
+                        <div className="hidden lg:flex items-center gap-0.5">
+                            {user && navLinks.map((link) => {
+                                const isActive = location.pathname === link.path;
+                                return (
+                                    <Link key={link.path} to={link.path}
+                                        className={`relative text-[12px] font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-300 ${
+                                            isActive ? activeBg : `${textSecondary} ${hoverText}`
+                                        }`}>
+                                        <span className={`transition-colors ${isActive ? '' : textTertiary}`}>{link.icon}</span>
+                                        <span>{t(link.labelKey)}</span>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-1.5">
+                            <div className="hidden sm:block"><LanguageSwitcher compact /></div>
+                            <button onClick={toggleTheme}
+                                className={`no-scale w-8 h-8 flex items-center justify-center rounded-lg border transition-all duration-300 ${btnBg} ${btnText}`}>
+                                <AnimatePresence mode="wait">
+                                    <motion.div key={theme} initial={{rotate:-90,opacity:0,scale:0.5}} animate={{rotate:0,opacity:1,scale:1}} exit={{rotate:90,opacity:0,scale:0.5}} transition={{duration:0.2}}>
+                                        {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+                                    </motion.div>
+                                </AnimatePresence>
+                            </button>
+                            {user && (
+                                <div className="hidden lg:flex items-center gap-1.5 pl-2 ml-1 border-l border-white/[0.06]">
+                                    <div className={`flex items-center gap-1.5 ${textSecondary}`}>
+                                        <div className="w-7 h-7 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400 border border-emerald-500/10">
+                                            <User size={12} />
+                                        </div>
+                                        <span className="text-[11px] font-medium">{user.username}</span>
+                                    </div>
+                                    <button onClick={handleLogout} className="no-scale p-1.5 hover:bg-red-500/10 text-white/20 hover:text-red-400 rounded-lg transition-all">
+                                        <LogOut size={13} />
+                                    </button>
+                                </div>
+                            )}
+                            <button onClick={() => setMobileOpen(!mobileOpen)}
+                                className={`no-scale lg:hidden w-8 h-8 flex items-center justify-center rounded-lg border transition-all ${btnBg} ${btnText}`}>
+                                {mobileOpen ? <X size={14} /> : <Menu size={14} />}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.2}}
+                        className="fixed inset-0 z-[99] bg-[#060B18]/98 backdrop-blur-2xl flex flex-col pt-24 px-6 pb-8 lg:hidden">
+                        <div className="flex-1 space-y-1">
+                            {user && navLinks.map((link, i) => {
+                                const isActive = location.pathname === link.path;
+                                return (
+                                    <motion.div key={link.path} initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}}>
+                                        <Link to={link.path} onClick={() => setMobileOpen(false)}
+                                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                                                isActive ? 'text-emerald-400 bg-emerald-500/10' : 'text-white/30 hover:text-white/50 hover:bg-white/[0.03]'
+                                            }`}>
+                                            {link.icon}
+                                            <span>{t(link.labelKey)}</span>
+                                        </Link>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.3}}
+                            className="space-y-3 pt-6 border-t border-white/[0.04]">
+                            <div className="flex items-center justify-between">
+                                <LanguageSwitcher />
+                                <button onClick={toggleTheme} className="no-scale w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.04] text-white/30 border border-white/[0.06]">
+                                    {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                                </button>
+                            </div>
+                            {user && (
+                                <div className="flex items-center justify-between bg-white/[0.02] rounded-xl px-4 py-3 border border-white/[0.04]">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-7 h-7 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400"><User size={12} /></div>
+                                        <span className="text-xs font-medium text-white/50">{user.username}</span>
+                                    </div>
+                                    <button onClick={handleLogout} className="no-scale text-[11px] font-medium text-red-400 hover:bg-red-500/10 px-3 py-1 rounded-lg transition-all">Logout</button>
+                                </div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 

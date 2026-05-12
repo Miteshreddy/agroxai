@@ -7,14 +7,10 @@ const BackToTop = () => {
 
     useEffect(() => {
         const toggleVisibility = () => {
-            if (window.scrollY > 400) {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-            }
+            setIsVisible(window.scrollY > 400);
         };
 
-        window.addEventListener('scroll', toggleVisibility);
+        window.addEventListener('scroll', toggleVisibility, { passive: true });
         return () => window.removeEventListener('scroll', toggleVisibility);
     }, []);
 
@@ -32,14 +28,13 @@ const BackToTop = () => {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    whileHover={{ scale: 1.12 }}
-                    whileTap={{ scale: 0.92 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
                     onClick={scrollToTop}
-                    className="fixed bottom-8 right-8 z-[999] w-12 h-12 rounded-full flex items-center justify-center text-white"
-                    style={{ backgroundColor: '#2D4B37' }}
+                    className="no-scale fixed bottom-8 right-8 z-[999] w-11 h-11 rounded-xl flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-glow hover:shadow-glow-lg transition-shadow duration-300"
                 >
-                    <ArrowUp size={24} />
+                    <ArrowUp size={18} />
                 </motion.button>
             )}
         </AnimatePresence>

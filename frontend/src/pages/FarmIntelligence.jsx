@@ -13,7 +13,7 @@ import {
   CloudRain, Compass, AlertTriangle, CheckCircle2, Shield, 
   Calendar, FileText, BarChart3, ChevronRight, RefreshCw, HelpCircle, ArrowUpRight
 } from 'lucide-react';
-import T from '../components/T';
+import T, { TD } from '../components/T';
 
 // Theme styling helper colors for Recharts gradients
 const CHART_COLORS = {
@@ -355,8 +355,8 @@ const FarmIntelligence = () => {
 
                       <h3 className="text-lg font-black text-brand-text-primary uppercase tracking-tight truncate max-w-[180px]">{t(crop.name.toLowerCase()) || crop.name}</h3>
                       <div className="mt-4 flex items-center justify-between text-[10px] font-black uppercase text-brand-text-secondary">
-                        <span>{language === 'hi' ? 'रिकॉर्ड' : 'RECS'}: {crop.count}</span>
-                        <span>{language === 'hi' ? 'मिट्टी' : 'SOIL'}: {t((crop.dominantSoil || 'Loamy').toLowerCase() + 'Soil')}</span>
+                        <span><T>RECS</T>: {crop.count}</span>
+                        <span><T>SOIL</T>: {t((crop.dominantSoil || 'Loamy').toLowerCase() + 'Soil')}</span>
                       </div>
                     </button>
                   );
@@ -432,12 +432,11 @@ const FarmIntelligence = () => {
                           className="h-full bg-gradient-to-r from-brand-primary to-emerald-400"
                         />
                       </div>
-                      <p className="text-[9px] text-brand-text-secondary font-medium leading-relaxed">
-                        {language === 'hi'
-                          ? `उपयोगकर्ता डेटाबेस में ${activeCropData.count} ऐतिहासिक पूर्वानुमान परिदृश्यों में मूल्यांकन किया गया।`
-                          : `Evaluated across ${activeCropData.count} historical prediction scenarios in user database.`
-                        }
-                      </p>
+                      <TD 
+                        as="p" 
+                        className="text-[9px] text-brand-text-secondary font-medium leading-relaxed" 
+                        value={`Evaluated across ${activeCropData.count} historical prediction scenarios in user database.`} 
+                      />
                     </div>
                   </div>
 
@@ -483,7 +482,7 @@ const FarmIntelligence = () => {
                             strokeWidth={2}
                             fillOpacity={1} 
                             fill="url(#colorConfidence)" 
-                            name={language === 'hi' ? 'सटीकता %' : 'Confidence %'}
+                            name={t('successRate')}
                           />
                         </AreaChart>
                       </ResponsiveContainer>
@@ -525,9 +524,9 @@ const FarmIntelligence = () => {
                                 if (tick.includes('Nitrogen')) return t('nitrogenAvg');
                                 if (tick.includes('Phosphorus')) return t('phosphorusAvg');
                                 if (tick.includes('Potassium')) return t('potassiumAvg');
-                                if (tick.includes('Humidity')) return language === 'hi' ? 'आर्द्रता (%)' : 'Humidity (%)';
-                                if (tick.includes('Temp')) return language === 'hi' ? 'तापमान (°C)' : 'Temp (°C)';
-                                if (tick.includes('pH')) return language === 'hi' ? 'मिट्टी pH (x10)' : 'Soil pH (x10)';
+                                if (tick.includes('Humidity')) return `${t('moistureAverage')} (%)`;
+                                if (tick.includes('Temp')) return `${t('averageTemp')} (°C)`;
+                                if (tick.includes('pH')) return `pH`;
                                 return tick;
                               }}
                               className="text-[8px] font-black uppercase text-brand-text-secondary" 
@@ -611,9 +610,9 @@ const FarmIntelligence = () => {
                           color: 'var(--text-color-primary)'
                         }} 
                       />
-                      <Bar dataKey="n" fill="var(--accent-primary)" name={language === 'hi' ? 'नाइट्रोजन (N)' : 'Nitrogen (N)'} radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="p" fill="var(--accent-gold)" name={language === 'hi' ? 'फास्फोरस (P)' : 'Phosphorus (P)'} radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="k" fill="#3b82f6" name={language === 'hi' ? 'पोटेशियम (K)' : 'Potassium (K)'} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="n" fill="var(--accent-primary)" name={`${t('nitrogenAvg')} (N)`} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="p" fill="var(--accent-gold)" name={`${t('phosphorusAvg')} (P)`} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="k" fill="#3b82f6" name={`${t('potassiumAvg')} (K)`} radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -639,8 +638,8 @@ const FarmIntelligence = () => {
                       {/* Decorative colored glow strip */}
                       <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-brand-primary" />
                       <div className="pl-2">
-                        <p className="text-xs font-black text-brand-text-primary uppercase mb-1 leading-tight">{ins.text}</p>
-                        <p className="text-[10px] text-brand-text-secondary font-medium leading-relaxed">{ins.detail}</p>
+                        <TD as="p" className="text-xs font-black text-brand-text-primary uppercase mb-1 leading-tight" value={ins.text} />
+                        <TD as="p" className="text-[10px] text-brand-text-secondary font-medium leading-relaxed" value={ins.detail} />
                       </div>
                     </div>
                   ))}

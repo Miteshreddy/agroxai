@@ -28,6 +28,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 const AppContent = () => {
   const location = useLocation();
   const isAuthRoute = ['/login', '/register', '/language'].includes(location.pathname);
+  const isHomePage = location.pathname === '/';
 
   return (
     <ErrorBoundary>
@@ -82,7 +83,7 @@ const AppContent = () => {
           </Routes>
         </main>
         {!isAuthRoute && <AgroChatbot />}
-        {!isAuthRoute && <Footer />}
+        {!isAuthRoute && !isHomePage && <Footer />}
       </div>
     </ErrorBoundary>
   );

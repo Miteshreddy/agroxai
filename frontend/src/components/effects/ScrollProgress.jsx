@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const ScrollProgress = () => {
     const [scrollProgress, setScrollProgress] = useState(0);
@@ -23,10 +24,10 @@ const ScrollProgress = () => {
                 top: 0,
                 left: 0,
                 width: `${scrollProgress}%`,
-                height: '3px',
-                backgroundColor: '#2D4B37',
+                height: '2px',
+                background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-cyan))',
                 zIndex: 9999,
-                boxShadow: '0 0 6px #2D4B37',
+                boxShadow: '0 0 12px rgba(16, 185, 129, 0.4)',
                 transition: 'width 0.1s ease-out'
             }}
         />

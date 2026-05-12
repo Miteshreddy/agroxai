@@ -10,7 +10,7 @@ import { AddFieldModal, LogCropModal, SelectFarmModal } from '../components/Farm
 import { CardSkeleton } from '../components/Skeleton';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import T from '../components/T';
+import T, { TD } from '../components/T';
 
 const OUTCOME_COLORS = { 'Good Yield': 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20', 'Average': 'bg-amber-500/10 text-amber-500 border-amber-500/20', 'Poor': 'bg-red-500/10 text-red-500 border-red-500/20' };
 
@@ -309,7 +309,7 @@ const MyFarm = () => {
                   </div>
                   <div>
                     <T as="p" className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-2">AI Farm Intelligence</T>
-                    <p className="text-white/90 text-base font-medium leading-relaxed">{aiSummary}</p>
+                    <TD as="p" className="text-white/90 text-base font-medium leading-relaxed" value={aiSummary} />
                   </div>
                 </div>
               </motion.div>
@@ -468,8 +468,8 @@ const MyFarm = () => {
                         <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + i * 0.1 }} className="relative mb-5 last:mb-0">
                           <div className={`absolute -left-6 top-1.5 w-3.5 h-3.5 rounded-full border-2 border-brand-surface shadow-sm z-10 ${item.type === 'field' ? 'bg-blue-400' : 'bg-emerald-400'}`} />
                           <div className="ml-3">
-                            <p className="text-sm font-bold text-brand-text-primary">{item.text}</p>
-                            <p className="text-[10px] font-bold text-brand-text-tertiary">{item.sub}</p>
+                            <TD as="p" className="text-sm font-bold text-brand-text-primary" value={item.text} />
+                            <TD as="p" className="text-[10px] font-bold text-brand-text-tertiary" value={item.sub} />
                           </div>
                         </motion.div>
                       ))}
@@ -489,7 +489,7 @@ const MyFarm = () => {
                           <span className="text-xl">{ins.icon}</span>
                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ins.color }} />
                         </div>
-                        <p className="text-brand-text-secondary text-sm font-medium leading-relaxed">{ins.msg}</p>
+                        <TD as="p" className="text-brand-text-secondary text-sm font-medium leading-relaxed" value={ins.msg} />
                       </motion.div>
                     ))}
                   </div>

@@ -1,77 +1,89 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Leaf, Github, Twitter, Linkedin, Database, Cpu, BarChart } from 'lucide-react';
+import { Leaf, Github, Twitter, Linkedin, Database, Cpu, BarChart, ExternalLink } from 'lucide-react';
 import T from './T';
 
 const Footer = () => {
   return (
-    <footer className="bg-brand-surface-inset border-t border-brand-border pt-24 pb-12 px-6 transition-colors duration-500">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 mb-24">
-        <div className="space-y-8">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center shadow-premium">
-              <Leaf className="text-brand-bg" size={24} />
+    <footer className="relative border-t border-brand-border bg-brand-surface-inset transition-colors duration-500 overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-brand-primary/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-10">
+        {/* Main grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          {/* Brand */}
+          <div className="lg:col-span-1 space-y-5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-glow-sm">
+                <Leaf className="text-white" size={20} />
+              </div>
+              <span className="text-xl font-bold tracking-tight text-brand-text-primary font-display">
+                Agro<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">XAI</span>
+              </span>
             </div>
-            <span className="text-2xl font-black tracking-tighter text-brand-text-primary uppercase">
-              Agro<span className="text-brand-primary italic">XAI</span>
-            </span>
+            <T as="p" className="text-brand-text-secondary text-sm leading-relaxed max-w-xs">
+              Revolutionizing agriculture through explainable artificial intelligence. Empowering farmers with precise, data-driven crop recommendations.
+            </T>
+            <div className="flex gap-2.5">
+              <SocialLink icon={<Twitter size={16} />} href="https://github.com/Miteshreddy/agroxai" />
+              <SocialLink icon={<Linkedin size={16} />} href="https://github.com/Miteshreddy/agroxai" />
+              <SocialLink icon={<Github size={16} />} href="https://github.com/Miteshreddy/agroxai" />
+            </div>
           </div>
-          <T as="p" className="text-brand-text-secondary font-medium leading-relaxed max-w-sm">
-            Revolutionizing agriculture through explainable artificial intelligence. Empowering farmers with precise, data-driven crop recommendations.
-          </T>
-          <div className="flex gap-4">
-            <SocialLink icon={<Twitter size={20} />} href="https://github.com/Miteshreddy/agroxai" />
-            <SocialLink icon={<Linkedin size={20} />} href="https://github.com/Miteshreddy/agroxai" />
-            <SocialLink icon={<Github size={20} />} href="https://github.com/Miteshreddy/agroxai" />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-12">
-          <div className="space-y-6">
-            <T as="h4" className="text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em] opacity-50">Resources</T>
-            <ul className="space-y-4">
-              <li><Link to="/" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Home</T></Link></li>
-              <li><Link to="/recommend" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Recommend</T></Link></li>
-              <li><Link to="/history" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>History</T></Link></li>
+          {/* Navigation */}
+          <div className="space-y-5">
+            <T as="h4" className="text-xs font-semibold uppercase text-brand-text-tertiary tracking-[0.15em] font-display">Platform</T>
+            <ul className="space-y-3">
+              <li><Link to="/" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>Home</T></Link></li>
+              <li><Link to="/recommend" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>Recommend</T></Link></li>
+              <li><Link to="/my-farm" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>My Farm</T></Link></li>
+              <li><Link to="/history" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>History</T></Link></li>
+              <li><Link to="/intelligence" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>Intelligence</T></Link></li>
             </ul>
           </div>
-          <div className="space-y-6">
-            <T as="h4" className="text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em] opacity-50">Company</T>
-            <ul className="space-y-4">
-              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Privacy</T></a></li>
-              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Contact</T></a></li>
-              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-brand-text-primary font-bold hover:text-brand-primary transition-colors"><T>Science</T></a></li>
+
+          {/* Company */}
+          <div className="space-y-5">
+            <T as="h4" className="text-xs font-semibold uppercase text-brand-text-tertiary tracking-[0.15em] font-display">Company</T>
+            <ul className="space-y-3">
+              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>Privacy</T> <ExternalLink size={10} className="opacity-40" /></a></li>
+              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>Contact</T> <ExternalLink size={10} className="opacity-40" /></a></li>
+              <li><a href="https://github.com/Miteshreddy/agroxai" target="_blank" rel="noopener noreferrer" className="text-sm text-brand-text-secondary font-medium hover:text-brand-primary transition-colors inline-flex items-center gap-1"><T>Science</T> <ExternalLink size={10} className="opacity-40" /></a></li>
             </ul>
           </div>
-        </div>
 
-        <div className="space-y-8">
-          <T as="h4" className="text-[10px] font-black uppercase text-brand-text-secondary tracking-[0.2em] opacity-50">Technology Stack</T>
-          <div className="flex flex-wrap gap-3">
-            <TechBadge icon={<Cpu size={14} />} label="XGBoost" />
-            <TechBadge icon={<BarChart size={14} />} label="SHAP Model" />
-            <TechBadge icon={<Database size={14} />} label="MongoDB" />
-            <TechBadge icon={<Leaf size={14} />} label="Explainable AI" />
+          {/* Tech Stack */}
+          <div className="space-y-5">
+            <T as="h4" className="text-xs font-semibold uppercase text-brand-text-tertiary tracking-[0.15em] font-display">Technology</T>
+            <div className="flex flex-wrap gap-2">
+              <TechBadge icon={<Cpu size={12} />} label="XGBoost" />
+              <TechBadge icon={<BarChart size={12} />} label="SHAP" />
+              <TechBadge icon={<Database size={12} />} label="MongoDB" />
+              <TechBadge icon={<Leaf size={12} />} label="Explainable AI" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto pt-12 border-t border-brand-border flex flex-col md:flex-row items-center justify-between gap-6 text-brand-text-secondary/60 text-[10px] font-black uppercase tracking-[0.2em]">
-        <T as="p">© 2026 AgroXAI. Precision Farming Systems.</T>
-        <T as="p">Built with ❤️ for sustainable agriculture</T>
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-brand-border flex flex-col sm:flex-row items-center justify-between gap-4 text-brand-text-tertiary text-xs">
+          <T as="p">© 2026 AgroXAI. Precision Farming Systems.</T>
+          <T as="p">Built with ❤️ for sustainable agriculture</T>
+        </div>
       </div>
     </footer>
   );
 };
 
 const SocialLink = ({ icon, href }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-brand-surface-elevated border border-brand-border rounded-xl flex items-center justify-center text-brand-text-primary hover:bg-brand-primary hover:text-brand-surface hover:border-brand-primary transition-all duration-300">
+  <a href={href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-brand-surface-elevated border border-brand-border rounded-xl flex items-center justify-center text-brand-text-tertiary hover:text-brand-primary hover:border-brand-primary/20 hover:shadow-glow-sm transition-all duration-300">
     {icon}
   </a>
 );
 
 const TechBadge = ({ icon, label }) => (
-  <div className="flex items-center gap-2 px-4 py-2.5 bg-brand-surface-elevated border border-brand-border rounded-xl text-brand-text-primary font-black text-[10px] uppercase tracking-wider shadow-sm hover:shadow-premium hover:border-brand-primary/20 transition-all cursor-default">
+  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-surface-elevated border border-brand-border rounded-lg text-brand-text-secondary text-[11px] font-medium hover:border-brand-primary/15 hover:text-brand-primary transition-all duration-300 cursor-default">
     <span className="text-brand-primary">{icon}</span>
     {label}
   </div>

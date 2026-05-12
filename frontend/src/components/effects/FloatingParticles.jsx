@@ -31,31 +31,31 @@ const FloatingParticles = () => {
                 fpsLimit: 60,
                 particles: {
                     number: {
-                        value: 25,
+                        value: 18,
                         density: {
                             enable: false
                         }
                     },
                     color: {
-                        value: "#1F7A63"
+                        value: ["#10B981", "#06B6D4", "#34D399"]
                     },
                     shape: {
                         type: "circle"
                     },
                     opacity: {
-                        value: { min: 0.1, max: 0.3 },
+                        value: { min: 0.06, max: 0.18 },
                         animation: {
                             enable: true,
-                            speed: 0.5,
+                            speed: 0.4,
                             sync: false
                         }
                     },
                     size: {
-                        value: { min: 1, max: 3 }
+                        value: { min: 1, max: 2.5 }
                     },
                     move: {
                         enable: true,
-                        speed: { min: 0.3, max: 0.8 },
+                        speed: { min: 0.2, max: 0.5 },
                         direction: "top",
                         random: true,
                         straight: false,
@@ -74,8 +74,8 @@ const FloatingParticles = () => {
                     modes: {
                         parallax: {
                             enable: true,
-                            force: 2,
-                            smooth: 10
+                            force: 1.5,
+                            smooth: 15
                         }
                     }
                 },
