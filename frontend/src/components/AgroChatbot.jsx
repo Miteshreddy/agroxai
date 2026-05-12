@@ -141,18 +141,18 @@ const AgroChatbot = ({ context = {} }) => {
             className="fixed bottom-24 right-6 z-[100] w-[380px] max-h-[550px] bg-brand-surface rounded-3xl shadow-2xl border border-brand-border flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-brand-text-primary px-6 py-5 flex items-center gap-3 shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-brand-primary/20 flex items-center justify-center">
+            <div className="bg-brand-surface-inset border-b border-brand-border px-6 py-5 flex items-center gap-3 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-brand-primary/15 flex items-center justify-center">
                 <Bot size={20} className="text-brand-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-white font-black text-sm uppercase tracking-wider">AgroXAI Assistant</p>
+                <p className="text-brand-text-primary font-black text-sm uppercase tracking-wider">AgroXAI Assistant</p>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Powered by Gemini AI</span>
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-[10px] font-bold text-brand-text-tertiary uppercase tracking-widest">Powered by Gemini AI</span>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-white/40 hover:text-white transition-colors">
+              <button onClick={() => setIsOpen(false)} className="text-brand-text-tertiary hover:text-brand-text-primary transition-colors">
                 <X size={18} />
               </button>
             </div>
