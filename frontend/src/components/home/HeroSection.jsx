@@ -22,24 +22,24 @@ const CommandCenterHero = () => {
   const onMove = (e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); };
 
   return (
-    <section onMouseMove={onMove} className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-brand-bg transition-colors duration-500">
+    <section onMouseMove={onMove} className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-brand-bg light-mesh-bg dark:bg-transparent transition-colors duration-500">
       {/* Layered ambient background */}
       <div className="absolute inset-0 z-0">
         {/* Radial core glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-emerald-500/[0.04] rounded-full blur-[200px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/[0.03] rounded-full blur-[150px] animate-pulse" style={{animationDuration:'8s'}} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-emerald-500/[0.15] dark:bg-emerald-500/[0.04] rounded-full blur-[200px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/[0.1] dark:bg-cyan-500/[0.03] rounded-full blur-[150px] animate-pulse" style={{animationDuration:'8s'}} />
         
         {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04]" style={{
+        <div className="absolute inset-0 opacity-[0.15] dark:opacity-[0.04]" style={{
           backgroundImage: `linear-gradient(var(--border-strong) 1px, transparent 1px), linear-gradient(90deg, var(--border-strong) 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
 
         {/* Scan line */}
-        <div className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent animate-scanner" />
+        <div className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/60 dark:via-emerald-400/40 to-transparent animate-scanner" />
 
         {/* Noise */}
-        <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03]" style={{
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.03]" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
         }} />
       </div>
@@ -73,7 +73,7 @@ const CommandCenterHero = () => {
       <div className="absolute inset-0 pointer-events-none z-10 hidden lg:block">
         {/* Top-left: System status */}
         <motion.div initial={{opacity:0,x:-30}} animate={{opacity:1,x:0}} transition={{delay:1.5,duration:1}}
-          className="absolute top-20 left-12 space-y-1.5">
+          className="absolute top-20 left-12 space-y-1.5 p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
           <div className="text-[9px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em]">SYS.STATUS</div>
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -87,7 +87,7 @@ const CommandCenterHero = () => {
 
         {/* Top-right: Clock */}
         <motion.div initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} transition={{delay:1.8,duration:1}}
-          className="absolute top-20 right-12 text-right space-y-1">
+          className="absolute top-20 right-12 text-right space-y-1 p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
           <div className="text-[9px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em]">UTC.SYNC</div>
           <div className="text-lg font-mono text-brand-text-secondary tabular-nums">{time}</div>
           <div className="text-[9px] font-mono text-brand-text-muted">LAT 17.385 · LON 78.487</div>
@@ -95,7 +95,7 @@ const CommandCenterHero = () => {
 
         {/* Bottom-left: Metrics */}
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:2,duration:1}}
-          className="absolute bottom-20 left-12 space-y-2">
+          className="absolute bottom-20 left-12 space-y-2 p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
           {[
             {label:'PREDICTION.ACCURACY', value:'96.7%', color:'text-emerald-500/70 dark:text-emerald-400/70'},
             {label:'ACTIVE.MODELS', value:'2,847', color:'text-cyan-500/60 dark:text-cyan-400/60'},
@@ -110,7 +110,7 @@ const CommandCenterHero = () => {
 
         {/* Bottom-right: Live feed */}
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:2.2,duration:1}}
-          className="absolute bottom-20 right-12 text-right">
+          className="absolute bottom-20 right-12 text-right p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
           <div className="text-[9px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em] mb-1.5">LIVE.INTEL</div>
           <div className="text-[10px] font-mono text-brand-text-tertiary space-y-1">
             <div>▸ SOIL_N₂ OPTIMAL [SECTOR 903]</div>

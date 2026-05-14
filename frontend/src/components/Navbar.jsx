@@ -36,7 +36,7 @@ const Navbar = () => {
         { path: '/intelligence', labelKey: 'navIntelligence', icon: <Cpu size={14} /> },
     ];
 
-    const navBg = isScrolled ? 'glass-panel shadow-premium' : 'bg-transparent border-transparent';
+    const navBg = isScrolled ? 'glass-panel-premium' : 'bg-transparent border-transparent';
 
     const textPrimary = 'text-brand-text-primary';
     const textSecondary = 'text-brand-text-secondary';
@@ -114,7 +114,7 @@ const Navbar = () => {
             <AnimatePresence>
                 {mobileOpen && (
                     <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.2}}
-                        className="fixed inset-0 z-[99] bg-[#060B18]/98 backdrop-blur-2xl flex flex-col pt-24 px-6 pb-8 lg:hidden">
+                        className="fixed inset-0 z-[99] bg-brand-surface/95 dark:bg-[#060B18]/98 backdrop-blur-3xl flex flex-col pt-24 px-6 pb-8 lg:hidden">
                         <div className="flex-1 space-y-1">
                             {user && navLinks.map((link, i) => {
                                 const isActive = location.pathname === link.path;
@@ -122,7 +122,7 @@ const Navbar = () => {
                                     <motion.div key={link.path} initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}}>
                                         <Link to={link.path} onClick={() => setMobileOpen(false)}
                                             className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                                                isActive ? 'text-emerald-400 bg-emerald-500/10' : 'text-white/30 hover:text-white/50 hover:bg-white/[0.03]'
+                                                isActive ? 'text-emerald-500 bg-emerald-500/10 dark:text-emerald-400' : 'text-brand-text-secondary hover:text-brand-text-primary hover:bg-brand-surface-hover dark:text-white/30 dark:hover:text-white/50 dark:hover:bg-white/[0.03]'
                                             }`}>
                                             {link.icon}
                                             <span>{t(link.labelKey)}</span>
@@ -132,20 +132,20 @@ const Navbar = () => {
                             })}
                         </div>
                         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:0.3}}
-                            className="space-y-3 pt-6 border-t border-white/[0.04]">
+                            className="space-y-3 pt-6 border-t border-brand-border dark:border-white/[0.04]">
                             <div className="flex items-center justify-between">
                                 <LanguageSwitcher />
-                                <button onClick={toggleTheme} className="no-scale w-9 h-9 flex items-center justify-center rounded-lg bg-white/[0.04] text-white/30 border border-white/[0.06]">
+                                <button onClick={toggleTheme} className="no-scale w-9 h-9 flex items-center justify-center rounded-lg bg-brand-surface text-brand-text-secondary border border-brand-border dark:bg-white/[0.04] dark:text-white/30 dark:border-white/[0.06]">
                                     {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
                                 </button>
                             </div>
                             {user && (
-                                <div className="flex items-center justify-between bg-white/[0.02] rounded-xl px-4 py-3 border border-white/[0.04]">
+                                <div className="flex items-center justify-between bg-brand-surface rounded-xl px-4 py-3 border border-brand-border dark:bg-white/[0.02] dark:border-white/[0.04]">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-7 h-7 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400"><User size={12} /></div>
-                                        <span className="text-xs font-medium text-white/50">{user.username}</span>
+                                        <div className="w-7 h-7 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-500 dark:text-emerald-400"><User size={12} /></div>
+                                        <span className="text-xs font-medium text-brand-text-secondary dark:text-white/50">{user.username}</span>
                                     </div>
-                                    <button onClick={handleLogout} className="no-scale text-[11px] font-medium text-red-400 hover:bg-red-500/10 px-3 py-1 rounded-lg transition-all">Logout</button>
+                                    <button onClick={handleLogout} className="no-scale text-[11px] font-medium text-red-500 hover:bg-red-500/10 dark:text-red-400 px-3 py-1 rounded-lg transition-all">Logout</button>
                                 </div>
                             )}
                         </motion.div>
