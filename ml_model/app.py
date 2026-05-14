@@ -12,6 +12,7 @@ import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from soil_mapper import map_farmer_inputs
+from functools import lru_cache
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -137,6 +138,82 @@ def health():
     return jsonify({"status": "ok"})
 
 
+@lru_cache(maxsize=2048)
+def _cached_predict(n, p, k, temp, humid, ph, rain):
+    input_dict = {
+        'N': n, 'P': p, 'K': k, 
+        'temperature': temp, 'humidity': humid, 
+        'ph': ph, 'rainfall': rain
+    }
+
+    # --- Build feature vector ---
+    engineered = engineer_features_single(input_dict)
+    ordered = {f: float(engineered.get(f, 0.0)) for f in EXPECTED_FEATURES}
+    df = pd.DataFrame([ordered])[EXPECTED_FEATURES]
+
+    # --- Step 1: Raw calibrated ML probabilities ---
+    ml_probs = model.predict_proba(df)[0]   # shape (n_classes,)
+
+    # --- Step 2: Agricultural Compatibility Index for every crop ---
+    scores = []
+    for idx, ml_p in enumerate(ml_probs):
+        crop_name = label_encoder.inverse_transform([idx])[0]
+        aci = compute_aci(input_dict, crop_name)
+
+        # Hybrid score: ML probability dominates (70 %) and ACI guides (30 %)
+        hybrid = 0.70 * float(ml_p) + 0.30 * aci
+
+        scores.append({
+            "crop":         str(crop_name),
+            "ml_prob":      float(ml_p),
+            "aci":          float(aci),
+            "hybrid_score": float(hybrid),
+        })
+
+    # Sort by hybrid score descending
+    ranked = sorted(scores, key=lambda x: x['hybrid_score'], reverse=True)
+
+    top_3 = [
+        {"crop": r["crop"], "confidence": round(r["hybrid_score"], 4)}
+        for r in ranked[:3]
+    ]
+    best = ranked[0]
+
+    # --- Step 3: Agricultural explanation (profile-based, zero-memory) ---
+    try:
+        if hasattr(model, 'estimator') and hasattr(model.estimator, 'feature_importances_'):
+            importances = model.estimator.feature_importances_
+        elif hasattr(model, 'feature_importances_'):
+            importances = model.feature_importances_
+        else:
+            importances = [1.0 / len(EXPECTED_FEATURES)] * len(EXPECTED_FEATURES)
+
+        fi = dict(zip(EXPECTED_FEATURES, importances))
+        explanation = {}
+        profile = crop_profiles.get(best["crop"]) if crop_profiles else None
+        for feat in BASE_FEATURES:
+            val  = float(input_dict[feat])
+            imp  = fi.get(feat, 0.1)
+            if profile:
+                mean  = profile[feat]['mean']
+                std   = profile[feat]['std']
+                sigma = max(std * 1.5, 5.0)
+                z     = (val - mean) / sigma
+                suit  = float(np.exp(-0.5 * z ** 2))
+            else:
+                suit = 0.7
+
+            # Positive = in-range benefit; Negative = limiting constraint
+            if suit >= 0.75:
+                explanation[feat] = round(imp * suit, 4)
+            else:
+                explanation[feat] = round(-imp * (1.0 - suit), 4)
+    except Exception as ex:
+        logger.warning(f"Explanation fallback: {ex}")
+        explanation = {f: 0.1 for f in BASE_FEATURES}
+
+    return best["crop"], round(best["hybrid_score"], 4), top_3, explanation
+
 @app.route('/predict', methods=['POST'])
 def predict():
     if not model or not label_encoder:
@@ -153,81 +230,20 @@ def predict():
         if missing:
             return jsonify({"error": f"Missing required fields: {', '.join(missing)}"}), 400
 
-        input_dict = {f: float(data[f]) for f in BASE_FEATURES}
+        # Extract values for caching (rounded to 2 decimal places to increase cache hit rate)
+        n = round(float(data.get('N', 0)), 2)
+        p = round(float(data.get('P', 0)), 2)
+        k = round(float(data.get('K', 0)), 2)
+        temp = round(float(data.get('temperature', 0)), 2)
+        humid = round(float(data.get('humidity', 0)), 2)
+        ph = round(float(data.get('ph', 0)), 2)
+        rain = round(float(data.get('rainfall', 0)), 2)
 
-        # --- Build feature vector ---
-        engineered = engineer_features_single(input_dict)
-        ordered = {f: float(engineered.get(f, 0.0)) for f in EXPECTED_FEATURES}
-        df = pd.DataFrame([ordered])[EXPECTED_FEATURES]
-
-        # --- Step 1: Raw calibrated ML probabilities ---
-        ml_probs = model.predict_proba(df)[0]   # shape (n_classes,)
-
-        # --- Step 2: Agricultural Compatibility Index for every crop ---
-        # ACI is computed with soft Gaussian scoring (see compute_aci docstring)
-        scores = []
-        for idx, ml_p in enumerate(ml_probs):
-            crop_name = label_encoder.inverse_transform([idx])[0]
-            aci = compute_aci(input_dict, crop_name)
-
-            # Hybrid score: ML probability dominates (70 %) and ACI guides (30 %)
-            # Lower ACI weight prevents ACI from overriding a clear ML signal,
-            # which was the mechanism that caused Pigeon Peas to dominate even when
-            # its ML probability was not particularly high.
-            hybrid = 0.70 * float(ml_p) + 0.30 * aci
-
-            scores.append({
-                "crop":         str(crop_name),
-                "ml_prob":      float(ml_p),
-                "aci":          float(aci),
-                "hybrid_score": float(hybrid),
-            })
-
-        # Sort by hybrid score descending
-        ranked = sorted(scores, key=lambda x: x['hybrid_score'], reverse=True)
-
-        top_3 = [
-            {"crop": r["crop"], "confidence": round(r["hybrid_score"], 4)}
-            for r in ranked[:3]
-        ]
-        best = ranked[0]
-
-        # --- Step 3: Agricultural explanation (profile-based, zero-memory) ---
-        try:
-            if hasattr(model, 'estimator') and hasattr(model.estimator, 'feature_importances_'):
-                importances = model.estimator.feature_importances_
-            elif hasattr(model, 'feature_importances_'):
-                importances = model.feature_importances_
-            else:
-                importances = [1.0 / len(EXPECTED_FEATURES)] * len(EXPECTED_FEATURES)
-
-            fi = dict(zip(EXPECTED_FEATURES, importances))
-            explanation = {}
-            profile = crop_profiles.get(best["crop"]) if crop_profiles else None
-            for feat in BASE_FEATURES:
-                val  = float(input_dict[feat])
-                imp  = fi.get(feat, 0.1)
-                if profile:
-                    mean  = profile[feat]['mean']
-                    std   = profile[feat]['std']
-                    sigma = max(std * 1.5, 5.0)
-                    z     = (val - mean) / sigma
-                    suit  = float(np.exp(-0.5 * z ** 2))
-                else:
-                    suit = 0.7
-
-                # Positive = in-range benefit; Negative = limiting constraint
-                if suit >= 0.75:
-                    explanation[feat] = round(imp * suit, 4)
-                else:
-                    explanation[feat] = round(-imp * (1.0 - suit), 4)
-        except Exception as ex:
-            logger.warning(f"Explanation fallback: {ex}")
-            explanation = {f: 0.1 for f in BASE_FEATURES}
+        best_crop, confidence, top_3, explanation = _cached_predict(n, p, k, temp, humid, ph, rain)
 
         return jsonify({
-            "crop":              best["crop"],
-            "confidence":        round(best["hybrid_score"], 4),
+            "crop":              best_crop,
+            "confidence":        confidence,
             "recommended_crops": top_3,
             "explanation":       explanation,
             "mapped_values":     {k: v for k, v in data.items() if k != 'season'},

@@ -4,6 +4,7 @@ const axios = require('axios');
 const Recommendation = require('../models/Recommendation');
 const { success, error: errorRes } = require('../utils/response');
 const cropData = require('../utils/cropData');
+const agroServices = require('../utils/agroServices');
 
 const getCropMetadata = (cropName) => {
     if (!cropName) return { total_duration: 'Varies', difficulty: 'Medium' };
@@ -51,9 +52,9 @@ router.post('/recommend', async (req, res) => {
             if (!state && !district) {
                 return errorRes(res, 'State or district required for manual location', 400);
             }
-            const geoRes = await axios.get(`${selfUrl}/geocode`, { params: { state, district, village } });
-            lat = geoRes.data.latitude;
-            lon = geoRes.data.longitude;
+            const geoData = await agroServices.getGeocode(state, district, village);
+            lat = geoData.latitude;
+            lon = geoData.longitude;
         }
 
         if (!lat || !lon) {
@@ -61,8 +62,7 @@ router.post('/recommend', async (req, res) => {
         }
 
         // Step 2: Get weather
-        const weatherRes = await axios.get(`${selfUrl}/weather`, { params: { lat, lon } });
-        const weather = weatherRes.data.data;
+        const weather = await agroServices.getWeather(lat, lon);
 
         // Step 3: Derive descriptive levels
         const rainfall_level = weather.rainfall < 70 ? 'Low' : weather.rainfall < 170 ? 'Medium' : 'High';
@@ -72,9 +72,9 @@ router.post('/recommend', async (req, res) => {
         let soil_type = manual_soil_type;
         let soil_info = { soil_type };
         if (soil_mode === 'auto') {
-            const soilRes = await axios.get(`${selfUrl}/soil`, { params: { lat, lon } });
-            soil_type = soilRes.data.soil_type;
-            soil_info = soilRes.data;
+            const soilData = await agroServices.getSoil(lat, lon);
+            soil_type = soilData.soil_type;
+            soil_info = soilData;
         }
 
         // Step 5: Prepare farmer inputs
@@ -85,7 +85,8 @@ router.post('/recommend', async (req, res) => {
             season: weather.season,
             soil_type,
             rainfall_level,
-            humidity_level
+            humidity_level,
+            elevation: weather.elevation || 0
         };
 
         // Step 6: ML prediction
@@ -94,12 +95,9 @@ router.post('/recommend', async (req, res) => {
 
         // Step 7: Climate filter
         const mlCrops = top_crops.map(c => c.crop);
-        const filterRes = await axios.post(`${selfUrl}/filter-crops`, {
-            crops: mlCrops,
-            temperature: weather.temperature,
-            rainfall: weather.rainfall
-        });
-        const filtered_indices = filterRes.data.filtered_crops.map(crop => mlCrops.indexOf(crop));
+        const filterData = agroServices.filterCrops(mlCrops, weather.temperature, weather.rainfall);
+        
+        const filtered_indices = filterData.filtered_crops.map(crop => mlCrops.indexOf(crop));
         const filtered_crops = filtered_indices.map(idx => top_crops[idx]).filter(Boolean).slice(0, 3);
 
         // Ensure we always have exactly 3 crops for the comparison panel to render consistently
