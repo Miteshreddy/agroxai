@@ -23,7 +23,7 @@ router.post('/chat', async (req, res) => {
         if (!message?.trim()) return res.status(400).json({ error: 'Message is required' });
         if (!apiKey) return res.status(500).json({ error: 'Gemini API key missing' });
 
-        const genAI = new GoogleGenerativeAI(apiKey);
+        const genAI = new GoogleGenerativeAI(apiKey, process.env.GEMINI_BASE_URL ? { apiVersion: 'v1beta', baseUrl: process.env.GEMINI_BASE_URL } : undefined);
         
         let contextStr = '';
         if (context) {

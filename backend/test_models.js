@@ -9,7 +9,7 @@ async function listModels() {
     }
 
     try {
-        const genAI = new GoogleGenerativeAI(apiKey);
+        const genAI = new GoogleGenerativeAI(apiKey, process.env.GEMINI_BASE_URL ? { apiVersion: 'v1beta', baseUrl: process.env.GEMINI_BASE_URL } : undefined);
         // The listModels method is on the client, but the SDK version might vary
         // Let's try a direct fetch if listModels isn't easily accessible
         console.log('Testing with different model IDs...');

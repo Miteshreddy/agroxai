@@ -3,7 +3,7 @@ require('dotenv').config();
 
 async function listModels() {
     const apiKey = process.env.GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+    const url = process.env.GEMINI_BASE_URL ? `${process.env.GEMINI_BASE_URL}/models?key=${apiKey}` : `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
     
     try {
         console.log('Fetching available models for this key...');
