@@ -13,7 +13,7 @@ async function listModels() {
         // The listModels method is on the client, but the SDK version might vary
         // Let's try a direct fetch if listModels isn't easily accessible
         console.log('Testing with different model IDs...');
-        const modelsToTest = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro', 'gemini-1.0-pro'];
+        const modelsToTest = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest', 'gemini-pro-latest'];
         
         for (const m of modelsToTest) {
             try {

@@ -72,10 +72,10 @@ const FarmIntelligence = () => {
       const confidencePercent = confidence < 1 ? Math.round(confidence * 100) : Math.round(confidence);
       
       const soil = record.soilType || 'Loamy';
-      const n = record.soilMetrics?.n || 65;
-      const p = record.soilMetrics?.p || 45;
-      const k = record.soilMetrics?.k || 40;
-      const ph = record.soilMetrics?.ph || 6.5;
+      const n = record.soilMetrics?.nitrogen ?? record.soilMetrics?.n ?? 65;
+      const p = record.soilMetrics?.phosphorus ?? record.soilMetrics?.p ?? 45;
+      const k = record.soilMetrics?.potassium ?? record.soilMetrics?.k ?? 40;
+      const ph = record.soilMetrics?.ph ?? 6.5;
 
       const temp = record.environmentalData?.temp || 26;
       const humidity = record.environmentalData?.humidity || 65;
@@ -168,6 +168,156 @@ const FarmIntelligence = () => {
       { subject: 'Temp (°C)', value: activeCropData.avgTemp * 2.5, fullMark: 100 }, // Scaled
       { subject: 'Soil pH (x10)', value: activeCropData.avgPh * 10, fullMark: 100 }, // Scaled
     ];
+  }, [activeCropData]);
+
+  // Dynamic Agricultural Calculation Engine (Dynamic Crop Intelligence)
+  const calculatedMetrics = useMemo(() => {
+    if (!activeCropData) return null;
+
+    const { name, avgN, avgP, avgK, avgPh, avgTemp, avgHumidity, avgRainfall } = activeCropData;
+
+    // 1. SOIL HEALTH SCORE CALCULATION
+    // Calculated based on optimal ranges: N (70), P (50), K (40), pH (6.5), Humidity (55%)
+    const nScore = Math.max(0, 100 - Math.abs(avgN - 70) * 1.2);
+    const pScore = Math.max(0, 100 - Math.abs(avgP - 50) * 1.5);
+    const kScore = Math.max(0, 100 - Math.abs(avgK - 40) * 1.5);
+    const phDev = Math.abs(avgPh - 6.5);
+    const phScore = Math.max(0, 100 - phDev * 25);
+    const moistScore = Math.max(0, 100 - Math.abs(avgHumidity - 55) * 1.0);
+    const soilHealth = Math.round((nScore + pScore + kScore + phScore + moistScore) / 5);
+
+    // 2. YIELD PREDICTION CALCULATION
+    // Dynamically maps different baseline outputs to different crops
+    const cropYieldBases = {
+      rice: 4.2,
+      wheat: 3.5,
+      maize: 4.8,
+      cotton: 1.8,
+      sunflower: 2.1,
+      mango: 6.5,
+      soybean: 2.5,
+      sugarcane: 35.0,
+    };
+    const lowercaseCrop = name.toLowerCase();
+    const baseYield = cropYieldBases[lowercaseCrop] || (Object.keys(cropYieldBases).find(k => lowercaseCrop.includes(k)) ? cropYieldBases[Object.keys(cropYieldBases).find(k => lowercaseCrop.includes(k))] : 3.0);
+
+    const healthFactor = 0.7 + (soilHealth / 100) * 0.4; // 0.7x to 1.1x scaling
+    const tempFactor = 1 - Math.max(0, Math.abs(avgTemp - 26) - 5) * 0.03; // max 15% reduction
+    const rainFactor = 1 - Math.max(0, Math.abs(avgRainfall - 130) - 50) * 0.002;
+    const predictedYieldVal = baseYield * healthFactor * tempFactor * rainFactor;
+    const predictedYield = `${predictedYieldVal.toFixed(1)} tons/acre`;
+
+    // 3. RISK SCORE MATRIX
+    let droughtRisk = 'Low';
+    if (avgRainfall < 60 || avgHumidity < 35) droughtRisk = 'High';
+    else if (avgRainfall < 100 || avgHumidity < 50) droughtRisk = 'Medium';
+
+    let floodRisk = 'Low';
+    if (avgRainfall > 200) floodRisk = 'High';
+    else if (avgRainfall > 150) floodRisk = 'Medium';
+
+    let deficiencyRisk = 'Low';
+    if (avgN < 40 || avgP < 30 || avgK < 30) deficiencyRisk = 'High';
+    else if (avgN < 55 || avgP < 40 || avgK < 38) deficiencyRisk = 'Medium';
+
+    const failScore = (droughtRisk === 'High' ? 40 : droughtRisk === 'Medium' ? 20 : 0) +
+                     (floodRisk === 'High' ? 30 : floodRisk === 'Medium' ? 15 : 0) +
+                     (deficiencyRisk === 'High' ? 30 : deficiencyRisk === 'Medium' ? 15 : 0) +
+                     (phDev > 1.2 ? 15 : 0);
+    const overallRisk = failScore > 60 ? 'High' : failScore > 30 ? 'Medium' : 'Low';
+
+    // 4. CROP TIMELINE RECOMMENDATIONS
+    const cropSeasons = {
+      rice: { plant: 'June (Monsoon Start)', harvest: 'November (Post-Monsoon)' },
+      wheat: { plant: 'November (Winter)', harvest: 'April (Spring)' },
+      maize: { plant: 'June / March', harvest: 'October / July' },
+      cotton: { plant: 'May (Pre-monsoon)', harvest: 'December' },
+      sunflower: { plant: 'January (Rabi) / June', harvest: 'May / October' },
+      mango: { plant: 'July (Monsoon)', harvest: 'May - July (Summer)' },
+    };
+    const seasonRec = cropSeasons[lowercaseCrop] || (Object.keys(cropSeasons).find(k => lowercaseCrop.includes(k)) ? cropSeasons[Object.keys(cropSeasons).find(k => lowercaseCrop.includes(k))] : { plant: 'June', harvest: 'October' });
+
+    // 5. DYNAMIC AI RECOMMENDATIONS (ADVICE LIST)
+    const recommendations = [];
+    if (avgN < 50) {
+      recommendations.push({
+        action: 'Apply Nitrogenous Fertilizer',
+        detail: `Nitrogen level is critically low (${avgN} mg/kg). Add Urea or Neem-coated Ammonium Nitrate to support leaf expansion.`,
+        priority: 'High'
+      });
+    }
+    if (avgP < 40) {
+      recommendations.push({
+        action: 'Add Phosphatic Fertilizers',
+        detail: `Phosphorus is substandard (${avgP} mg/kg). Consider applying SSP or DAP for root development.`,
+        priority: 'High'
+      });
+    }
+    if (avgK < 40) {
+      recommendations.push({
+        action: 'Supplement Potassium (K)',
+        detail: `Potassium level is low (${avgK} mg/kg). Apply Muriate of Potash (MOP) to optimize fruit quality and disease resistance.`,
+        priority: 'Medium'
+      });
+    }
+    if (avgPh < 6.0) {
+      recommendations.push({
+        action: 'Neutralize Acidic Soil',
+        detail: `Soil pH (${avgPh}) is highly acidic. Add agricultural lime (Calcium Carbonate) to raise pH and optimize nutrient uptake.`,
+        priority: 'High'
+      });
+    } else if (avgPh > 7.6) {
+      recommendations.push({
+        action: 'Amend Alkaline Soil',
+        detail: `Soil pH (${avgPh}) is moderately alkaline. Apply gypsum or elemental sulfur to balance pH levels.`,
+        priority: 'Medium'
+      });
+    }
+
+    // Crop specific irrigation/drainage recommendations
+    if (lowercaseCrop.includes('rice') || lowercaseCrop.includes('धान')) {
+      if (avgRainfall < 120) {
+        recommendations.push({
+          action: 'Increase Irrigation Frequency',
+          detail: `Rice has high water requirements. Current average rainfall is sub-optimal (${avgRainfall}mm). Supplement with canal/borewell water.`,
+          priority: 'High'
+        });
+      } else {
+        recommendations.push({
+          action: 'Systematic Water Level Monitoring',
+          detail: 'Maintain standing water at 2-5 cm depth until tillering, then drain before harvesting.',
+          priority: 'Low'
+        });
+      }
+    } else {
+      // Non-rice crops
+      if (avgRainfall > 180) {
+        recommendations.push({
+          action: 'Improve Field Drainage',
+          detail: `Heavy rainfall (${avgRainfall}mm) detected. Non-paddy crops like ${name} are highly prone to root rot. Clear contours.`,
+          priority: 'High'
+        });
+      }
+    }
+
+    if (recommendations.length < 3) {
+      recommendations.push({
+        action: 'Introduce Leguminous Crop Rotation',
+        detail: `Rotate ${name} with Cowpea or Chickpea in the next cycle to biologically enrich the soil structure.`,
+        priority: 'Low'
+      });
+    }
+
+    return {
+      soilHealth,
+      predictedYield,
+      overallRisk,
+      droughtRisk,
+      floodRisk,
+      deficiencyRisk,
+      seasonRec,
+      recommendations
+    };
   }, [activeCropData]);
 
   // Dynamic AI-Generated Insights compilation
@@ -418,6 +568,42 @@ const FarmIntelligence = () => {
                       </div>
                     </div>
 
+                    {/* Soil Health, Yield Forecast & Scheduling */}
+                    <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-5">
+                      <div className="space-y-1">
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">Health & Output</span>
+                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight">Agricultural Metrics</h3>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-4 p-3 bg-brand-surface-inset border border-brand-border rounded-2xl">
+                          <div>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Soil Health Score</span>
+                            <p className="text-xl font-black text-brand-primary">{calculatedMetrics?.soilHealth}%</p>
+                          </div>
+                          <div className="w-10 h-10 rounded-full border-2 border-brand-primary/20 border-t-brand-primary flex items-center justify-center font-black text-xs text-brand-text-primary">
+                            {calculatedMetrics?.soilHealth}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 p-3 bg-brand-surface-inset border border-brand-border rounded-2xl">
+                          <div>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Yield Forecast</span>
+                            <p className="text-xs font-black text-brand-text-primary uppercase tracking-tight">{calculatedMetrics?.predictedYield}</p>
+                          </div>
+                          <TrendingUp size={18} className="text-brand-primary" />
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 p-3 bg-brand-surface-inset border border-brand-border rounded-2xl">
+                          <div>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Seeding Window</span>
+                            <p className="text-[10px] font-black text-brand-text-primary uppercase tracking-tight">{calculatedMetrics?.seasonRec.plant}</p>
+                          </div>
+                          <Calendar size={18} className="text-brand-primary" />
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Confidence gauge card */}
                     <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-4">
                       <div className="flex justify-between items-center text-[9px] font-black uppercase">
@@ -560,7 +746,22 @@ const FarmIntelligence = () => {
                       <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-widest flex items-center gap-1.5">
                         <AlertTriangle size={10} className="text-brand-gold" /> {t('diagnosticRiskProfile')}
                       </span>
-                      <div className="space-y-2">
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2 text-center text-[8px] font-black uppercase mb-1">
+                          <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.droughtRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.droughtRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
+                            Drought: {calculatedMetrics?.droughtRisk}
+                          </div>
+                          <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.floodRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.floodRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
+                            Flood: {calculatedMetrics?.floodRisk}
+                          </div>
+                          <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.deficiencyRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.deficiencyRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
+                            Deficiency: {calculatedMetrics?.deficiencyRisk}
+                          </div>
+                          <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.overallRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.overallRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
+                            Overall: {calculatedMetrics?.overallRisk}
+                          </div>
+                        </div>
+
                         {activeCropData.avgPh < 6.0 || activeCropData.avgPh > 7.5 ? (
                           <div className="p-3 bg-red-400/10 rounded-xl border border-red-400/20 text-[10px] text-red-400 font-black uppercase">
                             {t('extremePHWarning')} ({activeCropData.avgPh})
@@ -570,7 +771,7 @@ const FarmIntelligence = () => {
                             <Shield size={12} /> {t('phAlkalinityOptimum')}
                           </div>
                         )}
-                        <p className="text-[9px] text-brand-text-secondary font-medium">
+                        <p className="text-[9px] text-brand-text-secondary font-medium leading-relaxed">
                           {t('basedOnPHCalculations')}
                         </p>
                       </div>
@@ -630,16 +831,16 @@ const FarmIntelligence = () => {
                 </div>
 
                 <div className="space-y-4 flex-grow flex flex-col justify-center">
-                  {aiInsights.map((ins) => (
+                  {calculatedMetrics?.recommendations.slice(0, 3).map((rec, idx) => (
                     <div 
-                      key={ins.id}
+                      key={idx}
                       className="p-4 bg-brand-surface-inset border border-brand-border rounded-2xl relative overflow-hidden"
                     >
-                      {/* Decorative colored glow strip */}
-                      <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-brand-primary" />
+                      {/* Decorative colored glow strip based on priority */}
+                      <div className={`absolute left-0 top-0 bottom-0 w-[4px] ${rec.priority === 'High' ? 'bg-red-500' : rec.priority === 'Medium' ? 'bg-brand-gold' : 'bg-brand-primary'}`} />
                       <div className="pl-2">
-                        <TD as="p" className="text-xs font-black text-brand-text-primary uppercase mb-1 leading-tight" value={ins.text} />
-                        <TD as="p" className="text-[10px] text-brand-text-secondary font-medium leading-relaxed" value={ins.detail} />
+                        <p className="text-xs font-black text-brand-text-primary uppercase mb-1 leading-tight">{rec.action}</p>
+                        <p className="text-[10px] text-brand-text-secondary font-medium leading-relaxed">{rec.detail}</p>
                       </div>
                     </div>
                   ))}

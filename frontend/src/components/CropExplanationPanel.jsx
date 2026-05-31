@@ -19,6 +19,17 @@ const getSoilAdviceDetail = (values) => {
 };
 
 const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_values }) => {
+    // Normalize keys to support both short-form (N, P, K) and long-form (nitrogen, phosphorus, potassium) keys
+    const normalizedValues = useMemo(() => {
+        if (!mapped_values) return null;
+        return {
+            N: mapped_values.N ?? mapped_values.nitrogen ?? 0,
+            P: mapped_values.P ?? mapped_values.phosphorus ?? 0,
+            K: mapped_values.K ?? mapped_values.potassium ?? 0,
+            ph: mapped_values.ph ?? 7.0
+        };
+    }, [mapped_values]);
+
     const chartData = useMemo(() => {
         return Object.entries(explanation)
             .map(([key, value]) => ({
@@ -57,10 +68,10 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
 
             {/* 2. Nutrient Snapshot */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <NutrientTile label="Nitrogen (N)" value={mapped_values?.N} delay={0} />
-                <NutrientTile label="Phosphorus (P)" value={mapped_values?.P} delay={0.1} />
-                <NutrientTile label="Potassium (K)" value={mapped_values?.K} delay={0.2} />
-                <NutrientTile label="Soil pH" value={mapped_values?.ph} delay={0.3} isPH={true} />
+                <NutrientTile label="Nitrogen (N)" value={normalizedValues?.N} delay={0} />
+                <NutrientTile label="Phosphorus (P)" value={normalizedValues?.P} delay={0.1} />
+                <NutrientTile label="Potassium (K)" value={normalizedValues?.K} delay={0.2} />
+                <NutrientTile label="Soil pH" value={normalizedValues?.ph} delay={0.3} isPH={true} />
             </div>
 
             {/* 2.5 Soil Health Recommendation (New) */}
@@ -84,7 +95,7 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                     </div>
                 </div>
                 <p className="text-lg text-white/90 font-medium leading-relaxed relative z-10 max-w-2xl">
-                    <TD value={getSoilAdviceDetail(mapped_values)} />
+                    <TD value={getSoilAdviceDetail(normalizedValues)} />
                 </p>
             </motion.div>
 

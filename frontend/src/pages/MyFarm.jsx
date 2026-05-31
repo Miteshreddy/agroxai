@@ -309,7 +309,7 @@ const MyFarm = () => {
                   </div>
                   <div>
                     <T as="p" className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-2">AI Farm Intelligence</T>
-                    <TD as="p" className="text-white/90 text-base font-medium leading-relaxed" value={aiSummary} />
+                    <TD as="p" className="text-brand-text-primary dark:text-white/90 text-base font-medium leading-relaxed" value={aiSummary} />
                   </div>
                 </div>
               </motion.div>

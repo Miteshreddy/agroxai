@@ -37,13 +37,13 @@ router.post('/chat', async (req, res) => {
         
         let responseText = '';
         try {
-            console.log('Attempting with gemini-flash-latest...');
-            const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+            console.log('Attempting with gemini-3.5-flash...');
+            const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
             const result = await model.generateContent(fullPrompt);
             responseText = result.response.text();
         } catch (flashErr) {
-            console.warn('Gemini Flash Latest failed, trying gemini-pro-latest...', flashErr.message);
-            const model = genAI.getGenerativeModel({ model: 'gemini-pro-latest' });
+            console.warn('Gemini 3.5 Flash failed, trying gemini-flash-latest...', flashErr.message);
+            const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
             const result = await model.generateContent(fullPrompt);
             responseText = result.response.text();
         }

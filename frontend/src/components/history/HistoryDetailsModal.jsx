@@ -154,7 +154,12 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
                                         confidence={confidence}
                                         explanation={record.predictionResult.aiReasoning}
                                         inputs={{ soil_type: record.soilType, season: record.environmentalData?.season }}
-                                        mapped_values={record.predictionResult.mappedValues || record.soilMetrics}
+                                        mapped_values={record.predictionResult.mappedValues || (record.soilMetrics ? {
+                                            N: record.soilMetrics.nitrogen ?? record.soilMetrics.N ?? 0,
+                                            P: record.soilMetrics.phosphorus ?? record.soilMetrics.P ?? 0,
+                                            K: record.soilMetrics.potassium ?? record.soilMetrics.K ?? 0,
+                                            ph: record.soilMetrics.ph ?? 7.0
+                                        } : null)}
                                     />
                                 </div>
                             )}
