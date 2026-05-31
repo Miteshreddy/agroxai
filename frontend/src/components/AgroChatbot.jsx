@@ -149,7 +149,7 @@ const AgroChatbot = ({ context = {} }) => {
                 <p className="text-brand-text-primary font-black text-sm uppercase tracking-wider">AgroXAI Assistant</p>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[10px] font-bold text-brand-text-tertiary uppercase tracking-widest">Powered by Gemini AI</span>
+                  <span className="text-[10px] font-bold text-brand-text-tertiary uppercase tracking-widest">Agricultural AI Assistant</span>
                 </div>
               </div>
               <button onClick={() => setIsOpen(false)} className="text-brand-text-tertiary hover:text-brand-text-primary transition-colors">
