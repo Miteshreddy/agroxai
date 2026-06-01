@@ -73,46 +73,46 @@ const CommandCenterHero = () => {
       <div className="absolute inset-0 pointer-events-none z-10 hidden lg:block">
         {/* Top-left: System status */}
         <motion.div initial={{opacity:0,x:-30}} animate={{opacity:1,x:0}} transition={{delay:1.5,duration:1}}
-          className="absolute top-20 left-12 space-y-1.5 p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
-          <div className="text-[9px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em]">SYS.STATUS</div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10px] font-mono text-brand-text-secondary">NEURAL_CORE ONLINE</span>
+          className="absolute top-20 left-12 space-y-2.5 p-5 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
+          <div className="text-[13px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em]">SYS.STATUS</div>
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[15px] font-mono text-brand-text-secondary">NEURAL_CORE ONLINE</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" style={{animationDelay:'0.5s'}} />
-            <span className="text-[10px] font-mono text-brand-text-tertiary">SAT_FEED v4.2.1</span>
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" style={{animationDelay:'0.5s'}} />
+            <span className="text-[15px] font-mono text-brand-text-tertiary">SAT_FEED v4.2.1</span>
           </div>
         </motion.div>
 
         {/* Top-right: Clock */}
         <motion.div initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} transition={{delay:1.8,duration:1}}
-          className="absolute top-20 right-12 text-right space-y-1 p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
-          <div className="text-[9px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em]">UTC.SYNC</div>
-          <div className="text-lg font-mono text-brand-text-secondary tabular-nums">{time}</div>
-          <div className="text-[9px] font-mono text-brand-text-muted">LAT 17.385 · LON 78.487</div>
+          className="absolute top-20 right-12 text-right space-y-2 p-5 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
+          <div className="text-[13px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em]">UTC.SYNC</div>
+          <div className="text-[27px] font-mono text-brand-text-secondary tabular-nums">{time}</div>
+          <div className="text-[13px] font-mono text-brand-text-muted">LAT 17.385 · LON 78.487</div>
         </motion.div>
 
         {/* Bottom-left: Metrics */}
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:2,duration:1}}
-          className="absolute bottom-20 left-12 space-y-2 p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
+          className="absolute bottom-20 left-12 space-y-3.5 p-5 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
           {[
             {label:'PREDICTION.ACCURACY', value:'96.7%', color:'text-emerald-500/70 dark:text-emerald-400/70'},
             {label:'ACTIVE.MODELS', value:'2,847', color:'text-cyan-500/60 dark:text-cyan-400/60'},
             {label:'REGION.COVERAGE', value:'28 STATES', color:'text-brand-text-tertiary'},
           ].map((m,i) => (
-            <div key={i} className="flex items-center gap-3">
-              <span className="text-[9px] font-mono text-brand-text-muted w-32">{m.label}</span>
-              <span className={`text-[11px] font-mono ${m.color}`}>{m.value}</span>
+            <div key={i} className="flex items-center gap-5">
+              <span className="text-[13px] font-mono text-brand-text-muted w-48">{m.label}</span>
+              <span className={`text-[16px] font-mono ${m.color}`}>{m.value}</span>
             </div>
           ))}
         </motion.div>
 
         {/* Bottom-right: Live feed */}
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:2.2,duration:1}}
-          className="absolute bottom-20 right-12 text-right p-3 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
-          <div className="text-[9px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em] mb-1.5">LIVE.INTEL</div>
-          <div className="text-[10px] font-mono text-brand-text-tertiary space-y-1">
+          className="absolute bottom-20 right-12 text-right p-5 rounded-xl bg-white/40 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border border-brand-border dark:border-transparent shadow-sm dark:shadow-none">
+          <div className="text-[13px] font-mono text-emerald-500/50 dark:text-emerald-400/50 tracking-[0.3em] mb-2.5">LIVE.INTEL</div>
+          <div className="text-[15px] font-mono text-brand-text-tertiary space-y-2">
             <div>▸ SOIL_N₂ OPTIMAL [SECTOR 903]</div>
             <div>▸ MONSOON PATTERN DETECTED</div>
             <div className="text-emerald-500/60 dark:text-emerald-400/40">▸ YIELD FORECAST +14.2%</div>
