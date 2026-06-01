@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Target, TrendingUp, CheckCircle, Sprout, Info, AlertTriangle, CheckSquare } from 'lucide-react';
-import T from '../T';
+import T, { TD } from '../T';
+import useTranslate from '../../hooks/useTranslate';
 
 const COLORS = ['#10b981', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899'];
 
@@ -19,13 +20,58 @@ const StatCard = ({ title, value, subtitle, icon: Icon, colorClass }) => (
             </div>
         </div>
         <div className="space-y-1">
-            <h2 className="text-3xl font-black text-brand-text-primary tracking-tight">{value}</h2>
+            <h2 className="text-3xl font-black text-brand-text-primary tracking-tight">
+                <TD value={String(value)} />
+            </h2>
             <p className="text-xs font-medium text-brand-text-tertiary"><T>{subtitle}</T></p>
         </div>
     </motion.div>
 );
 
 const HistoryAnalytics = ({ analytics, insights }) => {
+    const { tBatch, language } = useTranslate();
+    const [translatedCropData, setTranslatedCropData] = React.useState([]);
+    const [translatedTrendsData, setTranslatedTrendsData] = React.useState([]);
+
+    React.useEffect(() => {
+        if (!analytics.cropDistribution || analytics.cropDistribution.length === 0) {
+            setTranslatedCropData([]);
+            return;
+        }
+        let cancelled = false;
+        const names = analytics.cropDistribution.map(c => c.name);
+        tBatch(names).then(translatedNames => {
+            if (cancelled) return;
+            const mapped = analytics.cropDistribution.map((c, idx) => ({
+                ...c,
+                name: translatedNames[idx]
+            }));
+            setTranslatedCropData(mapped);
+        });
+        return () => { cancelled = true; };
+    }, [analytics.cropDistribution, language, tBatch]);
+
+    React.useEffect(() => {
+        if (!analytics.seasonalTrends || analytics.seasonalTrends.length === 0) {
+            setTranslatedTrendsData([]);
+            return;
+        }
+        let cancelled = false;
+        const names = analytics.seasonalTrends.map(t => t.name);
+        tBatch(names).then(translatedNames => {
+            if (cancelled) return;
+            const mapped = analytics.seasonalTrends.map((t, idx) => ({
+                ...t,
+                name: translatedNames[idx]
+            }));
+            setTranslatedTrendsData(mapped);
+        });
+        return () => { cancelled = true; };
+    }, [analytics.seasonalTrends, language, tBatch]);
+
+    const cropData = translatedCropData.length > 0 ? translatedCropData : (analytics.cropDistribution || []);
+    const trendsData = translatedTrendsData.length > 0 ? translatedTrendsData : (analytics.seasonalTrends || []);
+
     return (
         <div className="space-y-6">
             {/* Top Stats */}
@@ -68,17 +114,17 @@ const HistoryAnalytics = ({ analytics, insights }) => {
                         <T>Crop Distribution</T>
                     </h3>
                     <div className="flex-1 min-h-[200px]">
-                        {analytics.cropDistribution.length > 0 ? (
+                        {cropData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
-                                        data={analytics.cropDistribution}
+                                        data={cropData}
                                         innerRadius={60}
                                         outerRadius={80}
                                         paddingAngle={5}
                                         dataKey="value"
                                     >
-                                        {analytics.cropDistribution.map((entry, index) => (
+                                        {cropData.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
@@ -93,10 +139,10 @@ const HistoryAnalytics = ({ analytics, insights }) => {
                         )}
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4 justify-center">
-                        {analytics.cropDistribution.map((c, i) => (
+                        {cropData.map((c, i) => (
                             <div key={c.name} className="flex items-center gap-1.5 text-[10px] font-bold text-brand-text-secondary">
                                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                                {c.name}
+                                <TD value={c.name} />
                             </div>
                         ))}
                     </div>
@@ -109,9 +155,9 @@ const HistoryAnalytics = ({ analytics, insights }) => {
                         <T>Seasonal Activity</T>
                     </h3>
                     <div className="h-[200px] w-full">
-                        {analytics.seasonalTrends.length > 0 ? (
+                        {trendsData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={analytics.seasonalTrends}>
+                                <BarChart data={trendsData}>
                                     <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 700 }} tickLine={false} axisLine={false} />
                                     <YAxis hide />
                                     <Tooltip 
@@ -146,7 +192,7 @@ const HistoryAnalytics = ({ analytics, insights }) => {
                                     <div className={`p-1.5 rounded-lg shrink-0 ${color}`}>
                                         <Icon size={14} />
                                     </div>
-                                    <p className="text-xs font-medium text-brand-text-secondary leading-relaxed"><T>{insight.text}</T></p>
+                                    <p className="text-xs font-medium text-brand-text-secondary leading-relaxed"><TD value={insight.text} /></p>
                                 </div>
                             );
                         }) : (

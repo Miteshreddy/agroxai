@@ -23,8 +23,9 @@ import GrowingTimeline from '../components/GrowingTimeline';
 import Sidebar from '../components/Sidebar';
 import FeaturePanel from '../components/FeaturePanel';
 import AIProcessingOverlay from '../components/AIProcessingOverlay';
-import T from '../components/T';
+import T, { TD } from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
+import { translateText } from '../utils/translate';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import MagneticButton from '../components/effects/MagneticButton';
@@ -76,7 +77,7 @@ const toRainfallLevel  = mm  => mm  < 70  ? 'Low' : mm  < 170 ? 'Medium' : 'High
 const toHumidityLevel  = pct => pct < 35  ? 'Low' : pct < 75  ? 'Medium' : 'High';
 
 const Recommend = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const { user } = useAuth();
     const [searchParams] = useSearchParams();
     const resultsRef = useRef(null);
@@ -146,8 +147,8 @@ const Recommend = () => {
 
     const handleSubmit = async () => {
         if (!locationData) {
-            toast.error(t('navHome') === 'Home' ? 'Please select your location first.' : t('navHome'));
-            toast.error('Please select your location first.');
+            const transError = await translateText('Please select your location first.', language);
+            toast.error(transError);
             return;
         }
         setLoading(true);
@@ -175,7 +176,9 @@ const Recommend = () => {
             const confidence = data.confidence ?? data.recommended_crops?.[0]?.confidence ?? 0.8;
             const soilType   = data.soil_type || manualSoil;
             const weather    = data.weather || locationData.weatherData || {};
-            toast.success(`🌾 Recommended: ${crop}!`);
+            const transRec = await translateText('Recommended', language);
+            const transCrop = await translateText(crop, language);
+            toast.success(`🌾 ${transRec}: ${transCrop}!`);
 
             // Wait for the overlay to show at least MIN_OVERLAY_MS
             const elapsed = Date.now() - overlayStart;
@@ -237,7 +240,8 @@ const Recommend = () => {
             setLoading(false);
             setShowProcessing(false);
             setShowResults(false);
-            toast.error('Recommendation failed. Check all servers are running.');
+            const transFail = await translateText('Recommendation failed. Check all servers are running.', language);
+            toast.error(transFail);
         }
     };
 
@@ -408,17 +412,19 @@ const Recommend = () => {
                         transition={{ delay: 0.5 }}
                         className="mb-4"
                     >
-                        <p className="text-center text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-3">Quick Demo Presets</p>
+                        <p className="text-center text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-3"><T>Quick Demo Presets</T></p>
                         <div className="flex flex-wrap justify-center gap-3">
                             {DEMO_PRESETS.map((preset) => {
                                 const Icon = preset.icon;
                                 return (
                                     <button
                                         key={preset.id}
-                                        onClick={() => {
+                                        onClick={async () => {
                                             setLocationData({ lat: preset.lat, lon: preset.lon, weatherData: preset.weather, mode: 'demo' });
                                             setManualSoil(preset.soil);
-                                            toast(`🎬 ${preset.label} — ${preset.weather.location.city}`, { icon: '✨' });
+                                            const transLabel = await translateText(preset.label, language);
+                                            const transCity = await translateText(preset.weather.location.city, language);
+                                            toast(`🎬 ${transLabel} — ${transCity}`, { icon: '✨' });
                                             setTimeout(() => {
                                                 document.querySelector('[data-submit-btn]')?.click();
                                             }, 300);
@@ -426,7 +432,7 @@ const Recommend = () => {
                                         className={`flex items-center gap-2 px-5 py-3 text-[10px] font-black uppercase tracking-widest rounded-2xl border transition-all duration-300 ${preset.color}`}
                                     >
                                         <Icon size={14} className={preset.iconColor} />
-                                        {preset.label}
+                                        <TD value={preset.label} />
                                     </button>
                                 );
                             })}
@@ -436,7 +442,7 @@ const Recommend = () => {
 
                 {error && (
                     <div className="p-4 bg-red-50 border border-red-100 text-red-700 text-sm font-bold rounded-2xl mb-8">
-                        ⚠️ {error}
+                        ⚠️ <TD value={error} />
                     </div>
                 )}
 

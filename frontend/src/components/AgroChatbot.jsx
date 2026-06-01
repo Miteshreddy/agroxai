@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import T, { TD } from './T';
+import { useLanguage } from '../context/LanguageContext';
+import { useTranslated } from '../hooks/useTranslate';
 
 const getApiUrl = () => {
     const url = import.meta.env.VITE_API_URL || 'https://agroxai.onrender.com/api';
@@ -9,14 +12,27 @@ const getApiUrl = () => {
 };
 const API = getApiUrl();
 
-const SUGGESTIONS = [
-  { label: '🌾 Best crop for my soil', message: 'What is the best crop for my current soil type?' },
-  { label: '🧪 Improve soil health', message: 'How can I improve my soil health naturally?' },
-  { label: '💊 Fertilizer advice', message: 'What fertilizer should I use for my crop?' },
-  { label: '🌧️ Irrigation tips', message: 'What are the best irrigation practices for my region?' },
-];
-
 const AgroChatbot = ({ context = {} }) => {
+  const { language } = useLanguage();
+  const { str } = useTranslated({
+    welcomeMsg: "Hello! I'm **AgroXAI Assistant** 🌱\nHow can I help with your farming today?",
+    assistantName: "AgroXAI Assistant",
+    assistantSub: "Agricultural AI Assistant",
+    thinking: "AI is thinking...",
+    placeholder: "Ask about farming...",
+    retry: "Retry Now",
+    quotaMsg: "AI Quota Exceeded. Please wait a minute and try again.",
+    unavailableMsg: "AI is temporarily unavailable.",
+    suggestionLabel1: '🌾 Best crop for my soil',
+    suggestionMessage1: 'What is the best crop for my current soil type?',
+    suggestionLabel2: '🧪 Improve soil health',
+    suggestionMessage2: 'How can I improve my soil health naturally?',
+    suggestionLabel3: '💊 Fertilizer advice',
+    suggestionMessage3: 'What fertilizer should I use for my crop?',
+    suggestionLabel4: '🌧️ Irrigation tips',
+    suggestionMessage4: 'What are the best irrigation practices for my region?'
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'bot', text: "Hello! I'm **AgroXAI Assistant** 🌱\nHow can I help with your farming today?" },
@@ -25,6 +41,23 @@ const AgroChatbot = ({ context = {} }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Keep initial bot message synchronized with active language changes
+  useEffect(() => {
+    setMessages(prev => {
+      if (prev.length === 1 && prev[0].role === 'bot') {
+        return [{ role: 'bot', text: str.welcomeMsg }];
+      }
+      return prev;
+    });
+  }, [str.welcomeMsg]);
+
+  const dynamicSuggestions = [
+    { label: str.suggestionLabel1, message: str.suggestionMessage1 },
+    { label: str.suggestionLabel2, message: str.suggestionMessage2 },
+    { label: str.suggestionLabel3, message: str.suggestionMessage3 },
+    { label: str.suggestionLabel4, message: str.suggestionMessage4 },
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -68,9 +101,9 @@ const AgroChatbot = ({ context = {} }) => {
       console.error('Status:', err.response?.status);
       console.error('Data:', err.response?.data);
       
-      let errMsg = "AI is temporarily unavailable.";
+      let errMsg = str.unavailableMsg;
       if (err.response?.status === 429) {
-        errMsg = "AI Quota Exceeded. Please wait a minute and try again.";
+        errMsg = str.quotaMsg;
       } else if (err.response?.data?.error) {
         errMsg = err.response.data.error;
       }
@@ -94,6 +127,7 @@ const AgroChatbot = ({ context = {} }) => {
 
   // Simple markdown bold rendering
   const renderText = (text) => {
+    if (!text) return '';
     return text.split('\n').map((line, i) => (
       <span key={i}>
         {line.split(/(\*\*.*?\*\*)/).map((part, j) => {
@@ -146,10 +180,10 @@ const AgroChatbot = ({ context = {} }) => {
                 <Bot size={20} className="text-brand-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-brand-text-primary font-black text-sm uppercase tracking-wider">AgroXAI Assistant</p>
+                <p className="text-brand-text-primary font-black text-sm uppercase tracking-wider">{str.assistantName}</p>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[10px] font-bold text-brand-text-tertiary uppercase tracking-widest">Agricultural AI Assistant</span>
+                  <span className="text-[10px] font-bold text-brand-text-tertiary uppercase tracking-widest">{str.assistantSub}</span>
                 </div>
               </div>
               <button onClick={() => setIsOpen(false)} className="text-brand-text-tertiary hover:text-brand-text-primary transition-colors">
@@ -177,13 +211,13 @@ const AgroChatbot = ({ context = {} }) => {
                       ? 'bg-brand-primary text-white rounded-tr-md'
                       : 'bg-brand-surface-inset text-brand-text-primary border border-brand-border rounded-tl-md'
                   }`}>
-                    {renderText(msg.text)}
+                    {msg.role === 'bot' ? <TD value={msg.text} render={(translatedVal) => renderText(translatedVal || msg.text)} /> : renderText(msg.text)}
                     {msg.isError && (
                       <button 
                         onClick={() => sendMessage(messages[i-1]?.text)}
                         className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-brand-primary hover:underline uppercase tracking-wider"
                       >
-                        <Loader2 size={10} className="animate-spin" /> Retry Now
+                        <Loader2 size={10} className="animate-spin" /> {str.retry}
                       </button>
                     )}
                   </div>
@@ -197,7 +231,7 @@ const AgroChatbot = ({ context = {} }) => {
                   </div>
                   <div className="bg-brand-surface-inset border border-brand-border rounded-2xl rounded-tl-md px-4 py-3 flex items-center gap-2">
                     <Loader2 size={14} className="animate-spin text-brand-primary" />
-                    <span className="text-xs font-bold text-brand-text-secondary">AI is thinking...</span>
+                    <span className="text-xs font-bold text-brand-text-secondary">{str.thinking}</span>
                   </div>
                 </motion.div>
               )}
@@ -207,7 +241,7 @@ const AgroChatbot = ({ context = {} }) => {
             {/* Smart Suggestions */}
             {messages.length <= 2 && !isTyping && (
               <div className="px-4 pb-2 flex flex-wrap gap-2">
-                {SUGGESTIONS.map((s, i) => (
+                {dynamicSuggestions.map((s, i) => (
                   <button
                     key={i}
                     onClick={() => sendMessage(s.message)}
@@ -227,7 +261,7 @@ const AgroChatbot = ({ context = {} }) => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about farming..."
+                  placeholder={str.placeholder}
                   className="flex-1 bg-transparent outline-none text-sm font-medium text-brand-text-primary placeholder:text-brand-text-secondary"
                   disabled={isTyping}
                 />

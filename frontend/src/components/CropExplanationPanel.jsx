@@ -4,6 +4,7 @@ import { Brain, TrendingUp, AlertCircle, Droplets, Thermometer, CloudRain, Map a
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import CountUp from 'react-countup';
 import T, { TD } from './T';
+import { useTranslated } from '../hooks/useTranslate';
 
 const getSoilAdviceDetail = (values) => {
     if (!values) return "Evaluating your soil's specific nutrient needs based on environmental descriptors...";
@@ -19,6 +20,18 @@ const getSoilAdviceDetail = (values) => {
 };
 
 const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_values }) => {
+    const { str } = useTranslated({
+        nitrogen: "Nitrogen",
+        phosphorus: "Phosphorus",
+        potassium: "Potassium",
+        ph: "pH",
+        temperature: "Temperature",
+        humidity: "Humidity",
+        rainfall: "Rainfall",
+        N: "Nitrogen",
+        P: "Phosphorus",
+        K: "Potassium"
+    });
     // Normalize keys to support both short-form (N, P, K) and long-form (nitrogen, phosphorus, potassium) keys
     const normalizedValues = useMemo(() => {
         if (!mapped_values) return null;
@@ -128,6 +141,7 @@ const CropExplanationPanel = ({ crop, confidence, explanation, inputs, mapped_va
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fill: 'var(--text-primary)', fontSize: '11px', fontWeight: 800 }}
+                                tickFormatter={(val) => str[val] || str[val.toLowerCase()] || val}
                             />
                             <Tooltip
                                 cursor={{ fill: 'var(--surface-inset)' }}

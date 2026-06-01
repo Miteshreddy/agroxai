@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import T from '../components/T';
 import { CardSkeleton } from '../components/Skeleton';
+import { useLanguage } from '../context/LanguageContext';
+import { translateText } from '../utils/translate';
 
 // New Components
 import HistoryAnalytics from '../components/history/HistoryAnalytics';
@@ -26,6 +28,7 @@ const apiClient = axios.create({
 
 const History = () => {
     const { user } = useAuth();
+    const { language } = useLanguage();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -60,9 +63,11 @@ const History = () => {
             await apiClient.delete(`/history/${id}`);
             setHistory(history.filter(item => item._id !== id));
             if (selectedRecord && selectedRecord._id === id) setSelectedRecord(null);
-            toast.success('Analysis record deleted');
+            const transMsg = await translateText('Analysis record deleted', language);
+            toast.success(transMsg);
         } catch (error) {
-            toast.error('Failed to delete record');
+            const transMsg = await translateText('Failed to delete record', language);
+            toast.error(transMsg);
         }
     };
 
@@ -71,9 +76,13 @@ const History = () => {
             const newStatus = !record.bookmarked;
             await apiClient.patch(`/history/${record._id}`, { bookmarked: newStatus });
             setHistory(history.map(item => item._id === record._id ? { ...item, bookmarked: newStatus } : item));
-            if (newStatus) toast.success('Added to favorites', { icon: '⭐' });
+            if (newStatus) {
+                const transMsg = await translateText('Added to favorites', language);
+                toast.success(transMsg, { icon: '⭐' });
+            }
         } catch (error) {
-            toast.error('Failed to update favorite status');
+            const transMsg = await translateText('Failed to update favorite status', language);
+            toast.error(transMsg);
         }
     };
 
@@ -81,9 +90,11 @@ const History = () => {
         try {
             await apiClient.patch(`/history/${id}`, { notes });
             setHistory(history.map(item => item._id === id ? { ...item, notes } : item));
-            toast.success('Notes saved successfully');
+            const transMsg = await translateText('Notes saved successfully', language);
+            toast.success(transMsg);
         } catch (error) {
-            toast.error('Failed to save notes');
+            const transMsg = await translateText('Failed to save notes', language);
+            toast.error(transMsg);
         }
     };
 

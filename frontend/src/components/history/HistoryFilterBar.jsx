@@ -1,12 +1,21 @@
 import React from 'react';
 import { Search, SlidersHorizontal, Star, Calendar, ArrowUpDown } from 'lucide-react';
-import T from '../T';
+import T, { TD } from '../T';
+import { useTranslated } from '../../hooks/useTranslate';
 
 const HistoryFilterBar = ({ 
     searchQuery, setSearchQuery, 
     filterFavorites, setFilterFavorites,
     sortBy, setSortBy
 }) => {
+    const { str } = useTranslated({
+        placeholder: "Search by crop, farm, soil type...",
+        newestFirst: "Newest First",
+        oldestFirst: "Oldest First",
+        highestConfidence: "Highest Confidence",
+        lowestConfidence: "Lowest Confidence"
+    });
+
     return (
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
             {/* Search */}
@@ -14,7 +23,7 @@ const HistoryFilterBar = ({
                 <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text-tertiary group-focus-within:text-brand-primary transition-colors" />
                 <input
                     type="text"
-                    placeholder="Search by crop, farm, soil type..."
+                    placeholder={str.placeholder}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full bg-brand-surface border border-brand-border rounded-2xl pl-11 pr-4 py-3 text-sm font-bold text-brand-text-primary placeholder:text-brand-text-tertiary focus:outline-none focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 transition-all shadow-sm"
@@ -43,10 +52,10 @@ const HistoryFilterBar = ({
                         onChange={(e) => setSortBy(e.target.value)}
                         className="w-full appearance-none bg-brand-surface border border-brand-border rounded-xl pl-10 pr-8 py-2.5 text-xs font-black text-brand-text-secondary uppercase tracking-widest outline-none focus:border-brand-primary transition-all shadow-sm cursor-pointer"
                     >
-                        <option value="date-desc">Newest First</option>
-                        <option value="date-asc">Oldest First</option>
-                        <option value="confidence-desc">Highest Confidence</option>
-                        <option value="confidence-asc">Lowest Confidence</option>
+                        <option value="date-desc">{str.newestFirst}</option>
+                        <option value="date-asc">{str.oldestFirst}</option>
+                        <option value="confidence-desc">{str.highestConfidence}</option>
+                        <option value="confidence-asc">{str.lowestConfidence}</option>
                     </select>
                     <ArrowUpDown size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text-tertiary pointer-events-none" />
                 </div>

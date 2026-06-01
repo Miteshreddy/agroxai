@@ -145,7 +145,7 @@ const Navbar = () => {
                                         <div className="w-7 h-7 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-500 dark:text-emerald-400"><User size={12} /></div>
                                         <span className="text-xs font-medium text-brand-text-secondary dark:text-white/50">{user.username}</span>
                                     </div>
-                                    <button onClick={handleLogout} className="no-scale text-[11px] font-medium text-red-500 hover:bg-red-500/10 dark:text-red-400 px-3 py-1 rounded-lg transition-all">Logout</button>
+                                    <button onClick={handleLogout} className="no-scale text-[11px] font-medium text-red-500 hover:bg-red-500/10 dark:text-red-400 px-3 py-1 rounded-lg transition-all">{t('logout')}</button>
                                 </div>
                             )}
                         </motion.div>

@@ -499,7 +499,7 @@ const FarmIntelligence = () => {
                         <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md ${
                           isActive ? 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20' : 'bg-brand-surface-inset border border-brand-border text-brand-text-secondary'
                         }`}>
-                          {crop.avgConfidence}% Match
+                          <TD value="Match" prefix={`${crop.avgConfidence}% `} />
                         </span>
                       </div>
 
@@ -571,14 +571,14 @@ const FarmIntelligence = () => {
                     {/* Soil Health, Yield Forecast & Scheduling */}
                     <div className="bg-brand-surface border border-brand-border rounded-[2.5rem] p-6 space-y-5">
                       <div className="space-y-1">
-                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]">Health & Output</span>
-                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight">Agricultural Metrics</h3>
+                        <span className="text-[8px] font-black text-brand-text-secondary uppercase tracking-[0.25em]"><T>Health & Output</T></span>
+                        <h3 className="text-md font-black text-brand-text-primary uppercase tracking-tight"><T>Agricultural Metrics</T></h3>
                       </div>
 
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-4 p-3 bg-brand-surface-inset border border-brand-border rounded-2xl">
                           <div>
-                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Soil Health Score</span>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase"><T>Soil Health Score</T></span>
                             <p className="text-xl font-black text-brand-primary">{calculatedMetrics?.soilHealth}%</p>
                           </div>
                           <div className="w-10 h-10 rounded-full border-2 border-brand-primary/20 border-t-brand-primary flex items-center justify-center font-black text-xs text-brand-text-primary">
@@ -588,16 +588,16 @@ const FarmIntelligence = () => {
 
                         <div className="flex items-center justify-between gap-4 p-3 bg-brand-surface-inset border border-brand-border rounded-2xl">
                           <div>
-                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Yield Forecast</span>
-                            <p className="text-xs font-black text-brand-text-primary uppercase tracking-tight">{calculatedMetrics?.predictedYield}</p>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase"><T>Yield Forecast</T></span>
+                            <p className="text-xs font-black text-brand-text-primary uppercase tracking-tight"><TD value={calculatedMetrics?.predictedYield} /></p>
                           </div>
                           <TrendingUp size={18} className="text-brand-primary" />
                         </div>
 
                         <div className="flex items-center justify-between gap-4 p-3 bg-brand-surface-inset border border-brand-border rounded-2xl">
                           <div>
-                            <span className="text-[8px] font-black text-brand-text-secondary uppercase">Seeding Window</span>
-                            <p className="text-[10px] font-black text-brand-text-primary uppercase tracking-tight">{calculatedMetrics?.seasonRec.plant}</p>
+                            <span className="text-[8px] font-black text-brand-text-secondary uppercase"><T>Seeding Window</T></span>
+                            <p className="text-[10px] font-black text-brand-text-primary uppercase tracking-tight"><TD value={calculatedMetrics?.seasonRec.plant} /></p>
                           </div>
                           <Calendar size={18} className="text-brand-primary" />
                         </div>
@@ -749,16 +749,16 @@ const FarmIntelligence = () => {
                       <div className="space-y-3">
                         <div className="grid grid-cols-2 gap-2 text-center text-[8px] font-black uppercase mb-1">
                           <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.droughtRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.droughtRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
-                            Drought: {calculatedMetrics?.droughtRisk}
+                            <TD value={`Drought: ${calculatedMetrics?.droughtRisk}`} />
                           </div>
                           <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.floodRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.floodRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
-                            Flood: {calculatedMetrics?.floodRisk}
+                            <TD value={`Flood: ${calculatedMetrics?.floodRisk}`} />
                           </div>
                           <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.deficiencyRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.deficiencyRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
-                            Deficiency: {calculatedMetrics?.deficiencyRisk}
+                            <TD value={`Deficiency: ${calculatedMetrics?.deficiencyRisk}`} />
                           </div>
                           <div className={`p-2 bg-brand-surface-inset border border-brand-border rounded-xl ${calculatedMetrics?.overallRisk === 'High' ? 'text-red-500 border-red-500/20' : calculatedMetrics?.overallRisk === 'Medium' ? 'text-amber-500 border-amber-500/20' : 'text-emerald-500 border-emerald-500/20'}`}>
-                            Overall: {calculatedMetrics?.overallRisk}
+                            <TD value={`Overall: ${calculatedMetrics?.overallRisk}`} />
                           </div>
                         </div>
 
@@ -839,8 +839,8 @@ const FarmIntelligence = () => {
                       {/* Decorative colored glow strip based on priority */}
                       <div className={`absolute left-0 top-0 bottom-0 w-[4px] ${rec.priority === 'High' ? 'bg-red-500' : rec.priority === 'Medium' ? 'bg-brand-gold' : 'bg-brand-primary'}`} />
                       <div className="pl-2">
-                        <p className="text-xs font-black text-brand-text-primary uppercase mb-1 leading-tight">{rec.action}</p>
-                        <p className="text-[10px] text-brand-text-secondary font-medium leading-relaxed">{rec.detail}</p>
+                        <TD as="p" className="text-xs font-black text-brand-text-primary uppercase mb-1 leading-tight" value={rec.action} />
+                        <TD as="p" className="text-[10px] text-brand-text-secondary font-medium leading-relaxed" value={rec.detail} />
                       </div>
                     </div>
                   ))}

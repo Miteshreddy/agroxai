@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Sprout, TrendingUp, Calendar, Trash2, ArrowRight, Star } from 'lucide-react';
-import T from '../T';
+import T, { TD } from '../T';
 
 const HistoryCard = ({ record, onOpenDetails, onDelete, onToggleFavorite }) => {
     const crop = record.predictionResult?.crop || 'Unknown';
@@ -38,7 +38,7 @@ const HistoryCard = ({ record, onOpenDetails, onDelete, onToggleFavorite }) => {
                         <MapPin size={14} className="text-brand-text-tertiary" />
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-brand-text-primary">{record.farmName || record.location || 'Unknown Farm'}</h4>
+                        <h4 className="text-sm font-bold text-brand-text-primary"><TD value={record.farmName || record.location || 'Unknown Farm'} /></h4>
                         <p className="text-[10px] font-medium text-brand-text-tertiary flex items-center gap-1">
                             <Calendar size={10} /> {date}
                         </p>
@@ -66,10 +66,10 @@ const HistoryCard = ({ record, onOpenDetails, onDelete, onToggleFavorite }) => {
                     <Sprout size={28} className="text-brand-primary" />
                 </div>
                 <div className="flex-1">
-                    <h2 className="text-2xl font-black text-brand-text-primary uppercase tracking-tight">{crop}</h2>
+                    <h2 className="text-2xl font-black text-brand-text-primary uppercase tracking-tight"><TD value={crop} /></h2>
                     <div className="flex items-center gap-3 mt-1">
                         <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest border ${confColor}`}>
-                            {Math.round(confidence * 100)}% Match
+                            {Math.round(confidence * 100)}% <T>Match</T>
                         </span>
                         <div className="flex-1 h-1.5 bg-brand-surface-inset rounded-full overflow-hidden">
                             <motion.div 
@@ -85,12 +85,12 @@ const HistoryCard = ({ record, onOpenDetails, onDelete, onToggleFavorite }) => {
             {/* Bottom: Tags / Env Info */}
             <div className="grid grid-cols-2 gap-2 mb-5">
                 <div className="bg-brand-surface-inset px-3 py-2 rounded-xl">
-                    <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-0.5">Soil</p>
-                    <p className="text-xs font-bold text-brand-text-primary">{record.soilType}</p>
+                    <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-0.5"><T>Soil</T></p>
+                    <p className="text-xs font-bold text-brand-text-primary"><TD value={record.soilType} /></p>
                 </div>
                 <div className="bg-brand-surface-inset px-3 py-2 rounded-xl">
-                    <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-0.5">Season</p>
-                    <p className="text-xs font-bold text-brand-text-primary">{record.environmentalData?.season || 'Monsoon'}</p>
+                    <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-0.5"><T>Season</T></p>
+                    <p className="text-xs font-bold text-brand-text-primary"><TD value={record.environmentalData?.season || 'Monsoon'} /></p>
                 </div>
             </div>
 

@@ -324,7 +324,7 @@ const MyFarm = () => {
                     <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest flex items-center gap-3">
                       <MapPin size={18} className="text-brand-primary" /> {t('myFieldsHeader')}
                     </h3>
-                    <span className="px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black rounded-lg uppercase tracking-widest">{fields.length} Fields</span>
+                    <span className="px-3 py-1 bg-brand-primary/10 text-brand-primary text-[10px] font-black rounded-lg uppercase tracking-widest">{fields.length} <T>Fields</T></span>
                   </div>
 
                   {fields.length === 0 ? <NoFieldsSVG /> : (
@@ -342,9 +342,9 @@ const MyFarm = () => {
                               <div>
                                 <div className="flex items-center gap-3 mb-1">
                                   <p className="font-black text-brand-text-primary text-lg uppercase tracking-tight leading-none">{f.name}</p>
-                                  <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${status.color}`}>{status.label}</span>
+                                  <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${status.color}`}><T>{status.label}</T></span>
                                 </div>
-                                <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest">{f.district}{f.district && f.state ? ', ' : ''}{f.state}</p>
+                                <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest"><TD value={f.district} />{f.district && f.state ? ', ' : ''}<TD value={f.state} /></p>
                               </div>
                               <button onClick={() => deleteField(f._id || f.id)} className="w-9 h-9 flex items-center justify-center bg-brand-surface-inset text-brand-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-brand-border">
                                 <Trash2 size={14} />
@@ -353,8 +353,8 @@ const MyFarm = () => {
  
                             <div className="flex items-center gap-3 flex-wrap mb-5">
                               <span className="px-3 py-1.5 bg-brand-primary/10 text-brand-primary text-[10px] font-black rounded-xl uppercase tracking-wider">{t((f.soilType || 'Loamy').toLowerCase() + 'Soil')}</span>
-                              <span className="text-[10px] text-brand-text-secondary font-black uppercase tracking-widest">{f.area || 0} acres</span>
-                              <span className="text-[10px] text-brand-text-secondary font-black uppercase tracking-widest">{fieldCropCount} crops logged</span>
+                              <span className="text-[10px] text-brand-text-secondary font-black uppercase tracking-widest">{f.area || 0} <T>acres</T></span>
+                              <span className="text-[10px] text-brand-text-secondary font-black uppercase tracking-widest">{fieldCropCount} <T>crops logged</T></span>
                             </div>
  
                             {/* Success rate bar */}
@@ -435,8 +435,8 @@ const MyFarm = () => {
                         <motion.div key={c.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.06 }}
                           className="flex items-center justify-between p-4 rounded-2xl bg-brand-surface border border-brand-border hover:shadow-premium transition-all">
                           <div>
-                            <p className="text-sm font-black text-brand-text-primary uppercase tracking-tight">{c.cropName}</p>
-                            <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{t((c.season || 'Kharif').toLowerCase())} {c.year} · {c.fieldName}</p>
+                            <p className="text-sm font-black text-brand-text-primary uppercase tracking-tight"><TD value={c.cropName} /></p>
+                            <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{t((c.season || 'Kharif').toLowerCase())} {c.year} · <TD value={c.fieldName} /></p>
                           </div>
                           <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border ${OUTCOME_COLORS[c.outcome] || ''}`}>
                             {t(c.outcome === 'Good Yield' ? 'goodYield' : c.outcome === 'Average' ? 'averageYield' : 'poorYield')}
@@ -505,7 +505,7 @@ const MyFarm = () => {
                   </div>
                   {history.length === 0 ? (
                     <div className="text-center py-6 opacity-40">
-                      <p className="text-xs font-bold">No precision analyses saved yet.</p>
+                      <p className="text-xs font-bold"><T>No precision analyses saved yet.</T></p>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -516,8 +516,8 @@ const MyFarm = () => {
                               <Sprout size={18} />
                             </div>
                             <div>
-                              <p className="text-sm font-black text-brand-text-primary uppercase">{h.predictionResult?.crop || h.result?.crop || 'Unknown'}</p>
-                              <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest">{h.location} · {Math.round((h.predictionResult?.confidence || h.result?.confidence || 0) * 100)}% Match</p>
+                              <p className="text-sm font-black text-brand-text-primary uppercase"><TD value={h.predictionResult?.crop || h.result?.crop || 'Unknown'} /></p>
+                              <p className="text-[9px] font-black text-brand-text-secondary uppercase tracking-widest"><TD value={h.location} /> · <TD value="Match" prefix={`${Math.round((h.predictionResult?.confidence || h.result?.confidence || 0) * 100)}% `} /></p>
                             </div>
                           </div>
                           <Link to="/recommend" className="text-brand-primary p-2 hover:bg-brand-primary/10 rounded-lg">

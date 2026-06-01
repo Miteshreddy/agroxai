@@ -4,7 +4,8 @@ import { X, Download, FileText, Share2, MapPin, Sprout, Wind, Droplets, Thermome
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import toast from 'react-hot-toast';
-import T from '../T';
+import T, { TD } from '../T';
+import useTranslate, { useTranslated } from '../../hooks/useTranslate';
 import CropExplanationPanel from '../CropExplanationPanel';
 
 const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
@@ -12,6 +13,13 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
     const [notes, setNotes] = useState(record?.notes || '');
     const [isSavingNote, setIsSavingNote] = useState(false);
     const reportRef = useRef(null);
+    const { t, language } = useTranslate();
+    const { str } = useTranslated({
+        placeholder: "Add your observations or notes about this analysis...",
+        exporting: "Generating PDF Report...",
+        success: "Report downloaded successfully!",
+        error: "Failed to generate PDF"
+    });
 
     React.useEffect(() => {
         if (record) setNotes(record.notes || '');
@@ -28,7 +36,7 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
     const handleExportPDF = async () => {
         if (!reportRef.current) return;
         setIsExporting(true);
-        toast.loading('Generating PDF Report...', { id: 'pdf-toast' });
+        toast.loading(str.exporting, { id: 'pdf-toast' });
         
         try {
             const canvas = await html2canvas(reportRef.current, {
@@ -45,10 +53,10 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
             pdf.save(`AgroXAI_Report_${crop}_${new Date().getTime()}.pdf`);
             
-            toast.success('Report downloaded successfully!', { id: 'pdf-toast' });
+            toast.success(str.success, { id: 'pdf-toast' });
         } catch (error) {
             console.error('PDF generation error:', error);
-            toast.error('Failed to generate PDF', { id: 'pdf-toast' });
+            toast.error(str.error, { id: 'pdf-toast' });
         } finally {
             setIsExporting(false);
         }
@@ -88,7 +96,7 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
                                 className="flex items-center gap-2 px-4 py-2 bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20 rounded-xl text-xs font-black uppercase tracking-widest transition-colors disabled:opacity-50"
                             >
                                 {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-                                <span className="hidden sm:inline">Export PDF</span>
+                                <span className="hidden sm:inline"><T>Export PDF</T></span>
                             </button>
                         </div>
                         <button 
@@ -105,7 +113,7 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
                             
                             {/* Report Header */}
                             <div className="text-center pb-6 border-b border-brand-border">
-                                <h1 className="text-3xl font-black text-brand-text-primary uppercase tracking-tight mb-2">Analysis Report</h1>
+                                <h1 className="text-3xl font-black text-brand-text-primary uppercase tracking-tight mb-2"><T>Analysis Report</T></h1>
                                 <p className="text-sm font-medium text-brand-text-tertiary">{date}</p>
                             </div>
 
@@ -115,32 +123,32 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
                                     <div className="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mb-4">
                                         <Sprout size={36} className="text-brand-primary" />
                                     </div>
-                                    <h2 className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-1">Recommended Crop</h2>
-                                    <p className="text-4xl font-black text-brand-text-primary uppercase">{crop}</p>
+                                    <h2 className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] mb-1"><T>Recommended Crop</T></h2>
+                                    <p className="text-4xl font-black text-brand-text-primary uppercase"><TD value={crop} /></p>
                                     <div className="mt-4 px-4 py-1.5 bg-brand-surface-inset rounded-full text-sm font-bold text-brand-text-primary">
-                                        {Math.round(confidence * 100)}% Confidence
+                                        {Math.round(confidence * 100)}% <T>Confidence</T>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="premium-card p-4 flex flex-col justify-center items-center text-center">
                                         <MapPin size={24} className="text-blue-500 mb-2" />
-                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1">Location</p>
-                                        <p className="text-sm font-bold text-brand-text-primary">{record.location}</p>
+                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1"><T>Location</T></p>
+                                        <p className="text-sm font-bold text-brand-text-primary"><TD value={record.location} /></p>
                                     </div>
                                     <div className="premium-card p-4 flex flex-col justify-center items-center text-center">
                                         <Wind size={24} className="text-amber-700 mb-2" />
-                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1">Soil Type</p>
-                                        <p className="text-sm font-bold text-brand-text-primary">{record.soilType}</p>
+                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1"><T>Soil Type</T></p>
+                                        <p className="text-sm font-bold text-brand-text-primary"><TD value={record.soilType} /></p>
                                     </div>
                                     <div className="premium-card p-4 flex flex-col justify-center items-center text-center">
                                         <Thermometer size={24} className="text-orange-500 mb-2" />
-                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1">Temperature</p>
+                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1"><T>Temperature</T></p>
                                         <p className="text-sm font-bold text-brand-text-primary">{record.environmentalData?.temperature}°C</p>
                                     </div>
                                     <div className="premium-card p-4 flex flex-col justify-center items-center text-center">
                                         <CloudRain size={24} className="text-cyan-500 mb-2" />
-                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1">Rainfall</p>
+                                        <p className="text-[10px] font-black text-brand-text-tertiary uppercase tracking-widest mb-1"><T>Rainfall</T></p>
                                         <p className="text-sm font-bold text-brand-text-primary">{record.environmentalData?.rainfall}mm</p>
                                     </div>
                                 </div>
@@ -169,7 +177,7 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
                                 <div className="premium-card p-6">
                                     <h3 className="text-xs font-black text-brand-text-primary uppercase tracking-[0.1em] mb-4 flex items-center gap-2">
                                         <Droplets size={16} className="text-blue-500" />
-                                        Soil Metrics
+                                        <T>Soil Metrics</T>
                                     </h3>
                                     <div className="grid grid-cols-4 gap-4 text-center">
                                         <div className="p-3 bg-brand-surface-inset rounded-xl">
@@ -197,13 +205,13 @@ const HistoryDetailsModal = ({ record, onClose, onUpdateNotes }) => {
                         <div className="mt-8">
                             <h3 className="text-xs font-black text-brand-text-primary uppercase tracking-[0.1em] mb-3 flex items-center gap-2">
                                 <FileText size={16} className="text-amber-500" />
-                                Personal Notes
+                                <T>Personal Notes</T>
                             </h3>
                             <div className="relative">
                                 <textarea
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Add your observations or notes about this analysis..."
+                                    placeholder={str.placeholder}
                                     className="w-full h-32 bg-brand-surface border border-brand-border rounded-2xl p-4 text-sm text-brand-text-primary placeholder:text-brand-text-tertiary focus:outline-none focus:border-brand-primary/50 focus:ring-4 focus:ring-brand-primary/10 transition-all custom-scrollbar resize-none"
                                 />
                                 <button

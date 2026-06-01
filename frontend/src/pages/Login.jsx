@@ -6,8 +6,9 @@ import {
   Eye, EyeOff, Loader2, Leaf, Sparkles, Cpu, 
   Shield, User, Lock, ArrowRight, CheckCircle2 
 } from 'lucide-react';
-import T from '../components/T';
+import T, { TD } from '../components/T';
 import { useLanguage } from '../context/LanguageContext';
+import { useTranslated } from '../hooks/useTranslate';
 
 const Login = () => {
     const { login, user } = useAuth();
@@ -18,6 +19,10 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { str } = useTranslated({
+        usernamePlaceholder: "Enter your username",
+        passwordPlaceholder: "Enter your password"
+    });
 
     if (user) return <Navigate to="/" replace />;
 
@@ -220,7 +225,7 @@ const Login = () => {
                                     <input
                                         type="text"
                                         className="w-full bg-brand-surface-inset border border-brand-border rounded-xl py-3.5 pl-11 pr-4 text-xs font-semibold text-brand-text-primary placeholder:text-brand-text-secondary/30 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all outline-none"
-                                        placeholder={t('username')}
+                                        placeholder={str.usernamePlaceholder}
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
                                     />
@@ -241,7 +246,7 @@ const Login = () => {
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         className="w-full bg-brand-surface-inset border border-brand-border rounded-xl py-3.5 pl-11 pr-11 text-xs font-semibold text-brand-text-primary placeholder:text-brand-text-secondary/30 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30 transition-all outline-none"
-                                        placeholder={t('password')}
+                                        placeholder={str.passwordPlaceholder}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
@@ -266,7 +271,7 @@ const Login = () => {
                                         exit={{ opacity: 0, height: 0, scale: 0.95 }}
                                         className="bg-red-500/10 text-red-400 p-3.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-red-500/20 text-center flex items-center justify-center gap-2"
                                     >
-                                        <span>⚠️</span> {error}
+                                        <span>⚠️</span> <TD value={error} />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
