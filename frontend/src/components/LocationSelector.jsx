@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import T, { TD } from './T';
+import useTranslate, { useTranslated } from '../hooks/useTranslate';
+import { useLanguage } from '../context/LanguageContext';
 import axios from 'axios';
 import { MapPin, Navigation, Loader2, AlertCircle, Droplets, CloudRain } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -12,6 +15,23 @@ const getApiUrl = () => {
 const API = getApiUrl();
 
 const LocationSelector = ({ onLocationSelect, loading }) => {
+    const { t } = useLanguage();
+    const { str } = useTranslated({
+        detecting: "Detecting...",
+        smartSearch: "Smart Search",
+        orEditManually: "Or edit manually",
+        district: "District",
+        state: "State",
+        getWeatherData: "Get Weather Data",
+        change: "Change",
+        liveWeather: "Live Weather",
+        humidity: "Humidity",
+        rain: "Rain",
+        enterDistrict: "Enter district",
+        enterState: "Enter state",
+        searchPlaceholder: "Search for location (e.g. Hyderabad)"
+    });
+    const { t: transProgrammatic } = useTranslate();
     const [locationMode, setLocationMode] = useState('current');
     const [manualLocation, setManualLocation] = useState({ state: '', district: '' });
     const [selectedCoords, setSelectedCoords] = useState(null);
@@ -64,24 +84,27 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
             const resolvedCity = data.location?.city || label || 'Selected Location';
             setLocationLabel(resolvedCity);
             onLocationSelect({ lat, lon, weatherData: data, mode: locationMode });
-            toast.success('✅ Weather locked!');
+            const successMsg = await transProgrammatic('✅ Weather locked!');
+            toast.success(successMsg);
         } catch (err) {
-            setError('Backend connection failed. Check if server is on port 5005.');
+            const errMsg = await transProgrammatic('Backend connection failed. Check if server is on port 5005.');
+            setError(errMsg);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleAutoGPS = () => {
+    const handleAutoGPS = async () => {
         if (!navigator.geolocation) {
-            setError('GPS not supported by browser.');
+            const errMsg = await transProgrammatic('GPS not supported by browser.');
+            setError(errMsg);
             return;
         }
         setIsLoading(true);
         navigator.geolocation.getCurrentPosition(
             (pos) => fetchAndDisplayWeather(pos.coords.latitude, pos.coords.longitude, 'GPS Location'),
             () => {
-                setError('GPS Access Denied.');
+                transProgrammatic('GPS Access Denied.').then(setError);
                 setIsLoading(false);
             },
             { enableHighAccuracy: true, timeout: 10000 }
@@ -90,7 +113,8 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
 
     const handleManualSubmit = async () => {
         if (!manualLocation.state && !manualLocation.district) {
-            setError('Please provide at least a district or use autocomplete.');
+            const errMsg = await transProgrammatic('Please provide at least a district or use autocomplete.');
+            setError(errMsg);
             return;
         }
 
@@ -109,7 +133,8 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
             const label = `${manualLocation.district || ''}${manualLocation.district && manualLocation.state ? ', ' : ''}${manualLocation.state || ''}`;
             await fetchAndDisplayWeather(lat, lon, label || 'Manual Location');
         } catch (err) {
-            setError('Location not found.');
+            const errMsg = await transProgrammatic('Location not found.');
+            setError(errMsg);
         } finally {
             setIsLoading(false);
         }
@@ -124,7 +149,7 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
         <div className="premium-card">
             <h3 className="text-sm font-black text-brand-text-primary uppercase tracking-widest mb-6 flex items-center gap-2">
                 <MapPin size={18} className="text-brand-primary" />
-                Step 1 — Select Location
+                {t('location.stepTitle')}
             </h3>
 
             <div className="flex gap-2 mb-6 p-1 bg-brand-surface-inset border border-brand-border rounded-2xl">
@@ -132,13 +157,13 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                     onClick={() => { setLocationMode('current'); setWeatherData(null); setError(''); }}
                     className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${locationMode === 'current' ? 'bg-brand-surface-elevated text-brand-primary shadow-premium border border-brand-border' : 'text-brand-text-secondary hover:text-brand-primary'}`}
                 >
-                    Auto GPS
+                    {t('location.autoGps')}
                 </button>
                 <button
                     onClick={() => { setLocationMode('manual'); setWeatherData(null); setError(''); }}
                     className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${locationMode === 'manual' ? 'bg-brand-surface-elevated text-brand-primary shadow-premium border border-brand-border' : 'text-brand-text-secondary hover:text-brand-primary'}`}
                 >
-                    Manual Entry
+                    {t('location.manualEntry')}
                 </button>
             </div>
 
@@ -151,27 +176,27 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                             className="w-full py-4 bg-brand-primary text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:opacity-90 transition-all active:scale-[0.98] disabled:opacity-70 shadow-premium"
                         >
                             {isLoading ? <Loader2 className="animate-spin" size={16} /> : <Navigation size={16} className="transition-transform group-hover:rotate-12" />}
-                            {isLoading ? 'Detecting...' : 'Detect My Location'}
+                            {isLoading ? str.detecting : t('location.detectMyLocation')}
                         </button>
                     ) : (
                         <div className="space-y-5">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">Smart Search</label>
-                                <LocationSearch onSelect={handleAutocompleteSelect} />
+                                <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">{str.smartSearch}</label>
+                                <LocationSearch onSelect={handleAutocompleteSelect} placeholder={str.searchPlaceholder} />
                             </div>
 
                             <div className="flex items-center gap-4 py-2">
                                 <div className="h-px bg-brand-border flex-1"></div>
-                                <span className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest">Or edit manually</span>
+                                <span className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest">{str.orEditManually}</span>
                                 <div className="h-px bg-brand-border flex-1"></div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">District</label>
+                                    <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">{str.district}</label>
                                     <input
                                         type="text"
-                                        placeholder="Enter district"
+                                        placeholder={str.enterDistrict}
                                         value={manualLocation.district}
                                         className="w-full px-4 py-3.5 rounded-xl border border-brand-border bg-brand-surface-inset outline-none focus:border-brand-primary focus:bg-brand-surface transition-all text-xs font-bold text-brand-text-primary placeholder:text-brand-text-secondary"
                                         onChange={(e) => {
@@ -181,10 +206,10 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">State</label>
+                                    <label className="text-[10px] font-black text-brand-text-secondary uppercase tracking-widest ml-1">{str.state}</label>
                                     <input
                                         type="text"
-                                        placeholder="Enter state"
+                                        placeholder={str.enterState}
                                         value={manualLocation.state}
                                         className="w-full px-4 py-3.5 rounded-xl border border-brand-border bg-brand-surface-inset outline-none focus:border-brand-primary focus:bg-brand-surface transition-all text-xs font-bold text-brand-text-primary placeholder:text-brand-text-secondary"
                                         onChange={(e) => {
@@ -199,7 +224,7 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                                 disabled={isLoading}
                                 className="w-full py-4 bg-brand-primary text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-premium"
                             >
-                                {isLoading ? <Loader2 className="animate-spin mx-auto" size={16} /> : 'Get Weather Data'}
+                                {isLoading ? <Loader2 className="animate-spin mx-auto" size={16} /> : str.getWeatherData}
                             </button>
                         </div>
                     )}
@@ -211,16 +236,16 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
                         onClick={() => setWeatherData(null)}
                         className="absolute top-6 right-6 text-[10px] font-black uppercase tracking-widest bg-white/10 dark:bg-brand-surface-inset hover:bg-white/20 dark:hover:bg-brand-surface-hover px-3 py-1.5 rounded-lg border border-white/10 dark:border-brand-border transition-colors z-10 text-white dark:text-brand-text-primary"
                     >
-                        Change
+                        {str.change}
                     </button>
                     <div className="relative z-10">
-                        <p className="text-[10px] font-black opacity-60 uppercase tracking-widest mb-1">Live Weather</p>
-                        <p className="text-2xl font-black mb-6 tracking-tight">{locationLabel}</p>
+                        <p className="text-[10px] font-black opacity-60 uppercase tracking-widest mb-1">{str.liveWeather}</p>
+                        <p className="text-2xl font-black mb-6 tracking-tight"><TD value={locationLabel} /></p>
                         <div className="flex items-end gap-6">
                             <span className="text-6xl font-black tracking-tighter">{Math.round(weatherData.temperature)}°<span className="text-2xl opacity-40 ml-1">C</span></span>
                             <div className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-2 space-y-2">
-                                <p className="flex items-center gap-2"><Droplets size={12} className="text-cyan-300 dark:text-brand-primary animate-pulse" /> {weatherData.humidity}% Humidity</p>
-                                <p className="flex items-center gap-2"><CloudRain size={12} className="text-cyan-300 dark:text-brand-primary animate-bounce" /> {weatherData.rainfall}mm Rain</p>
+                                <p className="flex items-center gap-2"><Droplets size={12} className="text-cyan-300 dark:text-brand-primary animate-pulse" /> {weatherData.humidity}% {str.humidity}</p>
+                                <p className="flex items-center gap-2"><CloudRain size={12} className="text-cyan-300 dark:text-brand-primary animate-bounce" /> {weatherData.rainfall}mm {str.rain}</p>
                             </div>
                         </div>
                     </div>
@@ -229,7 +254,7 @@ const LocationSelector = ({ onLocationSelect, loading }) => {
 
             {error && (
                 <div className="mt-5 p-4 bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-3 border border-red-100">
-                    <AlertCircle size={14} /> {error}
+                    <AlertCircle size={14} /> <TD value={error} />
                 </div>
             )}
         </div>

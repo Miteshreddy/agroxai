@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import T, { TD } from './T';
 import axios from 'axios';
 import { MapPin, Search, Loader2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -126,7 +127,7 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                         {isLoading ? (
                             <div className="p-8 flex flex-col items-center justify-center gap-3">
                                 <Loader2 className="animate-spin text-brand-green" size={24} />
-                                <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-wider">Searching locations...</p>
+                                <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-wider"><T>Searching locations...</T></p>
                             </div>
                         ) : suggestions.length > 0 ? (
                             <div className="py-2">
@@ -144,7 +145,7 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                                                 {highlightMatch(item.display_name, query)}
                                             </span>
                                             <span className="text-[10px] font-bold text-brand-text-secondary uppercase tracking-tight">
-                                                {item.address.state || 'India'}
+                                                <TD value={item.address.state || 'India'} />
                                             </span>
                                         </div>
                                     </button>
@@ -155,8 +156,8 @@ const LocationSearch = ({ onSelect, placeholder = "Search for location (e.g. Hyd
                                 <div className="bg-red-500/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
                                     <Search size={20} className="text-red-400" />
                                 </div>
-                                <p className="text-sm font-bold text-brand-text-primary">No results found</p>
-                                <p className="text-xs text-brand-text-secondary mt-1">Try a different spelling or city name</p>
+                                <p className="text-sm font-bold text-brand-text-primary"><T>No results found</T></p>
+                                <p className="text-xs text-brand-text-secondary mt-1"><T>Try a different spelling or city name</T></p>
                             </div>
                         )}
                     </motion.div>

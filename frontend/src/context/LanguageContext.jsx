@@ -30,6 +30,10 @@ export const LANGUAGES = [
 // UI translations for key phrases
 export const TRANSLATIONS = {
   en: {
+    "location.stepTitle": "Step 1 — Select Location",
+    "location.autoGps": "Auto GPS",
+    "location.manualEntry": "Manual Entry",
+    "location.detectMyLocation": "Detect My Location",
     selectLanguage: 'Select Your Language',
     selectSubtitle: 'Choose a language to get information in your preferred language',
     continueBtn: 'Continue',
@@ -131,6 +135,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'Climatic telemetry vectors fit the seasonal humidity range perfectly.',
   },
   hi: {
+    "location.stepTitle": "चरण 1 — स्थान चुनें",
+    "location.autoGps": "ऑटो जीपीएस",
+    "location.manualEntry": "मैनुअल प्रविष्टि",
+    "location.detectMyLocation": "मेरा स्थान ज्ञात करें",
     selectLanguage: 'अपनी भाषा चुनें',
     selectSubtitle: 'अपनी पसंदीदा भाषा में जानकारी प्राप्त करने के लिए एक भाषा चुनें',
     continueBtn: 'जारी रखें',
@@ -232,6 +240,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'जलवायु टेलीमेट्री वेक्टर मौसमी आर्द्रता सीमा में पूरी तरह फिट बैठते हैं।',
   },
   bn: {
+    "location.stepTitle": "ধাপ ১ — অবস্থান নির্বাচন করুন",
+    "location.autoGps": "অটো জিপিএস",
+    "location.manualEntry": "ম্যানুয়াল এন্ট্রি",
+    "location.detectMyLocation": "আমার অবস্থান সনাক্ত করুন",
     selectLanguage: 'আপনার ভাষা বেছে নিন',
     selectSubtitle: 'আপনার পছন্দের ভাষায় তথ্য পেতে একটি ভাষা বেছে নিন',
     continueBtn: 'এগিয়ে যান',
@@ -333,6 +345,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'জলবায়ু টেলিমেট্রি ভেক্টরগুলি ঋতুকালীন আর্দ্রতার পরিসরে পুরোপুরি ফিট করে।',
   },
   te: {
+    "location.stepTitle": "దశ 1 — స్థానాన్ని ఎంచుకోండి",
+    "location.autoGps": "ఆటో జిపిఎస్",
+    "location.manualEntry": "మాన్యువల్ ఎంట్రీ",
+    "location.detectMyLocation": "నా స్థానాన్ని గుర్తించు",
     selectLanguage: 'మీ భాషను ఎంచుకోండి',
     selectSubtitle: 'మీకు ఇష్టమైన భాషలో సమాచారం పొందడానికి ఒక భాషను ఎంచుకోండి',
     continueBtn: 'కొనసాగించు',
@@ -434,6 +450,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'క్లైమాటిక్ టెలిమెట్రీ వెక్టర్స్ కాలానుగుణ తేమ పరిధికి సరిగ్గా సరిపోతాయి.',
   },
   mr: {
+    "location.stepTitle": "पायरी १ — स्थान निवडा",
+    "location.autoGps": "ऑटो जीपीएस",
+    "location.manualEntry": "मॅन्युअल एंट्री",
+    "location.detectMyLocation": "माझे स्थान शोधा",
     selectLanguage: 'तुमची भाषा निवडा',
     selectSubtitle: 'तुमच्या आवडत्या भाषेत माहिती मिळविण्यासाठी भाषा निवडा',
     continueBtn: 'पुढे जा',
@@ -535,6 +555,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'हवामानातील टेलीमेट्री वेक्टर्स हंगामी आर्द्रता श्रेणीमध्ये उत्तम प्रकारे बसतात.',
   },
   ta: {
+    "location.stepTitle": "படி 1 — இடத்தை தேர்ந்தெடுக்கவும்",
+    "location.autoGps": "ஆட்டோ ஜிபிஎஸ்",
+    "location.manualEntry": "கைமுறை பதிவு",
+    "location.detectMyLocation": "என் இடத்தை கண்டறியவும்",
     selectLanguage: 'உங்கள் மொழியை தேர்ந்தெடுங்கள்',
     selectSubtitle: 'உங்கள் விருப்பமான மொழியில் தகவல்களைப் பெற ஒரு மொழியைத் தேர்ந்தெடுங்கள்',
     continueBtn: 'தொடரவும்',
@@ -636,6 +660,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'காலநிலை டெலிமெட்ரி திசையன்கள் பருவகால ஈரப்பதம் வரம்பிற்கு கச்சிதமாக பொருந்துகின்றன.',
   },
   gu: {
+    "location.stepTitle": "પગલું 1 — સ્થાન પસંદ કરો",
+    "location.autoGps": "ઓટો જીપીએસ",
+    "location.manualEntry": "મેન્યુઅલ એન્ટ્રી",
+    "location.detectMyLocation": "મારું સ્થાન શોધો",
     selectLanguage: 'તમારી ભાષા પસંદ કરો',
     selectSubtitle: 'તમારી પસંદની ભાષામાં માહિતી મેળવવા ભાષા પસંદ કરો',
     continueBtn: 'આગળ વધો',
@@ -737,6 +765,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'ક્લાઇમેટિક ટેલિમેટ્રી વેક્ટર મોસમી ભેજની શ્રેણીમાં સંપૂર્ણ રીતે ફિટ છે.',
   },
   kn: {
+    "location.stepTitle": "ಹಂತ 1 — ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "location.autoGps": "ಆಟೋ ಜಿಪಿಎಸ್",
+    "location.manualEntry": "ಹಸ್ತಚಾಲಿತ ನಮೂದು",
+    "location.detectMyLocation": "ನನ್ನ ಸ್ಥಳವನ್ನು ಪತ್ತೆ ಮಾಡಿ",
     selectLanguage: 'ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ',
     selectSubtitle: 'ನಿಮಗೆ ಇಷ್ಟವಾದ ಭಾಷೆಯಲ್ಲಿ ಮಾಹಿತಿ ಪಡೆಯಲು ಭಾಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ',
     continueBtn: 'ಮುಂದುವರಿಯಿರಿ',
@@ -838,6 +870,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'ಹವಾಮಾನ ಟೆಲಿಮೆಟ್ರಿ ವೆಕ್ಟರ್‌ಗಳು ಕಾಲೋಚಿತ ಆರ್ದ್ರತೆಯ ಶ್ರೇಣಿಗೆ ಸಂಪೂರ್ಣವಾಗಿ ಹೊಂದಿಕೊಳ್ಳುತ್ತವೆ.',
   },
   ml: {
+    "location.stepTitle": "ഘട്ടം 1 — സ്ഥാനം തിരഞ്ഞെടുക്കുക",
+    "location.autoGps": "ഓട്ടോ ജിപിഎസ്",
+    "location.manualEntry": "മാനുവൽ എൻട്രി",
+    "location.detectMyLocation": "എന്റെ സ്ഥാനം കണ്ടെത്തുക",
     selectLanguage: 'നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക',
     selectSubtitle: 'നിങ്ങൾക്ക് ഇഷ്ടമുള്ള ഭാഷയിൽ വിവരങ്ങൾ നേടാൻ ഒരു ഭാഷ തിരഞ്ഞെടുക്കുക',
     continueBtn: 'തുടരുക',
@@ -939,6 +975,10 @@ export const TRANSLATIONS = {
     insight3Detail: 'കാലാവസ്ഥാ ടെലിമെട്രി വെക്‌ടറുകൾ സീസണൽ ഈർപ്പം പരിധിക്ക് തികച്ചും അനുയോജ്യമാണ്.',
   },
   pa: {
+    "location.stepTitle": "ਕਦਮ 1 — ਸਥਾਨ ਚੁਣੋ",
+    "location.autoGps": "ਆਟോ ਜੀਪੀਐਸ",
+    "location.manualEntry": "ਮੈਨੂਅਲ ਐਂਟਰੀ",
+    "location.detectMyLocation": "ਮੇਰਾ ਸਥਾਨ ਲੱਭੋ",
     selectLanguage: 'ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ',
     selectSubtitle: 'ਆਪਣੀ ਪਸੰਦੀਦਾ ਭਾਸ਼ਾ ਵਿੱਚ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਇੱਕ ਭਾਸ਼ਾ ਚੁਣো',
     continueBtn: 'ਜਾਰੀ ਰੱਖੋ',
